@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click 2 Cash - Ultimate Earning</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans Bengali', sans-serif; }
+        body { background: linear-gradient(135deg, #f0f9ff, #ecfdf5); color: #1e293b; min-height: 100vh; overflow-x: hidden; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-radius: 24px; border: 1px solid #fff; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04); }
+        .btn-primary { background: linear-gradient(135deg, #0ea5e9, #10b981); color: white; border-radius: 14px; padding: 12px; font-weight: bold; transition: 0.3s; width: 100%; border: none; cursor: pointer; }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #e2e8f0; z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; color: #64748b; background: none; border: none; cursor: pointer; }
+        .nav-item.active { color: #0ea5e9; font-weight: bold; }
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .wheel-container { position: relative; width: 220px; height: 220px; margin: 20px auto; }
+        .wheel { width: 100%; height: 100%; border-radius: 50%; border: 5px solid #fff; position: relative; overflow: hidden; transition: transform 4s cubic-bezier(0.1, 0, 0.1, 1); }
+        .wheel-section { position: absolute; width: 50%; height: 50%; transform-origin: bottom right; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; }
+    </style>
+</head>
+<body class="pb-24">
+
+    <div id="auth-section" class="flex justify-center items-center min-h-screen p-6">
+        <div class="glass-card w-full max-w-sm p-8 text-center">
+            <h2 id="auth-title" class="text-2xl font-bold mb-6 text-sky-700 underline underline-offset-8">লগ ইন করুন</h2>
+            <div id="login-form">
+                <input type="email" id="login-email" placeholder="ইমেইল" class="w-full p-4 mb-4 rounded-2xl bg-white border-none outline-none shadow-sm">
+                <input type="password" id="login-password" placeholder="পাসওয়ার্ড" class="w-full p-4 mb-6 rounded-2xl bg-white border-none outline-none shadow-sm">
+                <button onclick="login()" class="btn-primary shadow-lg">প্রবেশ করুন</button>
+                <p class="mt-4 text-sm text-gray-500">নতুন? <button onclick="toggleAuth()" class="text-sky-700 font-bold">একাউন্ট খুলুন</button></p>
+            </div>
+            <div id="register-form" class="hidden">
+                <input type="text" id="reg-name" placeholder="আপনার নাম" class="w-full p-4 mb-4 rounded-2xl bg-white border-none outline-none shadow-sm">
+                <input type="email" id="reg-email" placeholder="ইমেইল" class="w-full p-4 mb-4 rounded-2xl bg-white border-none outline-none shadow-sm">
+                <input type="password" id="reg-password" placeholder="পাসওয়ার্ড (৬+ সংখ্যা)" class="w-full p-4 mb-6 rounded-2xl bg-white border-none outline-none shadow-sm">
+                <button onclick="register()" class="btn-primary">রেজিস্টার</button>
+                <p class="mt-4 text-sm text-gray-500">আছে? <button onclick="toggleAuth()" class="text-sky-700 font-bold">লগ ইন</button></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-app" class="hidden">
+        <header class="p-5 flex justify-between items-center bg-white/70 backdrop-blur-md sticky top-0 z-50">
+            <div>
+                <h1 class="text-xl font-bold text-sky-800">Click2Cash</h1>
+                <p id="vpn-status-text" class="text-[10px] font-bold text-red-500 animate-pulse">VPN Disconnected</p>
+            </div>
+            <div class="bg-sky-600 text-white px-4 py-1.5 rounded-2xl shadow-md text-center">
+                <p class="text-[9px] uppercase opacity-80">My Balance</p>
+                <p class="text-lg font-bold">৳<span id="top-balance">0.00</span></p>
+            </div>
+        </header>
+
+        <main class="p-4 max-w-md mx-auto">
+            <section id="home" class="content-section active">
+                <div class="glass-card p-4 mb-6 flex justify-between items-center border-l-8 border-yellow-400">
+                    <div>
+                        <h3 class="font-bold text-gray-800">ডেইলি রিওয়ার্ড</h3>
+                        <p class="text-[10px] text-gray-500">প্রতিদিন একবার বোনাস নিন</p>
+                    </div>
+                    <button onclick="collectDailyBonus()" class="bg-yellow-500 text-white px-4 py-2 rounded-xl text-xs font-bold">Collect</button>
+                </div>
+
+                <div class="glass-card p-4 mb-6">
+                    <p id="admin-notice" class="text-xs text-gray-600 italic font-bold">বিজ্ঞপ্তি লোড হচ্ছে...</p>
+                </div>
+
+                <div id="vpn-tasks-list" class="space-y-4"></div>
+                <div id="novpn-tasks-list" class="space-y-4 mt-6"></div>
+            </section>
+
+            <section id="spin" class="content-section text-center">
+                <div class="glass-card p-8 mt-5">
+                    <h2 class="text-xl font-bold text-orange-600 mb-2">লাকি স্পিন</h2>
+                    <p class="text-[10px] text-gray-500 mb-4 uppercase">Win up to ৳৫.০০</p>
+                    <div class="wheel-container">
+                        <div id="wheel" class="wheel">
+                            <div class="wheel-section" style="background:#f87171; transform:rotate(0deg) skewY(-30deg)">৳0.2</div>
+                            <div class="wheel-section" style="background:#2dd4bf; transform:rotate(60deg) skewY(-30deg)">৳1.0</div>
+                            <div class="wheel-section" style="background:#fbbf24; transform:rotate(120deg) skewY(-30deg)">৳0.5</div>
+                            <div class="wheel-section" style="background:#34d399; transform:rotate(180deg) skewY(-30deg)">৳5.0</div>
+                            <div class="wheel-section" style="background:#38bdf8; transform:rotate(240deg) skewY(-30deg)">৳0.1</div>
+                            <div class="wheel-section" style="background:#f472b6; transform:rotate(300deg) skewY(-30deg)">৳2.0</div>
+                        </div>
+                    </div>
+                    <button id="spin-btn" onclick="startSpin()" class="btn-primary mt-6 shadow-xl">স্পিন শুরু করুন</button>
+                </div>
+            </section>
+
+            <section id="wallet" class="content-section">
+                <div class="glass-card p-8 mt-5">
+                    <h2 class="text-xl font-bold text-center text-sky-800 mb-6 uppercase tracking-widest">Withdraw</h2>
+                    <input type="number" id="wd-amount" placeholder="টাকার পরিমাণ (Min: ৫০)" class="w-full p-4 mb-4 rounded-2xl border-none outline-none shadow-inner bg-gray-50">
+                    <select id="wd-method" class="w-full p-4 mb-4 rounded-2xl border-none outline-none shadow-inner bg-gray-50 font-bold">
+                        <option value="bKash">বিকাশ</option>
+                        <option value="Nagad">নগদ</option>
+                        <option value="Recharge">রিচার্জ</option>
+                    </select>
+                    <input type="text" id="wd-number" placeholder="মোবাইল নম্বর" class="w-full p-4 mb-6 rounded-2xl border-none outline-none shadow-inner bg-gray-50">
+                    <button onclick="withdrawRequest()" class="btn-primary bg-sky-600 shadow-lg">পেমেন্ট রিকোয়েস্ট পাঠান</button>
+                </div>
+            </section>
+        </main>
+
+        <nav class="bottom-nav">
+            <button onclick="switchSection('home')" class="nav-item active"><i class="fas fa-home text-xl mb-1"></i><span>হোম</span></button>
+            <button onclick="switchSection('spin')" class="nav-item"><i class="fas fa-sync-alt text-xl mb-1"></i><span>স্পিন</span></button>
+            <button onclick="switchSection('wallet')" class="nav-item"><i class="fas fa-wallet text-xl mb-1"></i><span>ওয়ালেট</span></button>
+        </nav>
+    </div>
+
+    <script>
+        // ১. ফায়ারবেস কনফিগারেশন
+        const firebaseConfig = {
+            apiKey: "AIzaSyDI0riYoW-av6_5Pad-4MC0M48rncVJF7I",
+            authDomain: "earnpro-e1fe4.firebaseapp.com",
+            projectId: "earnpro-e1fe4",
+            storageBucket: "earnpro-e1fe4.appspot.com",
+            messagingSenderId: "439718395191",
+            appId: "1:439718395191:web:f315a459bd9ebf3552aeb2"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth(), db = firebase.firestore();
+        let userData = null, isVPN = false;
+
+        // ২. ভিপিএন ডিটেকশন
+        async function checkVPN() {
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                isVPN = ['US', 'GB', 'CA', 'DE'].includes(data.country_code);
+                const status = document.getElementById('vpn-status-text');
+                status.innerText = isVPN ? "VPN Connected: " + data.country_code : "Connect USA/UK VPN";
+                status.className = isVPN ? "text-[10px] font-bold text-green-600" : "text-[10px] font-bold text-red-500 animate-pulse";
+            } catch(e) { console.log("VPN Check Failed"); }
+        }
+        checkVPN(); setInterval(checkVPN, 20000);
+
+        // ৩. ইউজার ডাটা কন্ট্রোল
+        auth.onAuthStateChanged(user => {
+            if(user) {
+                document.getElementById('auth-section').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                db.collection('users').doc(user.uid).onSnapshot(doc => {
+                    userData = doc.data();
+                    if(userData) {
+                        document.getElementById('top-balance').innerText = userData.balance.toFixed(2);
+                    }
+                });
+                loadContent();
+            } else {
+                document.getElementById('auth-section').classList.remove('hidden');
+                document.getElementById('main-app').classList.add('hidden');
+            }
+        });
+
+        // ৪. টাস্ক লোডিং (১, ২, ৩ লিস্ট ফরম্যাট)
+        function loadContent() {
+            // নোটিশ লোড
+            db.collection('settings').doc('app_config').onSnapshot(doc => {
+                if(doc.exists) document.getElementById('admin-notice').innerText = doc.data().admin_note;
+            });
+
+            const vpnList = document.getElementById('vpn-tasks-list');
+            const noVpnList = document.getElementById('novpn-tasks-list');
+
+            db.collection('tasks').onSnapshot(snap => {
+                vpnList.innerHTML = `<h3 class="text-xs font-bold text-red-500 mb-3 px-1"><i class="fas fa-shield-alt"></i> VPN TASKS (HIGH PAY)</h3>`;
+                noVpnList.innerHTML = `<h3 class="text-xs font-bold text-green-600 mb-3 px-1"><i class="fas fa-check-circle"></i> NORMAL TASKS</h3>`;
+                
+                snap.forEach(doc => {
+                    const t = doc.data();
+                    // টাইমার ফরম্যাট (সেকেন্ড/মিনিট)
+                    const timeText = t.timer >= 60 ? Math.floor(t.timer / 60) + " মিনিট" : t.timer + " সেকেন্ড";
+                    
+                    const card = `
+                        <div class="glass-card p-5 border-l-8 ${t.type === 'vpn' ? 'border-sky-500' : 'border-emerald-500'}">
+                            <h4 class="font-bold text-sky-900 text-sm mb-3">🚀 ${t.name}</h4>
+                            <div class="text-[11px] text-gray-600 space-y-2 mb-4">
+                                <p><b>১. ভিপিএন:</b> ${t.type === 'vpn' ? 'USA/UK/CA (অবশ্যই)' : 'প্রয়োজন নেই'}</p>
+                                <p><b>২. সময়:</b> ${timeText} অপেক্ষা করুন</p>
+                                <p><b>৩. রিওয়ার্ড:</b> <span class="text-green-600 font-bold">৳${t.reward.toFixed(2)}</span></p>
+                            </div>
+                            <button onclick="runTask('${t.link}', ${t.reward}, '${t.type}', ${t.timer})" 
+                                class="btn-primary py-3 text-xs shadow-md">কাজ শুরু করুন</button>
+                        </div>`;
+                    
+                    if(t.type === 'vpn') vpnList.innerHTML += card;
+                    else noVpnList.innerHTML += card;
+                });
+            });
+        }
+
+        // ৫. টাস্ক রানার টাইমার সহ
+        function runTask(link, reward, type, timer) {
+            if(type === 'vpn' && !isVPN) return alert("দয়া করে USA/UK VPN কানেক্ট করুন!");
+            
+            window.open(link, '_blank');
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.disabled = true;
+
+            let count = timer;
+            const interval = setInterval(() => {
+                btn.innerText = "অপেক্ষা করুন: " + count + "s";
+                count--;
+                if(count < 0) {
+                    clearInterval(interval);
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    addMoney(reward);
+                }
+            }, 1000);
+        }
+
+        async function addMoney(amt) {
+            await db.collection('users').doc(userData.uid).update({
+                balance: firebase.firestore.FieldValue.increment(amt)
+            });
+            alert("অভিনন্দন! ৳" + amt + " যোগ হয়েছে।");
+        }
+
+        // ৬. স্পিন লজিক
+        function startSpin() {
+            const btn = document.getElementById('spin-btn');
+            btn.disabled = true;
+            const deg = 3600 + Math.random() * 360;
+            document.getElementById('wheel').style.transform = `rotate(${deg}deg)`;
+            setTimeout(async () => {
+                const wins = [0.2, 1.0, 0.5, 5.0, 0.1, 2.0];
+                const prize = wins[Math.floor(Math.random() * wins.length)];
+                await db.collection('users').doc(userData.uid).update({ balance: firebase.firestore.FieldValue.increment(prize) });
+                alert("আপনি জিতেছেন ৳" + prize);
+                btn.disabled = false;
+            }, 4000);
+        }
+
+        // ৭. ডেইলি বোনাস
+        async function collectDailyBonus() {
+            const today = new Date().toDateString();
+            if(userData.lastBonus === today) return alert("আজকের বোনাস নেওয়া শেষ!");
+            await db.collection('users').doc(userData.uid).update({
+                balance: firebase.firestore.FieldValue.increment(1.00),
+                lastBonus: today
+            });
+            alert("৳১.০০ বোনাস সফল!");
+        }
+
+        // ৮. উইথড্র সিস্টেম
+        async function withdrawRequest() {
+            const amt = parseFloat(document.getElementById('wd-amount').value);
+            const num = document.getElementById('wd-number').value;
+            if(amt < 50 || amt > userData.balance) return alert("পর্যাপ্ত ব্যালেন্স নেই (Min: ৫০)");
+            if(num.length < 11) return alert("সঠিক মোবাইল নম্বর দিন!");
+
+            await db.collection('withdrawals').add({
+                uid: userData.uid, name: userData.name, amount: amt, method: document.getElementById('wd-method').value,
+                number: num, status: 'pending', date: new Date().toISOString()
+            });
+            await db.collection('users').doc(userData.uid).update({ balance: firebase.firestore.FieldValue.increment(-amt) });
+            alert("পেমেন্ট রিকোয়েস্ট পাঠানো হয়েছে!");
+        }
+
+        // ৯. নেভিগেশন ও অথ Helpers
+        function switchSection(id) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        function toggleAuth() {
+            document.getElementById('login-form').classList.toggle('hidden');
+            document.getElementById('register-form').classList.toggle('hidden');
+        }
+
+        async function login() {
+            const e = document.getElementById('login-email').value, p = document.getElementById('login-password').value;
+            try { await auth.signInWithEmailAndPassword(e, p); } catch(e) { alert("ভুল ইমেইল/পাসওয়ার্ড!"); }
+        }
+
+        async function register() {
+            const n = document.getElementById('reg-name').value, e = document.getElementById('reg-email').value, p = document.getElementById('reg-password').value;
+            if(!n || p.length < 6) return alert("তথ্য সঠিক দিন (পাসওয়ার্ড ৬ ডিজিট)");
+            try {
+                const res = await auth.createUserWithEmailAndPassword(e, p);
+                await db.collection('users').doc(res.user.uid).set({ uid: res.user.uid, name: n, email: e, balance: 0, lastBonus: "" });
+            } catch(e) { alert(e.message); }
+        }
+    </script>
+</body>
+</html>
