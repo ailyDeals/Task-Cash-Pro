@@ -3,24 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Click2Cash — বিজ্ঞাপন দেখুন, আয় করুন</title>
+    <title>Click 2 Cash  </title>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script src="https://cdn.unityads.unity3d.com/sdk/4.0.0/unityads.js"></script>
 
-    <!-- =====================================================================
-         ADD YOUR SECOND AD NETWORK'S SCRIPT TAG HERE (PropellerAds / Adsterra /
-         whichever you're using). Paste exactly what appears in their
-         dashboard under Websites/Zones → "Get Code". Example shape:
-
-       <meta name="monetag" content="08dfa70688603c36aca8faa4cc5a672e">
-
-         Once it's here, tell me the network name + zone ID and I'll wire up
-         the actual show/trigger calls in the script section below (the
-         showNetworkAd() stub is already there waiting for it).
-         ===================================================================== -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0E6E5C">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@500;700;800&display=swap" rel="stylesheet">
@@ -110,6 +101,7 @@
         .tag{ font-size:10px; font-weight:700; padding:3px 9px; border-radius:20px; }
         .tag-video{ background:#E6F4EE; color: var(--teal-deep); }
         .tag-link{ background: var(--gold-soft); color:#8A6A16; }
+        .tag-quiz{ background:#EDE7F9; color:#4E3599; }
 
         ::placeholder{ color:#9AA39E; }
 
@@ -120,55 +112,100 @@
         }
         .task-icon.video{ background: linear-gradient(135deg, var(--teal), var(--teal-deep)); }
         .task-icon.link{ background: linear-gradient(135deg, var(--gold), #A87C1B); }
+        .task-icon.quiz{ background: linear-gradient(135deg, #7A5CC9, #4E3599); }
+        .task-icon.math{ background: linear-gradient(135deg, #7A5CC9, #4E3599); }
         .reward-chip{
             display:inline-flex; align-items:center; gap:4px; background:var(--gold-soft);
             color:#7A5C10; font-weight:800; font-size:12px; padding:5px 10px; border-radius:10px;
         }
-        .engagement-track{
-            width:100%; height:8px; border-radius:8px; background:#EDEAE0; overflow:hidden; margin-top:10px;
+        /* In-app ad overlay — the ad plays right inside the page, no new
+           tab, no popup blocker issues. Skip button is hidden for the
+           first N seconds. */
+        #ad-overlay{
+            position:fixed; inset:0; background:#0B1512; z-index:9998;
+            display:none; flex-direction:column;
         }
-        .engagement-fill{
-            height:100%; border-radius:8px;
-            background: linear-gradient(90deg, var(--gold), var(--teal));
-            width:0%; transition: width .4s ease;
+        #ad-overlay-bar{
+            display:flex; justify-content:space-between; align-items:center;
+            padding:14px 16px; background:#0B1512; flex-shrink:0;
         }
-        .engagement-note{ font-size:10px; color:var(--ink-soft); margin-top:6px; display:none; }
-
-        /* Full-screen "go back to the ad" banner */
-        #ad-watch-banner{
-            position:fixed; inset:0; background:rgba(8,20,17,.88); z-index:9998;
+        #ad-overlay-timer{
+            color:#fff; font-family:'Inter',sans-serif; font-weight:700; font-size:13px;
+            background:rgba(255,255,255,.1); padding:7px 14px; border-radius:20px;
+        }
+        #ad-overlay-skip{
+            color:#fff; font-weight:700; font-size:13px; background:var(--teal);
+            padding:8px 16px; border-radius:20px; border:none; cursor:pointer;
+            display:none; align-items:center; gap:6px;
+        }
+        #ad-overlay-frame-wrap{ flex:1; position:relative; background:#000; }
+        #ad-overlay-frame{ width:100%; height:100%; border:none; }
+        #ad-overlay-fallback{
+            position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
+            font-size:11px; color:rgba(255,255,255,.7); background:rgba(0,0,0,.5);
+            padding:8px 16px; border-radius:20px; text-decoration:none;
+        }
+        #ad-overlay-return{
+            margin:14px 16px calc(16px + env(safe-area-inset-bottom));
+            display:none;
+        }
+        #quiz-overlay{
+            position:fixed; inset:0; background:rgba(8,20,17,.88); z-index:9997;
             display:none; align-items:center; justify-content:center; padding:24px;
         }
-        #ad-watch-banner .box{
-            background:var(--surface); border-radius:22px; padding:28px 24px; text-align:center; max-width:340px;
+        #math-overlay{
+            position:fixed; inset:0; background:rgba(8,20,17,.88); z-index:9997;
+            display:none; align-items:center; justify-content:center; padding:24px;
         }
-        .ring{
-            width:96px; height:96px; border-radius:50%; margin:0 auto 16px; position:relative;
-            display:flex; align-items:center; justify-content:center;
-        }
-        .ring svg{ position:absolute; top:0; left:0; transform:rotate(-90deg); }
-        .ring span{ font-family:'Inter',sans-serif; font-weight:800; font-size:20px; color:var(--teal-deep); }
     </style>
 </head>
 <body class="pb-28">
 
-    <!-- Shown while the user is back on this tab but hasn't spent enough
-         real time on the ad tab yet. Sends them back rather than paying out. -->
-    <div id="ad-watch-banner">
-        <div class="box">
-            <div class="ring">
-                <svg width="96" height="96" viewBox="0 0 96 96">
-                    <circle cx="48" cy="48" r="42" stroke="#EDEAE0" stroke-width="8" fill="none"/>
-                    <circle id="ring-progress" cx="48" cy="48" r="42" stroke="url(#g)" stroke-width="8" fill="none"
-                            stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="264"/>
-                    <defs><linearGradient id="g"><stop offset="0%" stop-color="#C99A2E"/><stop offset="100%" stop-color="#0E6E5C"/></linearGradient></defs>
-                </svg>
-                <span id="ring-seconds">60</span>
-            </div>
-            <h3 style="font-weight:700; font-size:15px; margin-bottom:6px;">অ্যাড ট্যাবে ফিরে যান</h3>
-            <p id="ad-watch-msg" style="font-size:12px; color:var(--ink-soft); margin-bottom:18px; line-height:1.5;">রিওয়ার্ড পেতে অ্যাড ট্যাবে আরও কিছু সময় থাকতে হবে।</p>
-            <button id="ad-watch-reopen" class="btn-primary" style="margin-bottom:10px;">অ্যাড ট্যাব আবার খুলুন</button>
-            <button onclick="document.getElementById('ad-watch-banner').style.display='none'" style="width:100%; background:none; border:none; color:var(--ink-soft); font-size:12px; padding:6px; cursor:pointer;">পরে করব</button>
+    <!-- In-app ad overlay: opens right here, no new tab. Skip button is
+         hidden until the required number of seconds have passed. A
+         "ফিরে এসেছি" return button is shown as soon as the ad is
+         opened in a fallback tab, so the user always has an explicit
+         way to come back into the app and collect the reward. -->
+    <div id="ad-overlay">
+        <div id="ad-overlay-bar">
+            <span id="ad-overlay-timer">১৫সে পর স্কিপ করা যাবে</span>
+            <button id="ad-overlay-skip"><i class="fas fa-forward"></i> স্কিপ ও রিওয়ার্ড নিন</button>
+        </div>
+        <div id="ad-overlay-frame-wrap">
+            <iframe id="ad-overlay-frame" src="about:blank" allow="autoplay"></iframe>
+            <a id="ad-overlay-fallback" href="#" target="_blank" rel="noopener">অ্যাড দেখা না গেলে এখানে ট্যাপ করুন</a>
+        </div>
+        <button id="ad-overlay-return" class="btn-primary" style="background:linear-gradient(135deg,var(--success),#15653D);">
+            <i class="fas fa-arrow-left"></i> অ্যাড দেখেছি — অ্যাপে ফিরে আসুন
+        </button>
+    </div>
+
+    <!-- Quiz task: a tiny math problem the user solves before the ad step -->
+    <div id="quiz-overlay">
+        <div class="card" style="width:100%; max-width:340px; padding:28px 24px; text-align:center;">
+            <div class="task-icon" style="background:linear-gradient(135deg,#7A5CC9,#4E3599); margin:0 auto 16px;"><i class="fas fa-calculator"></i></div>
+            <h3 style="font-weight:700; font-size:15px; margin-bottom:4px;">ছোট্ট একটা অংক করুন</h3>
+            <p style="font-size:11px; color:var(--ink-soft); margin-bottom:18px;">সঠিক উত্তর দিলে পরের ধাপে অ্যাড দেখে রিওয়ার্ড পাবেন</p>
+            <p id="quiz-question" class="numeric" style="font-size:26px; font-weight:800; color:var(--teal-deep); margin-bottom:16px;">৫ + ৭ = ?</p>
+            <input type="number" id="quiz-answer" placeholder="উত্তর লিখুন" style="width:100%; padding:14px; margin-bottom:12px; border-radius:14px; border:1px solid var(--line); background:#FAFAF6; text-align:center; font-size:16px;">
+            <p id="quiz-error" style="font-size:11px; color:var(--danger); margin-bottom:10px; display:none;">ভুল উত্তর, আবার চেষ্টা করুন।</p>
+            <button id="quiz-submit" class="btn-primary" style="margin-bottom:10px;">জমা দিন</button>
+            <button id="quiz-cancel" style="width:100%; background:none; border:none; color:var(--ink-soft); font-size:12px; padding:6px; cursor:pointer;">বাতিল করুন</button>
+        </div>
+    </div>
+
+    <!-- Math-earn: unlimited auto-generated math problems. Correct answer
+         → watch a fixed 30s ad → reward credited immediately. -->
+    <div id="math-overlay">
+        <div class="card" style="width:100%; max-width:340px; padding:28px 24px; text-align:center;">
+            <div class="task-icon math" style="margin:0 auto 16px;"><i class="fas fa-calculator"></i></div>
+            <h3 style="font-weight:700; font-size:15px; margin-bottom:4px;">অংকের উত্তর দিন</h3>
+            <p style="font-size:11px; color:var(--ink-soft); margin-bottom:18px;">সঠিক উত্তর দিলে ৩০ সেকেন্ডের একটি অ্যাড দেখে রিওয়ার্ড পাবেন</p>
+            <p id="math-question" class="numeric" style="font-size:26px; font-weight:800; color:#4E3599; margin-bottom:16px;">৫ + ৭ = ?</p>
+            <input type="number" id="math-answer" placeholder="উত্তর লিখুন" style="width:100%; padding:14px; margin-bottom:12px; border-radius:14px; border:1px solid var(--line); background:#FAFAF6; text-align:center; font-size:16px;">
+            <p id="math-error" style="font-size:11px; color:var(--danger); margin-bottom:10px; display:none;">ভুল উত্তর, আবার চেষ্টা করুন।</p>
+            <button id="math-submit" class="btn-primary" style="margin-bottom:10px; background:linear-gradient(135deg,#7A5CC9,#4E3599);">জমা দিন ও অ্যাড দেখুন</button>
+            <button id="math-cancel" style="width:100%; background:none; border:none; color:var(--ink-soft); font-size:12px; padding:6px; cursor:pointer;">বাতিল করুন</button>
         </div>
     </div>
 
@@ -239,7 +276,19 @@
                             <p id="daily-bonus-desc" style="font-size:10px; color:var(--ink-soft);">আজকের বোনাস সংগ্রহ করুন</p>
                         </div>
                     </div>
-                    <button id="daily-btn" onclick="collectDailyBonus()" style="background:var(--success); color:#fff; padding:10px 18px; border-radius:12px; font-size:12px; font-weight:700; border:none; cursor:pointer;">Collect</button>
+                    <button id="daily-btn" onclick="collectDailyBonus()" disabled class="btn-disabled" style="background:var(--success); color:#fff; padding:10px 18px; border-radius:12px; font-size:12px; font-weight:700; border:none; cursor:pointer;">লোড হচ্ছে...</button>
+                </div>
+
+                <div class="card" style="padding:16px; margin-bottom:20px; border-left:6px solid #4E3599;">
+                    <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                        <div class="task-icon math"><i class="fas fa-calculator"></i></div>
+                        <div>
+                            <h4 style="font-weight:700; font-size:13px;">অংক করে ইনকাম করুন</h4>
+                            <p id="math-reward-desc" style="font-size:10px; color:var(--ink-soft);">প্রতি সঠিক উত্তরে ৳-- (৩০সে অ্যাড)</p>
+                        </div>
+                    </div>
+                    <button id="math-start-btn" onclick="startMathEarn()" class="btn-primary" style="font-size:13px; background:linear-gradient(135deg,#7A5CC9,#4E3599);">নতুন অংক শুরু করুন</button>
+                    <p id="math-limit-note" style="font-size:10px; color:var(--ink-soft); text-align:center; margin-top:8px;"></p>
                 </div>
 
                 <h4 class="display" style="font-size:14px; font-weight:700; color:var(--ink); margin-bottom:10px;">উপলব্ধ টাস্ক</h4>
@@ -300,47 +349,47 @@
     </div>
 
     <script>
-        /* =========================================================
-           IMPORTANT — WHAT CHANGED FROM THE ORIGINAL VERSION
-           1) VPN spoofing removed entirely. Faking geography to
-              trigger higher-paying ad-network placements is ad
-              fraud and can get the ad account / app banned.
-           2) Referral bonus is no longer instant-on-signup. It is
-              only credited once the *referred* user completes a
-              minimum number of real tasks (config.refer_task_requirement).
-              This still runs client-side below for simplicity —
-              for real money you should move this check into a
-              Cloud Function / Firestore rule so it can't be
-              bypassed from the browser console.
-           3) Minimum withdrawal is now pulled from app_config
-              (set by the admin panel) instead of a hardcoded 1200,
-              so you can set something users can realistically reach.
-           ========================================================= */
-
         const firebaseConfig = {
-            apiKey: "AIzaSyDI0riYoW-av6_5Pad-4MC0M48rncVJF7I",
-            authDomain: "earnpro-e1fe4.firebaseapp.com",
-            projectId: "earnpro-e1fe4",
-            storageBucket: "earnpro-e1fe4.appspot.com",
-            messagingSenderId: "439718395191",
-            appId: "1:439718395191:web:f315a459bd9ebf3552aeb2"
-        };
+  apiKey: "AIzaSyBoTCzjuZ4Z8O76m7FaoeiEUQSlh73HAnU",
+  authDomain: "ed-net-too.firebaseapp.com",
+  projectId: "ed-net-too",
+  storageBucket: "ed-net-too.firebasestorage.app",
+  messagingSenderId: "1015865016543",
+  appId: "1:1015865016543:web:45f3186980e43f57bae96a",
+  measurementId: "G-4HKLKWGFQW"
+};
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore();
 
         let userData = null;
-        let appConfig = { min_withdraw: 50, daily_bonus: 1, refer_bonus: 5, refer_task_requirement: 3 };
+        let appConfig = {
+            min_withdraw: 50, daily_bonus: 1, refer_bonus: 5, refer_task_requirement: 3,
+            math_reward: 0.20, math_ad_seconds: 30, math_daily_limit: 20
+        };
+        const MATH_AD_LINKS = [
+            "https://omg10.com/4/10626508",
+            "https://omg10.com/4/10644981",
+            "https://omg10.com/4/10587146"
+        ];
 
         const unityGameId = "500257213";
-        if (typeof UnityAds !== 'undefined') UnityAds.initialize(unityGameId, false);
+        let unityReady = false;
+        if (typeof UnityAds !== 'undefined') {
+            try {
+                UnityAds.initialize(unityGameId, true);
+                unityReady = true;
+            } catch (e) { console.warn('Unity Ads failed to initialize:', e); }
+        }
 
-        // Pre-fill refer code from a shared link: ?ref=ABC123
         window.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const ref = params.get('ref');
             if (ref) {
                 document.getElementById('reg-refer').value = ref.toUpperCase();
-                toggleAuth(); // jump straight to the register form
+                toggleAuth();
+            }
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js').catch(() => {});
             }
         });
 
@@ -356,17 +405,36 @@
                         document.getElementById('min-withdraw-note').innerText = `সর্বনিম্ন উইথড্র: ৳${appConfig.min_withdraw}`;
                         document.getElementById('daily-bonus-desc').innerText = `আজকের ৳${Number(appConfig.daily_bonus).toFixed(2)} সংগ্রহ করুন`;
                         document.getElementById('refer-bonus-desc').innerText = `বন্ধু ${appConfig.refer_task_requirement}টি টাস্ক শেষ করলে আপনি ৳${appConfig.refer_bonus} পাবেন।`;
+                        document.getElementById('math-reward-desc').innerText = `প্রতি সঠিক উত্তরে ৳${Number(appConfig.math_reward).toFixed(2)} (${appConfig.math_ad_seconds}সে অ্যাড)`;
+                        if (userData) renderMathLimit();
                     }
                 });
 
-                db.collection('users').doc(user.uid).onSnapshot(doc => {
+                db.collection('users').doc(user.uid).onSnapshot(async (doc) => {
+                    if (!doc.exists) {
+                        try {
+                            await db.collection('users').doc(user.uid).set({
+                                uid: user.uid,
+                                name: user.displayName || (user.email ? user.email.split('@')[0] : 'ইউজার'),
+                                email: user.email || '',
+                                balance: 0, total_earned: 0,
+                                completed_tasks: {}, lastBonus: '',
+                                referCodeLower: user.uid.substring(0, 6).toLowerCase(),
+                                referredBy: null, referBonusGiven: false, earn_log: [],
+                                math_completed_today: 0, math_last_date: ''
+                            }, { merge: true });
+                        } catch (e) {
+                            console.error('Could not auto-create missing user profile:', e);
+                        }
+                        return;
+                    }
                     userData = doc.data();
-                    if (!userData) return;
                     renderUser();
+                    renderMathLimit();
                     loadTasks();
                     loadEarnHistory();
                     loadWithdrawHistory();
-                });
+                }, err => console.error('users onSnapshot error:', err));
             }
         });
 
@@ -406,14 +474,19 @@
                     const limit = t.limit || 10;
                     const isLimitOver = completed >= limit;
                     const isVideo = t.type === 'video';
-                    const effectiveSeconds = isVideo ? t.timer : Math.max(60, Number(t.timer) || 60);
+                    const isQuiz = t.type === 'quiz';
+                    const effectiveSeconds = isVideo ? t.timer : Math.max(15, Number(t.timer) || 15);
+                    const iconClass = isVideo ? 'video' : (isQuiz ? 'quiz' : 'link');
+                    const faIcon = isVideo ? 'fa-play' : (isQuiz ? 'fa-calculator' : 'fa-arrow-up-right-from-square');
+                    const tagClass = isVideo ? 'tag-video' : (isQuiz ? 'tag-quiz' : 'tag-link');
+                    const btnLabel = isLimitOver ? 'লিমিট শেষ' : (isVideo ? 'ভিডিও দেখুন' : (isQuiz ? 'কুইজ শুরু করুন' : 'কাজ শুরু করুন'));
 
                     const el = document.createElement('div');
                     el.className = 'card';
                     el.style.cssText = 'padding:16px;';
                     el.innerHTML = `
                         <div style="display:flex; gap:12px; align-items:flex-start;">
-                            <div class="task-icon ${isVideo ? 'video' : 'link'}"><i class="fas ${isVideo ? 'fa-play' : 'fa-arrow-up-right-from-square'}"></i></div>
+                            <div class="task-icon ${iconClass}"><i class="fas ${faIcon}"></i></div>
                             <div style="flex:1; min-width:0;">
                                 <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
                                     <h4 style="font-weight:700; font-size:13px; line-height:1.3;">${t.name}</h4>
@@ -421,13 +494,11 @@
                                 </div>
                                 <div style="display:flex; align-items:center; gap:8px; margin:6px 0 12px;">
                                     <span class="reward-chip">৳${t.reward.toFixed(2)}</span>
-                                    <span class="tag ${isVideo ? 'tag-video' : 'tag-link'}"><i class="fas fa-clock"></i>&nbsp;${effectiveSeconds}সে</span>
+                                    <span class="tag ${tagClass}"><i class="fas fa-clock"></i>&nbsp;${effectiveSeconds}সে</span>
                                 </div>
                                 <button id="btn-${taskId}" class="btn-primary ${isLimitOver ? 'btn-disabled' : ''}" ${isLimitOver ? 'disabled' : ''} style="font-size:13px; padding:11px;">
-                                    ${isLimitOver ? 'লিমিট শেষ' : (isVideo ? 'ভিডিও দেখুন' : 'অ্যাডে যান')}
+                                    ${btnLabel}
                                 </button>
-                                <div class="engagement-track" id="track-${taskId}" style="display:none;"><div class="engagement-fill" id="fill-${taskId}"></div></div>
-                                <p class="engagement-note" id="note-${taskId}">অ্যাড ট্যাবে থাকুন — এই ট্যাবে ফিরলে অগ্রগতি দেখা যাবে</p>
                             </div>
                         </div>`;
                     if (!isLimitOver) {
@@ -485,114 +556,219 @@
             }, err => { /* likely missing composite index — see README note */ });
         }
 
-        /* =========================================================
-           GENUINE 60-SECOND ENGAGEMENT ENFORCEMENT (link tasks)
-
-           The old version just ran a countdown on THIS tab regardless
-           of whether the user ever opened the ad — so a 60s "wait" was
-           purely decorative. This version uses the Page Visibility API
-           to only count time while this tab is actually hidden (i.e.
-           the user is over on the ad tab). If they come back early,
-           they're sent back rather than paid out.
-
-           Caveat to know: this proves the user left the tab, not that
-           they scrolled/read the ad page itself — a determined user
-           could open the link and immediately switch to something else
-           entirely. There is no fully tamper-proof way to verify ad
-           attention from client-side JS alone; true enforcement lives
-           on the ad network's side (their own viewability tracking) and
-           in Firestore rules that never trust client-reported state.
-           ========================================================= */
-        let pendingAd = null; // {taskId, reward, requiredSeconds, accumulated, hiddenAt, link}
+        let activeAd = null;
 
         function runTask(id, link, reward, type, timer) {
             const btn = document.getElementById('btn-' + id);
 
-            if (type === 'link' && link) {
-                const requiredSeconds = Math.max(60, Number(timer) || 60);
-                pendingAd = { taskId: id, reward, requiredSeconds, accumulated: 0, hiddenAt: null, link };
-                document.getElementById(`track-${id}`).style.display = 'block';
-                document.getElementById(`note-${id}`).style.display = 'block';
-                window.open(link, '_blank');
-                renderAdProgress();
-            } else if (typeof UnityAds !== 'undefined') {
+            if (type === 'link') {
+                if (!link) { alert('এই টাস্কে কোনো অ্যাড লিংক সেট করা নেই। এডমিনকে জানান।'); return; }
+                openAdOverlay(id, link, reward, Math.max(15, Number(timer) || 15), () => completeTask(id, reward, 'টাস্ক'));
+
+            } else if (type === 'quiz') {
+                openQuizModal(id, link, reward, Math.max(15, Number(timer) || 15));
+
+            } else if (type === 'video') {
+                if (!unityReady || typeof UnityAds === 'undefined') {
+                    return fallbackFromVideo(id, link, reward, timer, 'ভিডিও অ্যাড সার্ভিস এখনো প্রস্তুত নয়।');
+                }
                 btn.disabled = true;
                 btn.innerText = 'লোড হচ্ছে...';
-                UnityAds.show('Rewarded_Android', {
-                    onStart: () => { btn.innerText = 'অ্যাড চলছে...'; },
-                    onComplete: () => completeTask(id, reward, 'ভিডিও বিজ্ঞাপন'),
-                    onFailure: () => { btn.disabled = false; btn.innerText = 'ভিডিও দেখুন'; alert('বিজ্ঞাপন লোড হয়নি। একটু পর আবার চেষ্টা করুন।'); }
-                });
-            } else {
-                alert('বিজ্ঞাপন লোড হচ্ছে, কিছুক্ষণ পর চেষ্টা করুন।');
-                // TODO: this is also where a second network's fallback/interstitial call would go — see showNetworkAd() stub below.
+                try {
+                    UnityAds.show('Rewarded_Android', {
+                        onStart: () => { btn.innerText = 'অ্যাড চলছে...'; },
+                        onComplete: () => completeTask(id, reward, 'ভিডিও বিজ্ঞাপন'),
+                        onFailure: () => fallbackFromVideo(id, link, reward, timer, 'ভিডিও অ্যাড লোড হয়নি।')
+                    });
+                } catch (e) {
+                    fallbackFromVideo(id, link, reward, timer, 'ভিডিও অ্যাড লোড হয়নি।');
+                }
             }
         }
 
-        document.addEventListener('visibilitychange', () => {
-            if (!pendingAd) return;
-            if (document.hidden) {
-                pendingAd.hiddenAt = Date.now();
+        function fallbackFromVideo(id, link, reward, timer, reasonMsg) {
+            const btn = document.getElementById('btn-' + id);
+            if (btn) { btn.disabled = false; btn.innerText = 'ভিডিও দেখুন'; }
+            if (link) {
+                openAdOverlay(id, link, reward, Math.max(15, Number(timer) || 15), () => completeTask(id, reward, 'টাস্ক'));
             } else {
-                if (pendingAd.hiddenAt) {
-                    pendingAd.accumulated += (Date.now() - pendingAd.hiddenAt) / 1000;
-                    pendingAd.hiddenAt = null;
+                alert(`${reasonMsg} এই টাস্কে বিকল্প লিংকও নেই — এডমিনকে টাস্কের ধরন "লিংক" বা "কুইজ"-এ পরিবর্তন করতে বলুন।`);
+            }
+        }
+
+        /* openAdOverlay: opens the ad inside the SPA (iframe) so the user
+           is never taken out of the app. If the ad network blocks framing
+           (common — many networks, including Monetag direct-link units,
+           refuse to load inside an iframe), the fallback link opens it in
+           a normal browser tab instead — the countdown keeps running in
+           the background regardless, and the "অ্যাড দেখেছি — অ্যাপে ফিরে
+           আসুন" button is always visible so there's always an explicit,
+           obvious way back into the app (switch tabs, then tap it) instead
+           of the user being stuck wondering what to do next. onDone runs
+           the moment the user comes back and taps the button/skip — this
+           is what credits the reward "সরাসরি" (immediately). */
+        function openAdOverlay(taskId, link, reward, requiredSeconds, onDone) {
+            activeAd = { taskId, reward, requiredSeconds, remaining: requiredSeconds, onDone };
+
+            document.getElementById('ad-overlay-frame').src = link;
+            document.getElementById('ad-overlay-fallback').href = link;
+            const timerEl = document.getElementById('ad-overlay-timer');
+            const skipBtn = document.getElementById('ad-overlay-skip');
+            const returnBtn = document.getElementById('ad-overlay-return');
+            skipBtn.style.display = 'none';
+            returnBtn.style.display = 'none';
+            timerEl.style.display = 'inline-block';
+            timerEl.innerText = `স্কিপ করা যাবে ${requiredSeconds}সে পর`;
+            document.getElementById('ad-overlay').style.display = 'flex';
+
+            activeAd.intervalId = setInterval(() => {
+                activeAd.remaining--;
+                if (activeAd.remaining <= 0) {
+                    clearInterval(activeAd.intervalId);
+                    timerEl.style.display = 'none';
+                    skipBtn.style.display = 'inline-flex';
+                    returnBtn.style.display = 'block';
+                } else {
+                    timerEl.innerText = `স্কিপ করা যাবে ${activeAd.remaining}সে পর`;
                 }
-                renderAdProgress();
+            }, 1000);
+
+            const finish = () => {
+                const cb = activeAd && activeAd.onDone;
+                closeAdOverlay();
+                if (cb) cb();
+            };
+            skipBtn.onclick = finish;
+            returnBtn.onclick = finish;
+        }
+
+        function closeAdOverlay() {
+            if (activeAd && activeAd.intervalId) clearInterval(activeAd.intervalId);
+            document.getElementById('ad-overlay').style.display = 'none';
+            document.getElementById('ad-overlay-frame').src = 'about:blank';
+            activeAd = null;
+        }
+
+        let activeQuiz = null;
+
+        function openQuizModal(taskId, link, reward, requiredSeconds) {
+            const a = Math.floor(Math.random() * 20) + 1;
+            const b = Math.floor(Math.random() * 20) + 1;
+            const useMinus = Math.random() < 0.5 && a > b;
+            const correctAnswer = useMinus ? a - b : a + b;
+            document.getElementById('quiz-question').innerText = `${a} ${useMinus ? '−' : '+'} ${b} = ?`;
+            document.getElementById('quiz-answer').value = '';
+            document.getElementById('quiz-error').style.display = 'none';
+            activeQuiz = { taskId, link, reward, requiredSeconds, correctAnswer };
+            document.getElementById('quiz-overlay').style.display = 'flex';
+        }
+
+        document.getElementById('quiz-submit').addEventListener('click', () => {
+            if (!activeQuiz) return;
+            const given = Number(document.getElementById('quiz-answer').value);
+            if (given === activeQuiz.correctAnswer) {
+                const { taskId, link, reward, requiredSeconds } = activeQuiz;
+                document.getElementById('quiz-overlay').style.display = 'none';
+                activeQuiz = null;
+                if (!link) { alert('এই কুইজ টাস্কে কোনো অ্যাড লিংক সেট করা নেই। এডমিনকে জানান।'); return; }
+                openAdOverlay(taskId, link, reward, requiredSeconds, () => completeTask(taskId, reward, 'টাস্ক'));
+            } else {
+                document.getElementById('quiz-error').style.display = 'block';
             }
         });
+        document.getElementById('quiz-cancel').addEventListener('click', () => {
+            activeQuiz = null;
+            document.getElementById('quiz-overlay').style.display = 'none';
+        });
 
-        function renderAdProgress() {
-            if (!pendingAd) return;
-            const p = pendingAd;
-            const remaining = Math.max(0, Math.round(p.requiredSeconds - p.accumulated));
-            const pct = Math.min(100, (p.accumulated / p.requiredSeconds) * 100);
+        /* ---------------------------------------------------------------
+           MATH-EARN SERVICE — unlimited auto-generated math problems.
+           Reward per correct answer (appConfig.math_reward) and the ad
+           length (appConfig.math_ad_seconds) both come from app_config,
+           so you control them from the admin panel without touching code
+           — and a daily cap (appConfig.math_daily_limit) stops a single
+           user from doing this without bound. Set math_reward comfortably
+           below what your Monetag zone actually pays per view (check the
+           Monetag dashboard CPM/RPM for these zone IDs) — that margin is
+           what keeps this feature profitable for you instead of a loss.
+           --------------------------------------------------------------- */
+        let activeMath = null;
 
-            const fill = document.getElementById(`fill-${p.taskId}`);
-            const btn = document.getElementById(`btn-${p.taskId}`);
-            if (fill) fill.style.width = pct + '%';
+        function todayStr(){ return new Date().toDateString(); }
 
-            if (remaining <= 0) {
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerText = 'রিওয়ার্ড নিন ✓';
-                    btn.onclick = () => {
-                        completeTask(p.taskId, p.reward, 'টাস্ক');
-                        pendingAd = null;
-                    };
-                }
-                document.getElementById('ad-watch-banner').style.display = 'none';
-                return;
-            }
-
-            if (btn) { btn.disabled = true; btn.innerText = `আরও ${Math.ceil(remaining)}সে দরকার`; }
-
-            // User came back to this tab too early — nudge them back instead of paying out.
-            if (!document.hidden) {
-                const ring = document.getElementById('ring-progress');
-                const seconds = document.getElementById('ring-seconds');
-                const circumference = 264;
-                ring.setAttribute('stroke-dashoffset', circumference - (pct / 100) * circumference);
-                seconds.innerText = Math.ceil(remaining) + 'সে';
-                document.getElementById('ad-watch-banner').style.display = 'flex';
-                document.getElementById('ad-watch-reopen').onclick = () => {
-                    window.open(p.link, '_blank');
-                    document.getElementById('ad-watch-banner').style.display = 'none';
-                };
+        function renderMathLimit(){
+            if (!userData) return;
+            const doneToday = (userData.math_last_date === todayStr()) ? (userData.math_completed_today || 0) : 0;
+            const limit = appConfig.math_daily_limit || 20;
+            const note = document.getElementById('math-limit-note');
+            const btn = document.getElementById('math-start-btn');
+            if (doneToday >= limit) {
+                note.innerText = `আজকের লিমিট শেষ (${doneToday}/${limit}) — আগামীকাল আবার চেষ্টা করুন।`;
+                btn.classList.add('btn-disabled');
+                btn.disabled = true;
+            } else {
+                note.innerText = `আজকে করেছেন ${doneToday}/${limit}`;
+                btn.classList.remove('btn-disabled');
+                btn.disabled = false;
             }
         }
 
-        // ---------------------------------------------------------------
-        // Second ad network placeholder. Once you give me the network
-        // name + zone/publisher ID (from their dashboard), this becomes
-        // the real trigger — e.g. a rewarded interstitial shown here
-        // instead of / alongside the direct-link flow above.
-        // ---------------------------------------------------------------
+        function startMathEarn() {
+            if (!userData) return alert('ডাটা লোড হচ্ছে, একটু পর আবার চেষ্টা করুন।');
+            const doneToday = (userData.math_last_date === todayStr()) ? (userData.math_completed_today || 0) : 0;
+            if (doneToday >= (appConfig.math_daily_limit || 20)) return renderMathLimit();
+
+            const a = Math.floor(Math.random() * 30) + 1;
+            const b = Math.floor(Math.random() * 30) + 1;
+            const useMinus = Math.random() < 0.5 && a > b;
+            const correctAnswer = useMinus ? a - b : a + b;
+            document.getElementById('math-question').innerText = `${a} ${useMinus ? '−' : '+'} ${b} = ?`;
+            document.getElementById('math-answer').value = '';
+            document.getElementById('math-error').style.display = 'none';
+            activeMath = { correctAnswer };
+            document.getElementById('math-overlay').style.display = 'flex';
+        }
+
+        document.getElementById('math-submit').addEventListener('click', () => {
+            if (!activeMath) return;
+            const given = Number(document.getElementById('math-answer').value);
+            if (given === activeMath.correctAnswer) {
+                document.getElementById('math-overlay').style.display = 'none';
+                activeMath = null;
+                const link = MATH_AD_LINKS[Math.floor(Math.random() * MATH_AD_LINKS.length)];
+                const seconds = appConfig.math_ad_seconds || 30;
+                openAdOverlay('math', link, appConfig.math_reward || 0.20, seconds, completeMathEarn);
+            } else {
+                document.getElementById('math-error').style.display = 'block';
+            }
+        });
+        document.getElementById('math-cancel').addEventListener('click', () => {
+            activeMath = null;
+            document.getElementById('math-overlay').style.display = 'none';
+        });
+
+        async function completeMathEarn() {
+            if (!userData) return;
+            const reward = appConfig.math_reward || 0.20;
+            const today = todayStr();
+            const doneToday = (userData.math_last_date === today) ? (userData.math_completed_today || 0) + 1 : 1;
+            await db.collection('users').doc(userData.uid).update({
+                balance: firebase.firestore.FieldValue.increment(reward),
+                total_earned: firebase.firestore.FieldValue.increment(reward),
+                math_last_date: today,
+                math_completed_today: doneToday,
+                earn_log: firebase.firestore.FieldValue.arrayUnion({ label: 'অংক টাস্ক', amount: reward, at: Date.now() })
+            });
+            alert(`৳${reward.toFixed(2)} যোগ হয়েছে! আরেকটা অংক করতে চান?`);
+            await maybeCreditReferrer();
+        }
+
         function showNetworkAd(onComplete) {
-            console.warn('showNetworkAd(): no ad network configured yet — paste the script tag in <head> and tell Claude the network name to wire this up.');
+            console.warn('showNetworkAd(): no ad network configured yet.');
         }
 
         async function completeTask(taskId, reward, label) {
+            if (!userData) return alert('ডাটা লোড হচ্ছে, একটু পর আবার চেষ্টা করুন।');
             const taskKey = `completed_tasks.${taskId}`;
             const logEntry = { label: label, amount: reward, at: Date.now() };
             await db.collection('users').doc(userData.uid).update({
@@ -605,8 +781,6 @@
             await maybeCreditReferrer();
         }
 
-        // Referral bonus only fires once the referred user has completed
-        // enough real tasks — not just for signing up.
         async function maybeCreditReferrer() {
             const fresh = (await db.collection('users').doc(userData.uid).get()).data();
             if (!fresh.referredBy || fresh.referBonusGiven) return;
@@ -629,6 +803,7 @@
         }
 
         async function collectDailyBonus() {
+            if (!userData) return alert('ডাটা লোড হচ্ছে, একটু পর আবার চেষ্টা করুন।');
             const today = new Date().toDateString();
             if (userData.lastBonus === today) return;
             document.getElementById('daily-coin').classList.add('spin');
@@ -643,6 +818,7 @@
         }
 
         async function withdrawRequest() {
+            if (!userData) return alert('ডাটা লোড হচ্ছে, একটু পর আবার চেষ্টা করুন।');
             const amt = parseFloat(document.getElementById('wd-amount').value);
             const num = document.getElementById('wd-number').value.trim();
             const min = appConfig.min_withdraw || 50;
@@ -711,7 +887,8 @@
                     referCodeLower: uid.substring(0, 6).toLowerCase(),
                     referredBy: r || null,
                     referBonusGiven: false,
-                    earn_log: []
+                    earn_log: [],
+                    math_completed_today: 0, math_last_date: ''
                 });
                 alert('একাউন্ট তৈরি হয়েছে! স্বাগতম।');
             } catch (err) { alert(err.message); }
