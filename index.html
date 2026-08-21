@@ -15,6 +15,13 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
+  <!-- Telegram WebApp SDK (required so window.Telegram.WebApp / initData exist
+       when this page is opened inside an actual Telegram Mini App). Without
+       this script, isInsideTelegram() below always returns false, which is
+       why the AdsGram button previously never showed a real ad even inside
+       Telegram. -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
   <!-- AdsGram SDK (Telegram Mini App rewarded ads) -->
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
@@ -227,7 +234,7 @@
             <div class="text-xs font-bold">টেলিগ্রাম এডসগ্রাম ভিডিও এড দেখুন</div>
           </div>
         </div>
-        <button onclick="watchAdsgramAd()" class="px-3 py-1.5 bg-cyan-500 hover:bg-cyan-400 text-white rounded-xl text-[11px] font-bold shadow-xs active:scale-95 transition-all">
+        <button id="btn-adsgram" onclick="watchAdsgramAd()" class="px-3 py-1.5 bg-cyan-500 hover:bg-cyan-400 text-white rounded-xl text-[11px] font-bold shadow-xs active:scale-95 transition-all">
           এড দেখুন
         </button>
       </div>
@@ -782,15 +789,6 @@
     const MIN_AD_HIDDEN_MS = 8000;
 
     // AdsGram block id (provided by the person running this app).
-    // NOTE: We deliberately do NOT call window.Adsgram.init() here at page
-    // load. AdsGram's SDK reads Telegram's WebApp launch parameters as part
-    // of init(), and if it can't find them (i.e. the page isn't opened
-    // inside an actual Telegram Mini App) it pops its own native alert
-    // ("Unable to retrieve launch parameters..."). To avoid that popup when
-    // someone opens this page in a regular browser (e.g. for testing), we
-    // only detect the Telegram environment here and defer the real
-    // Adsgram.init() call to the moment the user taps the AdsGram button —
-    // and only when running inside Telegram.
     const ADSGRAM_BLOCK_ID = 'int-43941';
     let adsgramController = null;
     function isInsideTelegram() {
@@ -959,9 +957,6 @@
         const raw = localStorage.getItem('tc_pending_reward');
         if (raw) {
           const p = JSON.parse(raw);
-          // Only auto-credit if the recorded hidden-time actually satisfied
-          // the minimum verification threshold (real ad view), and it hasn't
-          // already been claimed / is not stale (older than 10 minutes).
           const isFresh = p && (Date.now() - (p.time || 0)) < 10 * 60 * 1000;
           if (p && p.verified && p.coins > 0 && isFresh) {
             appData.user.coins = (appData.user.coins || 0) + p.coins;
@@ -1199,9 +1194,6 @@
       try {
         const userKey = sanitizeKey(appData.user.phone || appData.user.id);
         
-        // Live-sync THIS logged-in user's own record only (coins/cash as
-        // edited from the admin panel or approved deposits/withdrawals show
-        // up here instantly without needing a page refresh).
         fbDatabase.ref('users/' + userKey).on('value', (snapshot) => {
           const cloudUser = snapshot.val();
           if (cloudUser && typeof cloudUser === 'object') {
@@ -1210,7 +1202,6 @@
           }
         });
 
-        // Live-sync this user's own deposit/withdrawal history status
         fbDatabase.ref('deposits').orderByChild('userPhone').equalTo(appData.user.phone).on('value', (snapshot) => {
           const cloudDeps = snapshot.val();
           const history = document.getElementById('user-deposit-history');
@@ -1247,8 +1238,6 @@
           }
         });
 
-        // Live Realtime Ad Links Sync from Admin Panel — updates instantly,
-        // no refresh needed, so the very next ad click already uses the new link.
         fbDatabase.ref('adLinks').on('value', (snapshot) => {
           const cloudAds = snapshot.val();
           if (cloudAds) {
@@ -1257,7 +1246,6 @@
           }
         });
 
-        // Live Tasks Sync from Admin Panel
         fbDatabase.ref('tasks').on('value', (snapshot) => {
           const cloudTasks = snapshot.val();
           if (cloudTasks) {
@@ -1274,7 +1262,6 @@
           }
         });
 
-        // Live Deposit Methods Sync from Admin Panel
         fbDatabase.ref('depositMethods').on('value', (snapshot) => {
           const cloudMethods = snapshot.val();
           if (cloudMethods && Array.isArray(cloudMethods) && cloudMethods.length > 0) {
@@ -1434,20 +1421,6 @@
 
     // ==========================================
     // AD REWARD VERIFICATION SYSTEM (in-app modal ad tasks)
-    // ------------------------------------------
-    // Real ad-network verification (server-side postback / SDK confirmation)
-    // is not possible from a plain static HTML page for arbitrary third-party
-    // links — that requires a real ad-network integration. What we CAN do
-    // reliably on the client is use the Page Visibility API to measure how
-    // long the user actually spent away from this tab (i.e. on the ad page)
-    // after clicking "watch ad", and only unlock the claim button once that
-    // real away-time crosses a minimum threshold. This closes the old
-    // loophole where the countdown ran on wall-clock time regardless of
-    // whether the user ever left the tab, and it also means returning to
-    // this tab (or pressing back) keeps the user right where they were —
-    // inside the modal / current task — instead of bouncing them back to
-    // the login screen, because session state lives in localStorage and is
-    // never cleared by this flow.
     // ==========================================
     let pendingRewardCoins = 0;
     let pendingRewardTitle = '';
@@ -1536,8 +1509,6 @@
       adInterval = setInterval(updateAdVerificationProgress, 400);
     }
 
-    // Accumulates real "document hidden" time (i.e. actual time spent on the
-    // ad tab) rather than trusting flat elapsed wall-clock time.
     document.addEventListener('visibilitychange', () => {
       if (!hasUserClickedAd) return;
       if (document.visibilityState === 'hidden') {
@@ -1622,13 +1593,16 @@
     // ADSGRAM INTEGRATION (Telegram Mini App rewarded ads)
     // ------------------------------------------
     // Uses AdsGram's official SDK (window.Adsgram), block id int-43941.
-    // AdsGram itself confirms ad completion through its SDK promise — no
-    // fake timers are needed here, the reward is only credited once
-    // AdsGram's own show() promise resolves successfully. This only works
-    // inside a Telegram Mini App context; outside Telegram the SDK script
-    // won't load a real controller, so we detect that and tell the user.
+    // The reward is only credited once AdsGram's own show() promise
+    // resolves successfully — no fake timers. While the ad request/show is
+    // in-flight, the button is put into the same disabled/loading look the
+    // other earning buttons use, so the interaction feels consistent across
+    // the whole app.
     // ==========================================
     function watchAdsgramAd() {
+      const btn = document.getElementById('btn-adsgram');
+      const defaultBtnHtml = 'এড দেখুন';
+
       if ((appData.user.dailyAdsgram || 0) <= 0) {
         return alert('আজকের AdsGram এড লিমিট শেষ! আগামীকাল আবার চেষ্টা করুন।');
       }
@@ -1647,6 +1621,12 @@
         return;
       }
 
+      if (btn) {
+        btn.disabled = true;
+        btn.classList.add('opacity-60', 'cursor-not-allowed');
+        btn.innerText = 'লোড হচ্ছে...';
+      }
+
       adsgramController.show()
         .then(() => {
           // Resolves only when the user actually watched the AdsGram ad through.
@@ -1659,6 +1639,13 @@
         })
         .catch(() => {
           showToast('⚠️ এড সম্পূর্ণ দেখা হয়নি, তাই রিওয়ার্ড দেওয়া যায়নি।');
+        })
+        .finally(() => {
+          if (btn) {
+            btn.disabled = false;
+            btn.classList.remove('opacity-60', 'cursor-not-allowed');
+            btn.innerText = defaultBtnHtml;
+          }
         });
     }
 
@@ -2069,6 +2056,16 @@
 
     window.onload = () => {
       lucide.createIcons();
+
+      // Initialize Telegram WebApp (if running inside Telegram) so the
+      // Mini App gets full-height layout and Telegram knows the page is ready.
+      try {
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.ready();
+          window.Telegram.WebApp.expand();
+        }
+      } catch(e) {}
+
       checkActiveSession();
     };
   </script>
