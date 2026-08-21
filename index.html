@@ -223,23 +223,6 @@
       </div>
     </div>
 
-    <div class="px-4 pt-2.5">
-      <div class="bg-gradient-to-r from-sky-950 to-cyan-950 border border-cyan-500/30 rounded-2xl p-3 text-white flex items-center justify-between shadow-xs">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-cyan-500/30 text-cyan-300 flex items-center justify-center">
-            <i data-lucide="play-circle" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <div class="text-[10px] uppercase font-bold text-cyan-300 tracking-wider">AdsGram নেটওয়ার্ক</div>
-            <div class="text-xs font-bold">টেলিগ্রাম এডসগ্রাম ভিডিও এড দেখুন</div>
-          </div>
-        </div>
-        <button id="btn-adsgram" onclick="watchAdsgramAd()" class="px-3 py-1.5 bg-cyan-500 hover:bg-cyan-400 text-white rounded-xl text-[11px] font-bold shadow-xs active:scale-95 transition-all">
-          এড দেখুন
-        </button>
-      </div>
-    </div>
-
     <main class="flex-1 p-4 overflow-y-auto space-y-4">
       
       <section id="view-home" class="space-y-4">
@@ -280,7 +263,7 @@
             <span class="text-[11px] text-slate-500 font-normal">প্রতিদিন সীমিত সংখ্যক</span>
           </h3>
           
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
             <button onclick="openSpinModal()" class="bg-white border border-slate-200 hover:border-amber-400 p-3 rounded-2xl text-center flex flex-col items-center shadow-2xs active:scale-95 transition-all">
               <div class="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center mb-1.5 shadow-md shadow-amber-500/20">
                 <i data-lucide="sparkles" class="w-5 h-5"></i>
@@ -311,6 +294,14 @@
               </div>
               <span class="text-xs font-bold text-slate-800">ক্যাপচা জব</span>
               <span id="captcha-count" class="text-[10px] text-cyan-700 font-semibold">৫ টি বাকি</span>
+            </button>
+
+            <button id="btn-adsgram" onclick="watchAdsgramAd()" class="bg-white border border-slate-200 hover:border-sky-400 p-3 rounded-2xl text-center flex flex-col items-center shadow-2xs active:scale-95 transition-all">
+              <div class="w-10 h-10 rounded-2xl bg-sky-600 text-white flex items-center justify-center mb-1.5 shadow-md shadow-sky-600/20">
+                <i data-lucide="play-circle" class="w-5 h-5"></i>
+              </div>
+              <span class="text-xs font-bold text-slate-800">এডসগ্রাম এড</span>
+              <span id="adsgram-count" class="text-[10px] text-sky-700 font-semibold">১০ টি বাকি</span>
             </button>
           </div>
         </div>
@@ -1290,6 +1281,7 @@
       document.getElementById('spin-count').innerText = `${appData.user.dailySpins || 0} টি বাকি`;
       document.getElementById('quiz-count').innerText = `${appData.user.dailyQuiz || 0} টি বাকি`;
       document.getElementById('captcha-count').innerText = `${appData.user.dailyCaptcha || 0} টি বাকি`;
+      document.getElementById('adsgram-count').innerText = `${appData.user.dailyAdsgram || 0} টি বাকি`;
       document.getElementById('u-refer-count').innerText = `${appData.user.referralCount || 0} জন`;
       document.getElementById('u-refer-commission').innerText = `${appData.user.referralBonusCoins || 0} কয়েন`;
       document.getElementById('refer-code-box').innerText = appData.user.referralCode || 'RAKIB77';
@@ -1601,7 +1593,6 @@
     // ==========================================
     function watchAdsgramAd() {
       const btn = document.getElementById('btn-adsgram');
-      const defaultBtnHtml = 'এড দেখুন';
 
       if ((appData.user.dailyAdsgram || 0) <= 0) {
         return alert('আজকের AdsGram এড লিমিট শেষ! আগামীকাল আবার চেষ্টা করুন।');
@@ -1621,10 +1612,11 @@
         return;
       }
 
+      // Same disabled/dimmed loading feel as the other instant-earning cards,
+      // without touching the card's icon/label/count markup.
       if (btn) {
         btn.disabled = true;
-        btn.classList.add('opacity-60', 'cursor-not-allowed');
-        btn.innerText = 'লোড হচ্ছে...';
+        btn.classList.add('opacity-60', 'pointer-events-none');
       }
 
       adsgramController.show()
@@ -1643,8 +1635,7 @@
         .finally(() => {
           if (btn) {
             btn.disabled = false;
-            btn.classList.remove('opacity-60', 'cursor-not-allowed');
-            btn.innerText = defaultBtnHtml;
+            btn.classList.remove('opacity-60', 'pointer-events-none');
           }
         });
     }
