@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Task Cash Pro </title>
-  
+  <script src='//libtl.com/sdk.js' data-zone='11663016' data-sdk='show_11663016'></script>
   <script>
     window.tailwind = { config: { corePlugins: { preflight: true } } };
   </script>
@@ -2049,8 +2049,7 @@
 
     window.onload = () => {
       lucide.createIcons();
-
-      // Initialize Telegram WebApp (if running inside Telegram) so the
+// Initialize Telegram WebApp (if running inside Telegram) so the
       // Mini App gets full-height layout and Telegram knows the page is ready.
       try {
         if (window.Telegram && window.Telegram.WebApp) {
@@ -2062,5 +2061,30 @@
       checkActiveSession();
     };
   </script>
+
+  <script>
+  // In-App Interstitial
+  show_11663016({
+    type: 'inApp',
+    inAppSettings: {
+      frequency: 2,
+      capping: 0.1,
+      interval: 30,
+      timeout: 5,
+      everyPage: false
+    }
+  })
+  </script>
+
+  /*
+  This value is decoded as follows:
+    - show automatically 2 ads
+    within 0.1 hours (6 minutes)
+    with a 30-second interval between them
+    and a 5-second delay before the first one is shown.
+    The last digit, 0, means that the session will be saved when you navigate between pages.
+    If you set the last digit as 1, then at any transition between pages,
+    the session will be reset, and the ads will start again.
+  */
 </body>
 </html>
