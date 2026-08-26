@@ -804,6 +804,7 @@
         dailyQuiz: 5,
         dailyCaptcha: 5,
         dailyAdsgram: 10,
+        dailyMonetag: 30,
         referralCode: 'RAKIB77',
         referralCount: 0,
         referralBonusCoins: 0,
@@ -987,6 +988,7 @@
         dailyQuiz: 5,
         dailyCaptcha: 5,
         dailyAdsgram: 10,
+        dailyMonetag: 30,
         referralCode: 'TC' + phone.substring(7) + Math.floor(10 + Math.random() * 90),
         referralCount: 0,
         referralBonusCoins: 0,
@@ -1119,6 +1121,7 @@
           dailyQuiz: appData.user.dailyQuiz,
           dailyCaptcha: appData.user.dailyCaptcha,
           dailyAdsgram: appData.user.dailyAdsgram,
+          dailyMonetag: appData.user.dailyMonetag,
           referralCount: appData.user.referralCount,
           referralBonusCoins: appData.user.referralBonusCoins,
           completedTaskIds: appData.user.completedTaskIds || []
@@ -1427,45 +1430,21 @@
     let adRewardVerified = false;
 
     function triggerAdAndReward(title, coins, customAdUrl) {
-      pendingRewardCoins = coins;
-      pendingRewardTitle = title;
-      hasUserClickedAd = false;
-      adHiddenAccumMs = 0;
-      adLastHiddenAt = 0;
-      adRewardVerified = false;
-      currentAdUrl = customAdUrl || appData.adLinks?.spinAd || 'https://google.com';
-      
-      const modal = document.getElementById('modal-interstitial-ad');
-      const countEl = document.getElementById('ad-countdown-number');
-      const timerLabel = document.getElementById('ad-timer-label');
-      const claimBtn = document.getElementById('ad-claim-btn');
-      const actionBtn = document.getElementById('ad-action-btn');
-      const adModalSubtitle = document.getElementById('ad-modal-subtitle');
-      const verifyNote = document.getElementById('ad-verify-note');
-
-      adModalSubtitle.innerText = `${title} থেকে +${coins} কয়েন পেতে আগে নিচের বাটনে চাপ দিয়ে বিজ্ঞাপনটি দেখুন`;
-      if (timerLabel) timerLabel.innerText = 'বিজ্ঞাপন স্ট্যাটাস';
-      if (countEl) {
-        countEl.innerText = 'লকড 🔒';
-        countEl.className = 'text-2xl font-black font-mono text-amber-400';
+      // Monetag Rewarded Interstitial — replaces the old custom modal flow.
+      // Limit: 30 rewarded ads per day across all ad-income actions.
+      if ((appData.user.dailyMonetag || 0) <= 0) {
+        return alert('আজকের এড দেখে ইনকাম লিমিট শেষ! আগামীকাল আবার চেষ্টা করুন।');
       }
-      if (verifyNote) verifyNote.innerText = 'বিজ্ঞাপন ট্যাবে অন্তত ৮ সেকেন্ড থাকলেই রিওয়ার্ড আনলক হবে';
-      
-      if (actionBtn) {
-        actionBtn.innerHTML = `<i data-lucide="external-link" class="w-4 h-4"></i> ১. বিজ্ঞাপন দেখুন (ওপেন করুন)`;
-        actionBtn.classList.add('animate-pulse');
-        actionBtn.classList.remove('hidden');
-      }
-      if (claimBtn) {
-        claimBtn.classList.add('hidden');
-        claimBtn.disabled = true;
-        claimBtn.className = 'w-full py-2.5 bg-slate-300 text-slate-500 font-bold rounded-xl text-xs hidden flex items-center justify-center gap-1.5 cursor-not-allowed';
-      }
-
-      modal.classList.remove('hidden');
-
-      if (adInterval) clearInterval(adInterval);
-      lucide.createIcons();
+      show_11663161().then(() => {
+        appData.user.dailyMonetag = (appData.user.dailyMonetag || 1) - 1;
+        appData.user.coins = (appData.user.coins || 0) + coins;
+        saveData();
+        renderUserHeader();
+        confetti({ particleCount: 80, spread: 70 });
+        showToast(`🎉 অভিনন্দন! +${coins} কয়েন আপনার অ্যাকাউন্টে যুক্ত হয়েছে! (${title})`);
+      }).catch(() => {
+        showToast('⚠️ এড সম্পূর্ণ দেখা হয়নি, তাই রিওয়ার্ড দেওয়া যায়নি।');
+      });
     }
 
     function openAdLinkSafely() {
@@ -1777,10 +1756,27 @@
 
     function executeSpinAnimation() {
       if ((appData.user.dailySpins || 0) <= 0) return;
+      if ((appData.user.dailyMonetag || 0) <= 0) {
+        return alert('আজকের এড দেখে ইনকাম লিমিট শেষ! আগামীকাল আবার চেষ্টা করুন।');
+      }
       appData.user.dailySpins--;
       const won = SLICES[Math.floor(Math.random() * SLICES.length)].coins;
       closeModal('modal-spin');
-      triggerAdAndReward('লাকি স্পিন', won, appData.adLinks?.spinAd || 'https://google.com');
+      // Monetag Rewarded Interstitial
+      show_11663161().then(() => {
+        appData.user.dailyMonetag = (appData.user.dailyMonetag || 1) - 1;
+        appData.user.coins = (appData.user.coins || 0) + won;
+        saveData();
+        renderUserHeader();
+        confetti({ particleCount: 80, spread: 70 });
+        showToast(`🎉 লাকি স্পিন থেকে +${won} কয়েন যুক্ত হয়েছে!`);
+      }).catch(() => {
+        // restore spin if ad failed
+        appData.user.dailySpins = (appData.user.dailySpins || 0) + 1;
+        saveData();
+        renderUserHeader();
+        showToast('⚠️ এড সম্পূর্ণ দেখা হয়নি, তাই রিওয়ার্ড দেওয়া যায়নি। স্পিন ফিরিয়ে দেওয়া হয়েছে।');
+      });
     }
 
     function generateQuiz() {
@@ -1873,14 +1869,23 @@
     }
 
     function claimDailyBonus() {
-      appData.user.coins += 5;
-      appData.user.checkInStreak = (appData.user.checkInStreak || 0) + 1;
-      saveData();
-      renderUserHeader();
-      confetti({ particleCount: 70, spread: 60 });
-      document.getElementById('btn-checkin').innerText = 'আজ ক্লেইমড';
-      document.getElementById('btn-checkin').disabled = true;
-      showToast('🎉 অভিনন্দন! দৈনিক লগইন বোনাস ৫ কয়েন পেয়েছেন!');
+      if ((appData.user.dailyMonetag || 0) <= 0) {
+        return alert('আজকের এড দেখে ইনকাম লিমিট শেষ! আগামীকাল আবার চেষ্টা করুন।');
+      }
+      // Monetag Rewarded Interstitial
+      show_11663161().then(() => {
+        appData.user.dailyMonetag = (appData.user.dailyMonetag || 1) - 1;
+        appData.user.coins += 5;
+        appData.user.checkInStreak = (appData.user.checkInStreak || 0) + 1;
+        saveData();
+        renderUserHeader();
+        confetti({ particleCount: 70, spread: 60 });
+        document.getElementById('btn-checkin').innerText = 'আজ ক্লেইমড';
+        document.getElementById('btn-checkin').disabled = true;
+        showToast('🎉 অভিনন্দন! দৈনিক লগইন বোনাস ৫ কয়েন পেয়েছেন!');
+      }).catch(() => {
+        showToast('⚠️ এড সম্পূর্ণ দেখা হয়নি, তাই রিওয়ার্ড দেওয়া যায়নি।');
+      });
     }
 
     function handleRedeemPromo(e) {
