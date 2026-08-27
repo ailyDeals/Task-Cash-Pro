@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Task Cash Pro </title>
-<script src='//libtl.com/sdk.js' data-zone='11663161' data-sdk='show_11663161'></script>
+<script src='//libtl.com/sdk.js' data-zone='10335982' data-sdk='show_10335982'></script>
   <script>
     window.tailwind = { config: { corePlugins: { preflight: true } } };
   </script>
@@ -55,7 +55,13 @@
 </head>
 <body class="bg-slate-900 text-slate-800 antialiased font-sans min-h-screen flex justify-center selection:bg-emerald-500 selection:text-white">
 
-  <div id="toast-container" class="fixed top-4 right-4 z-50 pointer-events-none space-y-2"></div>
+  <div id="toast-container" class="fixed top-4 right-4 z-50 pointer-events-none space-y-2 max-w-[90vw]"></div>
+  <div id="global-loading" class="fixed inset-0 bg-black/60 z-[60] hidden items-center justify-center">
+    <div class="bg-slate-900 text-white px-6 py-4 rounded-2xl flex items-center gap-3 border border-emerald-500/40 shadow-xl">
+      <div class="w-5 h-5 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin"></div>
+      <span class="text-sm font-bold" id="global-loading-text">প্রসেসিং...</span>
+    </div>
+  </div>
 
   <!-- AUTH SCREEN (LOGIN & REGISTER) -->
   <div id="auth-screen" class="w-full max-w-md bg-slate-900 min-h-screen flex flex-col justify-center p-5 relative z-50 text-white">
@@ -265,13 +271,13 @@
             <span class="text-[11px] text-slate-500 font-normal">প্রতিদিন সীমিত সংখ্যক</span>
           </h3>
           
-          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
             <button onclick="openSpinModal()" class="bg-white border border-slate-200 hover:border-amber-400 p-3 rounded-2xl text-center flex flex-col items-center shadow-2xs active:scale-95 transition-all">
               <div class="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center mb-1.5 shadow-md shadow-amber-500/20">
                 <i data-lucide="sparkles" class="w-5 h-5"></i>
               </div>
               <span class="text-xs font-bold text-slate-800">লাকি স্পিন</span>
-              <span id="spin-count" class="text-[10px] text-emerald-600 font-semibold">৫ টি বাকি</span>
+              <span id="spin-count" class="text-[10px] text-emerald-600 font-semibold">৪ টি বাকি</span>
             </button>
 
             <button onclick="openQuizModal()" class="bg-white border border-slate-200 hover:border-emerald-400 p-3 rounded-2xl text-center flex flex-col items-center shadow-2xs active:scale-95 transition-all">
@@ -279,7 +285,7 @@
                 <i data-lucide="brain" class="w-5 h-5"></i>
               </div>
               <span class="text-xs font-bold text-slate-800">ম্যাথ কুইজ</span>
-              <span id="quiz-count" class="text-[10px] text-emerald-600 font-semibold">৫ টি বাকি</span>
+              <span id="quiz-count" class="text-[10px] text-emerald-600 font-semibold">৪ টি বাকি</span>
             </button>
 
             <button onclick="openScratchModal()" class="bg-white border border-slate-200 hover:border-purple-400 p-3 rounded-2xl text-center flex flex-col items-center shadow-2xs active:scale-95 transition-all">
@@ -303,7 +309,15 @@
                 <i data-lucide="play-circle" class="w-5 h-5"></i>
               </div>
               <span class="text-xs font-bold text-slate-800">এডসগ্রাম এড</span>
-              <span id="adsgram-count" class="text-[10px] text-sky-700 font-semibold">১০ টি বাকি</span>
+              <span id="adsgram-count" class="text-[10px] text-sky-700 font-semibold">৮ টি বাকি</span>
+            </button>
+
+            <button id="btn-watch-ads-only" onclick="watchThreeAdsOnly()" class="bg-white border border-slate-200 hover:border-rose-400 p-3 rounded-2xl text-center flex flex-col items-center shadow-2xs active:scale-95 transition-all">
+              <div class="w-10 h-10 rounded-2xl bg-rose-600 text-white flex items-center justify-center mb-1.5 shadow-md shadow-rose-600/20">
+                <i data-lucide="clapperboard" class="w-5 h-5"></i>
+              </div>
+              <span class="text-xs font-bold text-slate-800">শুধু এড দেখুন</span>
+              <span id="monetag-ads-count" class="text-[10px] text-rose-700 font-semibold">২০ টি বাকি</span>
             </button>
           </div>
         </div>
@@ -486,7 +500,7 @@
           <h3 class="text-base font-black flex items-center gap-1.5">
             <i data-lucide="wallet" class="w-5 h-5"></i> টাকা উত্তোলন / ক্যাশআউট
           </h3>
-          <p class="text-xs text-emerald-100 mt-0.5">১০০ কয়েন = ৳১ টাকা। সর্বনিম্ন ৫০ টাকা হলে উইথড্র রিকোয়েস্ট করা যাবে, যাচাইয়ের পর পেমেন্ট পাঠানো হবে।</p>
+          <p class="text-xs text-emerald-100 mt-0.5">১৫০ কয়েন = ৳১ টাকা। সর্বনিম্ন ৳১০০ + ন্যূনতম ৮টি সফল রেফারেল থাকলে উইথড্র রিকোয়েস্ট করা যাবে, যাচাইয়ের পর পেমেন্ট পাঠানো হবে।</p>
         </div>
 
         <form onsubmit="handleWithdrawSubmit(event)" class="bg-white border border-slate-200 rounded-3xl p-4 space-y-3 shadow-2xs">
@@ -501,8 +515,8 @@
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">টাকার পরিমাণ (BDT):</label>
-            <input type="number" id="wdr-amount" min="50" value="50" oninput="updateCoinsNeeded(this.value)" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs font-bold text-emerald-700" required>
-            <span id="wdr-coins-text" class="text-[11px] text-slate-500 mt-1 block">কয়েন কর্তন হবে: ৫,০০০ কয়েন</span>
+            <input type="number" id="wdr-amount" min="100" value="100" oninput="updateCoinsNeeded(this.value)" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs font-bold text-emerald-700" required>
+            <span id="wdr-coins-text" class="text-[11px] text-slate-500 mt-1 block">কয়েন কর্তন হবে: ১৫,০০০ কয়েন</span>
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">অ্যাকাউন্ট নম্বর:</label>
@@ -539,7 +553,7 @@
           <div>
             <div class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1.5">আপনার ফুল রেফারেল লিংক</div>
             <div class="flex items-center gap-1.5 bg-slate-50 p-2 rounded-2xl border border-slate-200">
-              <input type="text" id="full-refer-link-input" readonly value="https://taskcash.pro?ref=RAKIB77" class="w-full bg-transparent text-xs text-slate-700 font-mono font-bold px-2 outline-none select-all truncate">
+              <input type="text" id="full-refer-link-input" readonly value="" class="w-full bg-transparent text-xs text-slate-700 font-mono font-bold px-2 outline-none select-all truncate">
               <button onclick="copyReferLink()" class="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold flex items-center gap-1 shrink-0 active:scale-95 transition-all">
                 <i data-lucide="copy" class="w-3.5 h-3.5"></i> কপি
               </button>
@@ -775,15 +789,31 @@
 
     const STORAGE_KEY = 'TASKCASH_PRO_DATA';
     const SESSION_USER_KEY = 'TASKCASH_SESSION_PHONE';
+    const DEVICE_ID_KEY = 'TASKCASH_DEVICE_ID';
 
-    // Minimum real "away from app" time (ms) required on the ad tab before a
-    // reward can be claimed. This is tracked using the Page Visibility API so
-    // a user can't just wait on the same page without actually opening the ad.
-    const MIN_AD_HIDDEN_MS = 8000;
+    // ========== ECONOMY BALANCE (improved for sustainability) ==========
+    // 150 coins = ৳1 (was 100) — better margin for publisher
+    const COINS_PER_BDT = 150;
+    const MIN_WITHDRAW_BDT = 100;          // was 50
+    const MIN_REFS_FOR_WITHDRAW = 8;       // was 5
+    const WELCOME_COINS = 15;
+    const REFERRAL_BONUS_COINS = 15;
 
-    // AdsGram block id (provided by the person running this app).
+    // ========== AD FREQUENCY & ANTI-BAN ==========
+    // Higher cooldown reduces Monetag ban risk
+    const MONETAG_COOLDOWN_MS = 18000;     // 18s between ad requests
+    const SEQUENCE_GAP_MS = 4000;          // gap between ads in a 3-ad sequence
+    const MIN_AD_HIDDEN_MS = 10000;        // user must stay on ad tab ~10s
+    const MAX_DAILY_MONETAG = 20;          // reduced from 30 for safety
+    const MAX_DAILY_ADSGRAM = 8;
+    const MAX_DAILY_SPINS = 4;
+    const MAX_DAILY_QUIZ = 4;
+    const MAX_DAILY_CAPTCHA = 5;
+
+    // AdsGram block id
     const ADSGRAM_BLOCK_ID = 'int-43941';
     let adsgramController = null;
+
     function isInsideTelegram() {
       try {
         return !!(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData);
@@ -792,23 +822,66 @@
       }
     }
 
+    // Simple persistent device id for basic fraud signals
+    function getOrCreateDeviceId() {
+      try {
+        let id = localStorage.getItem(DEVICE_ID_KEY);
+        if (!id) {
+          id = 'd_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+          localStorage.setItem(DEVICE_ID_KEY, id);
+        }
+        return id;
+      } catch (e) {
+        return 'd_unknown';
+      }
+    }
+
+    // Action rate limiter (client-side anti-spam)
+    const actionTimestamps = {};
+    function canPerformAction(actionKey, minIntervalMs) {
+      const now = Date.now();
+      const last = actionTimestamps[actionKey] || 0;
+      if (now - last < minIntervalMs) return false;
+      actionTimestamps[actionKey] = now;
+      return true;
+    }
+
+    function showGlobalLoading(text) {
+      const el = document.getElementById('global-loading');
+      const t = document.getElementById('global-loading-text');
+      if (t) t.innerText = text || 'প্রসেসিং...';
+      if (el) {
+        el.classList.remove('hidden');
+        el.classList.add('flex');
+      }
+    }
+    function hideGlobalLoading() {
+      const el = document.getElementById('global-loading');
+      if (el) {
+        el.classList.add('hidden');
+        el.classList.remove('flex');
+      }
+    }
+
     let appData = {
       user: {
         id: 'u_guest',
         name: 'রাকিবুল হাসান',
         phone: '01712345678',
-        coins: 1250,
-        cashBalance: 150.0,
+        coins: 0,
+        cashBalance: 0,
         checkInStreak: 1,
-        dailySpins: 5,
-        dailyQuiz: 5,
-        dailyCaptcha: 5,
-        dailyAdsgram: 10,
-        dailyMonetag: 30,
+        dailySpins: MAX_DAILY_SPINS,
+        dailyQuiz: MAX_DAILY_QUIZ,
+        dailyCaptcha: MAX_DAILY_CAPTCHA,
+        dailyAdsgram: MAX_DAILY_ADSGRAM,
+        dailyMonetag: MAX_DAILY_MONETAG,
         referralCode: 'RAKIB77',
         referralCount: 0,
         referralBonusCoins: 0,
-        completedTaskIds: []
+        completedTaskIds: [],
+        deviceId: null,
+        lastAdAt: 0
       },
       tasks: [
         { id: 't1', title: 'নিউজ সাইটে ৩০ সেকেন্ড পোস্ট পড়ুন', type: 'visit', reward: 10, duration: 25, url: 'https://news.google.com' },
@@ -969,37 +1042,52 @@
       const name = document.getElementById('reg-name').value.trim();
       const phone = document.getElementById('reg-phone').value.trim();
       const password = document.getElementById('reg-password').value;
-      const refCode = document.getElementById('reg-refer').value.trim().toUpperCase();
+      let refCode = document.getElementById('reg-refer').value.trim().toUpperCase();
+      if (!refCode) {
+        try { refCode = (localStorage.getItem('tc_pending_ref') || '').trim().toUpperCase(); } catch (err) {}
+      }
 
-      if (!phone.startsWith('01') || phone.length !== 11) {
+      if (!/^01[3-9]\d{8}$/.test(phone)) {
         return alert('সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন (যেমন: 01712345678)');
+      }
+      if (!password || password.length < 4) {
+        return alert('পাসওয়ার্ড কমপক্ষে ৪ অক্ষরের হতে হবে।');
+      }
+      if (!name || name.length < 2) {
+        return alert('সঠিক নাম লিখুন।');
       }
 
       const userKey = sanitizeKey(phone);
+      const deviceId = getOrCreateDeviceId();
       const newUser = {
         id: userKey,
         name: name,
         phone: phone,
         password: password,
-        coins: 20,
+        coins: WELCOME_COINS,
         cashBalance: 0.0,
         checkInStreak: 1,
-        dailySpins: 5,
-        dailyQuiz: 5,
-        dailyCaptcha: 5,
-        dailyAdsgram: 10,
-        dailyMonetag: 30,
+        dailySpins: MAX_DAILY_SPINS,
+        dailyQuiz: MAX_DAILY_QUIZ,
+        dailyCaptcha: MAX_DAILY_CAPTCHA,
+        dailyAdsgram: MAX_DAILY_ADSGRAM,
+        dailyMonetag: MAX_DAILY_MONETAG,
         referralCode: 'TC' + phone.substring(7) + Math.floor(10 + Math.random() * 90),
         referralCount: 0,
         referralBonusCoins: 0,
         referredBy: refCode || null,
         joinedAt: new Date().toISOString(),
-        completedTaskIds: []
+        completedTaskIds: [],
+        deviceId: deviceId,
+        lastAdAt: 0,
+        createdAt: Date.now()
       };
 
       if (isFirebaseReady && fbDatabase) {
+        showGlobalLoading('একাউন্ট তৈরি হচ্ছে...');
         fbDatabase.ref('users/' + userKey).once('value', (snap) => {
           if (snap.exists()) {
+            hideGlobalLoading();
             alert('এই মোবাইল নম্বরে ইতোমধ্যে একাউন্ট আছে! লগইন করুন।');
             toggleAuthMode('login');
             document.getElementById('login-phone').value = phone;
@@ -1010,25 +1098,32 @@
                   refSnap.forEach((child) => {
                     const rUser = child.val();
                     fbDatabase.ref('users/' + child.key).update({
-                      coins: (rUser.coins || 0) + 20,
+                      coins: (rUser.coins || 0) + REFERRAL_BONUS_COINS,
                       referralCount: (rUser.referralCount || 0) + 1,
-                      referralBonusCoins: (rUser.referralBonusCoins || 0) + 20
+                      referralBonusCoins: (rUser.referralBonusCoins || 0) + REFERRAL_BONUS_COINS
                     });
                   });
                 });
               }
 
               localStorage.setItem(SESSION_USER_KEY, phone);
+              localStorage.removeItem('TASKCASH_LOGGED_OUT');
+              try { localStorage.removeItem('tc_pending_ref'); } catch (e) {}
               appData.user = newUser;
               saveData();
+              hideGlobalLoading();
               confetti({ particleCount: 100, spread: 80 });
-              alert('🎉 একাউন্ট সফলভাবে তৈরি হয়েছে! +২০ কয়েন ওয়েলকাম বোনাস পেয়েছেন!');
+              alert(`🎉 একাউন্ট সফলভাবে তৈরি হয়েছে! +${WELCOME_COINS} কয়েন ওয়েলকাম বোনাস পেয়েছেন!`);
               launchMainApp();
+            }).catch(() => {
+              hideGlobalLoading();
+              alert('নেটওয়ার্ক সমস্যা। আবার চেষ্টা করুন।');
             });
           }
         });
       } else {
         localStorage.setItem(SESSION_USER_KEY, phone);
+        try { localStorage.removeItem('tc_pending_ref'); } catch (e) {}
         appData.user = newUser;
         saveData();
         launchMainApp();
@@ -1279,7 +1374,7 @@
       document.getElementById('u-name').innerText = appData.user.name || 'ব্যবহারকারী';
       document.getElementById('u-phone').innerText = appData.user.phone || '01XXXXXXXXX';
       document.getElementById('u-coins').innerText = (appData.user.coins || 0).toLocaleString();
-      document.getElementById('u-coins-bdt').innerText = `≈ ৳${((appData.user.coins || 0) / 100).toFixed(2)}`;
+      document.getElementById('u-coins-bdt').innerText = `≈ ৳${((appData.user.coins || 0) / COINS_PER_BDT).toFixed(2)}`;
       document.getElementById('u-cash').innerText = `৳${(appData.user.cashBalance || 0).toFixed(2)}`;
       document.getElementById('u-streak').innerText = `${appData.user.checkInStreak || 1} দিন স্ট্রিক`;
       document.getElementById('u-header-ref').innerText = `${appData.user.referralCount || 0}`;
@@ -1290,8 +1385,11 @@
       document.getElementById('u-refer-count').innerText = `${appData.user.referralCount || 0} জন`;
       document.getElementById('u-refer-commission').innerText = `${appData.user.referralBonusCoins || 0} কয়েন`;
       document.getElementById('refer-code-box').innerText = appData.user.referralCode || 'RAKIB77';
-      document.getElementById('full-refer-link-input').value = `https://taskcash.pro?ref=${appData.user.referralCode || 'RAKIB77'}`;
+      const refLinkEl = document.getElementById('full-refer-link-input');
+      if (refLinkEl) refLinkEl.value = getReferLink(appData.user.referralCode || 'RAKIB77');
       document.getElementById('u-avatar').innerText = (appData.user.name || 'U').charAt(0);
+      const monEl = document.getElementById('monetag-ads-count');
+      if (monEl) monEl.innerText = `${appData.user.dailyMonetag || 0} টি বাকি`;
     }
 
     function switchTab(tabId) {
@@ -1429,21 +1527,129 @@
     let adInterval = null;
     let adRewardVerified = false;
 
+    // lastMonetagAdAt uses the global MONETAG_COOLDOWN_MS defined above
+    let lastMonetagAdAt = 0;
+    let isShowingAdSequence = false;
+
+    function waitMs(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function showMonetagAdSafe() {
+      const now = Date.now();
+      const wait = Math.max(0, MONETAG_COOLDOWN_MS - (now - lastMonetagAdAt));
+      if (wait > 0) {
+        showToast(`⏳ পরবর্তী এডের আগে ${Math.ceil(wait / 1000)} সেকেন্ড অপেক্ষা করুন (অ্যান্টি-ব্যান)...`);
+        await waitMs(wait);
+      }
+      lastMonetagAdAt = Date.now();
+      if (appData.user) appData.user.lastAdAt = lastMonetagAdAt;
+      // Call Monetag SDK — only credit after successful resolve
+      if (typeof show_10335982 !== 'function') {
+        throw new Error('Monetag SDK not loaded');
+      }
+      return show_10335982();
+    }
+
+    /**
+     * Shows up to 3 Monetag rewarded interstitials sequentially with strong cooldown.
+     * Reward is given only after sequence (proportional if fewer ads completed).
+     * Designed to reduce ban risk on Monetag.
+     */
+    async function showThreeAdsSequence(title, coins, onComplete) {
+      if (isShowingAdSequence) {
+        showToast('⚠️ আগে থেকে চলমান এড শেষ হোক, তারপর আবার চেষ্টা করুন।');
+        return;
+      }
+      if (!canPerformAction('ad_sequence', 5000)) {
+        showToast('⏳ একটু অপেক্ষা করুন...');
+        return;
+      }
+      if ((appData.user.dailyMonetag || 0) < 1) {
+        return alert('আজকের এড দেখে ইনকাম লিমিট শেষ! আগামীকাল আবার চেষ্টা করুন।');
+      }
+
+      isShowingAdSequence = true;
+      showGlobalLoading('এড সিকোয়েন্স চলছে...');
+      let watched = 0;
+      const total = 3;
+
+      try {
+        for (let i = 0; i < total; i++) {
+          if ((appData.user.dailyMonetag || 0) <= 0) break;
+
+          showToast(`📺 এড ${i + 1}/${total} লোড হচ্ছে... (${title})`);
+          try {
+            await showMonetagAdSafe();
+            watched++;
+            appData.user.dailyMonetag = Math.max(0, (appData.user.dailyMonetag || 1) - 1);
+            saveData();
+            renderUserHeader();
+            showToast(`✅ এড ${i + 1}/${total} সম্পন্ন!`);
+          } catch (e) {
+            console.warn('Ad show error', e);
+            showToast(`⚠️ এড ${i + 1} সম্পূর্ণ দেখা হয়নি।`);
+          }
+
+          // Longer gap between ads (anti-ban)
+          if (i < total - 1) {
+            await waitMs(SEQUENCE_GAP_MS);
+          }
+        }
+
+        if (watched >= 1 && coins > 0) {
+          // Only full reward if 3 ads watched; otherwise proportional (min 1)
+          const finalCoins = watched >= 3 ? coins : Math.max(1, Math.floor(coins * (watched / 3)));
+          appData.user.coins = (appData.user.coins || 0) + finalCoins;
+          // Log ad event for basic audit (Firebase)
+          if (isFirebaseReady && fbDatabase && appData.user.phone) {
+            try {
+              fbDatabase.ref('adEvents').push({
+                phone: appData.user.phone,
+                deviceId: appData.user.deviceId || getOrCreateDeviceId(),
+                title: title,
+                watched: watched,
+                coins: finalCoins,
+                time: Date.now()
+              });
+            } catch (err) {}
+          }
+          saveData();
+          renderUserHeader();
+          confetti({ particleCount: 80, spread: 70 });
+          showToast(`🎉 ${watched}টি এড দেখা হয়েছে! +${finalCoins} কয়েন যুক্ত (${title})`);
+        } else if (watched === 0) {
+          showToast('⚠️ কোনো এড সম্পূর্ণ দেখা হয়নি, রিওয়ার্ড দেওয়া যায়নি।');
+        }
+
+        showToast('↩️ এড সিকোয়েন্স শেষ।');
+        if (typeof onComplete === 'function') onComplete(watched);
+      } finally {
+        isShowingAdSequence = false;
+        hideGlobalLoading();
+      }
+    }
+
     function triggerAdAndReward(title, coins, customAdUrl) {
-      // Monetag Rewarded Interstitial — replaces the old custom modal flow.
-      // Limit: 30 rewarded ads per day across all ad-income actions.
+      // One action → 3 sequential Monetag ads, then reward
+      showThreeAdsSequence(title, coins);
+    }
+
+    /** Pure ad-watch button: only shows 3 ads (small fixed reward) */
+    function watchThreeAdsOnly() {
       if ((appData.user.dailyMonetag || 0) <= 0) {
         return alert('আজকের এড দেখে ইনকাম লিমিট শেষ! আগামীকাল আবার চেষ্টা করুন।');
       }
-      show_11663161().then(() => {
-        appData.user.dailyMonetag = (appData.user.dailyMonetag || 1) - 1;
-        appData.user.coins = (appData.user.coins || 0) + coins;
-        saveData();
-        renderUserHeader();
-        confetti({ particleCount: 80, spread: 70 });
-        showToast(`🎉 অভিনন্দন! +${coins} কয়েন আপনার অ্যাকাউন্টে যুক্ত হয়েছে! (${title})`);
-      }).catch(() => {
-        showToast('⚠️ এড সম্পূর্ণ দেখা হয়নি, তাই রিওয়ার্ড দেওয়া যায়নি।');
+      const btn = document.getElementById('btn-watch-ads-only');
+      if (btn) {
+        btn.disabled = true;
+        btn.classList.add('opacity-60', 'pointer-events-none');
+      }
+      showThreeAdsSequence('শুধু এড দেখুন', 5, () => {
+        if (btn) {
+          btn.disabled = false;
+          btn.classList.remove('opacity-60', 'pointer-events-none');
+        }
       });
     }
 
@@ -1577,6 +1783,9 @@
 
       if ((appData.user.dailyAdsgram || 0) <= 0) {
         return alert('আজকের AdsGram এড লিমিট শেষ! আগামীকাল আবার চেষ্টা করুন।');
+      }
+      if (!canPerformAction('adsgram', 12000)) {
+        return showToast('⏳ একটু অপেক্ষা করুন, পরে আবার চেষ্টা করুন।');
       }
 
       if (!isInsideTelegram()) {
@@ -1762,20 +1971,14 @@
       appData.user.dailySpins--;
       const won = SLICES[Math.floor(Math.random() * SLICES.length)].coins;
       closeModal('modal-spin');
-      // Monetag Rewarded Interstitial
-      show_11663161().then(() => {
-        appData.user.dailyMonetag = (appData.user.dailyMonetag || 1) - 1;
-        appData.user.coins = (appData.user.coins || 0) + won;
-        saveData();
-        renderUserHeader();
-        confetti({ particleCount: 80, spread: 70 });
-        showToast(`🎉 লাকি স্পিন থেকে +${won} কয়েন যুক্ত হয়েছে!`);
-      }).catch(() => {
-        // restore spin if ad failed
-        appData.user.dailySpins = (appData.user.dailySpins || 0) + 1;
-        saveData();
-        renderUserHeader();
-        showToast('⚠️ এড সম্পূর্ণ দেখা হয়নি, তাই রিওয়ার্ড দেওয়া যায়নি। স্পিন ফিরিয়ে দেওয়া হয়েছে।');
+      // 3 sequential Monetag ads then reward
+      showThreeAdsSequence('লাকি স্পিন', won, (watched) => {
+        if (watched === 0) {
+          appData.user.dailySpins = (appData.user.dailySpins || 0) + 1;
+          saveData();
+          renderUserHeader();
+          showToast('⚠️ এড সম্পূর্ণ দেখা হয়নি। স্পিন ফিরিয়ে দেওয়া হয়েছে।');
+        }
       });
     }
 
@@ -1872,19 +2075,14 @@
       if ((appData.user.dailyMonetag || 0) <= 0) {
         return alert('আজকের এড দেখে ইনকাম লিমিট শেষ! আগামীকাল আবার চেষ্টা করুন।');
       }
-      // Monetag Rewarded Interstitial
-      show_11663161().then(() => {
-        appData.user.dailyMonetag = (appData.user.dailyMonetag || 1) - 1;
-        appData.user.coins += 5;
-        appData.user.checkInStreak = (appData.user.checkInStreak || 0) + 1;
-        saveData();
-        renderUserHeader();
-        confetti({ particleCount: 70, spread: 60 });
-        document.getElementById('btn-checkin').innerText = 'আজ ক্লেইমড';
-        document.getElementById('btn-checkin').disabled = true;
-        showToast('🎉 অভিনন্দন! দৈনিক লগইন বোনাস ৫ কয়েন পেয়েছেন!');
-      }).catch(() => {
-        showToast('⚠️ এড সম্পূর্ণ দেখা হয়নি, তাই রিওয়ার্ড দেওয়া যায়নি।');
+      showThreeAdsSequence('দৈনিক লগইন বোনাস', 5, (watched) => {
+        if (watched >= 1) {
+          appData.user.checkInStreak = (appData.user.checkInStreak || 0) + 1;
+          saveData();
+          renderUserHeader();
+          document.getElementById('btn-checkin').innerText = 'আজ ক্লেইমড';
+          document.getElementById('btn-checkin').disabled = true;
+        }
       });
     }
 
@@ -1984,11 +2182,22 @@
 
     function handleWithdrawSubmit(e) {
       e.preventDefault();
+      if (!canPerformAction('withdraw', 8000)) {
+        return showToast('⏳ একটু অপেক্ষা করুন, আবার চেষ্টা করুন।');
+      }
       const amount = Number(document.getElementById('wdr-amount').value);
-      const coinsNeeded = amount * 100;
+      if (amount < MIN_WITHDRAW_BDT) {
+        return alert(`সর্বনিম্ন উইথড্র পরিমাণ ৳${MIN_WITHDRAW_BDT}`);
+      }
+      const coinsNeeded = amount * COINS_PER_BDT;
+      const userRefs = appData.user.referralCount || 0;
+
+      if (userRefs < MIN_REFS_FOR_WITHDRAW) {
+        return alert(`উইথড্র করতে ন্যূনতম ${MIN_REFS_FOR_WITHDRAW}টি সফল রেফারেল লাগবে। আপনার আছে: ${userRefs}টি। আরও ${MIN_REFS_FOR_WITHDRAW - userRefs} জন রেফার করুন।`);
+      }
 
       if ((appData.user.coins || 0) < coinsNeeded) {
-        return alert(`পর্যাপ্ত কয়েন নেই! প্রয়োজন ${coinsNeeded} কয়েন।`);
+        return alert(`পর্যাপ্ত কয়েন নেই! প্রয়োজন ${coinsNeeded.toLocaleString()} কয়েন (৳${amount} × ${COINS_PER_BDT})।`);
       }
 
       appData.user.coins -= coinsNeeded;
@@ -2026,45 +2235,157 @@
 
     function updateCoinsNeeded(amount) {
       const amt = Number(amount) || 0;
-      document.getElementById('wdr-coins-text').innerText = `কয়েন কর্তন হবে: ${(amt * 100).toLocaleString('bn-BD')} কয়েন`;
+      document.getElementById('wdr-coins-text').innerText = `কয়েন কর্তন হবে: ${(amt * COINS_PER_BDT).toLocaleString('bn-BD')} কয়েন`;
+    }
+
+    function getBaseAppUrl() {
+      // Works on GitHub Pages, custom domain, localhost, or any host
+      try {
+        const u = new URL(window.location.href);
+        // strip hash and keep path to index if any
+        let path = u.pathname || '/';
+        if (path.endsWith('index.html')) path = path.slice(0, -10) || '/';
+        return u.origin + (path.endsWith('/') ? path.slice(0, -1) : path) || u.origin;
+      } catch (e) {
+        return window.location.origin || 'https://taskcash.pro';
+      }
+    }
+
+    function getReferLink(code) {
+      const c = code || appData.user?.referralCode || 'RAKIB77';
+      return `${getBaseAppUrl()}?ref=${encodeURIComponent(c)}`;
     }
 
     function copyReferLink() {
-      const code = appData.user.referralCode || 'RAKIB77';
-      const link = `https://taskcash.pro?ref=${code}`;
+      const link = getReferLink();
       navigator.clipboard.writeText(link);
       showToast('🎉 রেফারেল লিংক সফলভাবে কপি হয়েছে!');
     }
 
     function shareWhatsApp() {
-      const code = appData.user.referralCode || 'RAKIB77';
-      const text = encodeURIComponent(`Task Cash Pro-তে ছোট ছোট টাস্ক ও এড দেখে কয়েন জমান! জয়েন করুন: https://taskcash.pro?ref=${code}`);
+      const link = getReferLink();
+      const text = encodeURIComponent(`Task Cash Pro-তে ছোট ছোট টাস্ক ও এড দেখে কয়েন জমান! জয়েন করুন: ${link}`);
       window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
     }
 
     function shareTelegram() {
       const code = appData.user.referralCode || 'RAKIB77';
+      const link = getReferLink(code);
       const text = encodeURIComponent(`Task Cash Pro-তে ছোট ছোট টাস্ক ও এড দেখে কয়েন জমান! রেফার কোড: ${code}`);
-      window.open(`https://t.me/share/url?url=https://taskcash.pro?ref=${code}&text=${text}`, '_blank');
+      window.open(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${text}`, '_blank');
     }
 
     function watchRewardedAd() {
       triggerAdAndReward('স্পনসরড ভিডিও অ্যাড', 5, appData.adLinks?.rewardedVideoAd || 'https://google.com');
     }
 
+    function applyReferralFromUrl() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        let ref = (params.get('ref') || params.get('refer') || params.get('r') || '').trim().toUpperCase();
+        if (!ref && window.location.hash) {
+          const hp = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+          ref = (hp.get('ref') || '').trim().toUpperCase();
+        }
+        if (!ref) return;
+
+        // Persist so registration still has it even if user navigates
+        try { localStorage.setItem('tc_pending_ref', ref); } catch (e) {}
+
+        // Show auth screen + register tab with code pre-filled
+        const auth = document.getElementById('auth-screen');
+        const main = document.getElementById('main-app-container');
+        if (auth) auth.classList.remove('hidden');
+        if (main) main.classList.add('hidden');
+
+        toggleAuthMode('register');
+        const refInput = document.getElementById('reg-refer');
+        if (refInput) {
+          refInput.value = ref;
+          refInput.classList.add('ring-2', 'ring-amber-400');
+        }
+        showToast(`🎁 রেফারেল কোড অটো সেট: ${ref}`);
+      } catch (e) {}
+    }
+
+    function initTelegramMiniApp() {
+      try {
+        if (!window.Telegram || !window.Telegram.WebApp) return;
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+        // Theme adaptation
+        if (tg.themeParams && tg.themeParams.bg_color) {
+          document.body.style.backgroundColor = tg.themeParams.bg_color;
+        }
+        // Optional: enable closing confirmation on critical screens
+        try { tg.enableClosingConfirmation(); } catch (e) {}
+        // Main button can be used later if needed
+        if (tg.MainButton) {
+          tg.MainButton.hide();
+        }
+        console.log('Telegram Mini App ready, initData length:', (tg.initData || '').length);
+      } catch (e) {
+        console.warn('Telegram init error', e);
+      }
+    }
+
     window.onload = () => {
       lucide.createIcons();
-// Initialize Telegram WebApp (if running inside Telegram) so the
-      // Mini App gets full-height layout and Telegram knows the page is ready.
-      try {
-        if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.ready();
-          window.Telegram.WebApp.expand();
-        }
-      } catch(e) {}
+      initTelegramMiniApp();
+      getOrCreateDeviceId();
 
+      applyReferralFromUrl();
       checkActiveSession();
+
+      // If user is not logged in and we have pending ref, ensure register form has it
+      try {
+        const pending = localStorage.getItem('tc_pending_ref');
+        if (pending && document.getElementById('reg-refer') && !document.getElementById('reg-refer').value) {
+          document.getElementById('reg-refer').value = pending;
+        }
+      } catch (e) {}
     };
+
+    /*
+     * ========== SUGGESTED FIREBASE SECURITY RULES (copy to Firebase Console) ==========
+     * {
+     *   "rules": {
+     *     "users": {
+     *       "$uid": {
+     *         ".read": "auth != null || true",
+     *         ".write": true,
+     *         ".validate": "newData.hasChildren(['phone','name'])"
+     *       }
+     *     },
+     *     "deposits": {
+     *       ".read": true,
+     *       ".write": true
+     *     },
+     *     "withdrawals": {
+     *       ".read": true,
+     *       ".write": true
+     *     },
+     *     "adEvents": {
+     *       ".read": false,
+     *       ".write": true
+     *     },
+     *     "campaigns": {
+     *       ".read": true,
+     *       ".write": true
+     *     },
+     *     "platformSettings": {
+     *       ".read": true,
+     *       ".write": false
+     *     },
+     *     "tasks": { ".read": true, ".write": false },
+     *     "depositMethods": { ".read": true, ".write": false },
+     *     "adLinks": { ".read": true, ".write": false }
+     *   }
+     * }
+     * NOTE: For production, use Firebase Auth + stricter rules. Current rules are permissive for client-only app.
+     * ================================================================================
+     */
   </script>
 
   
