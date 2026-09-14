@@ -93,7 +93,7 @@
           <input type="text" id="reg-refer" placeholder="যেমন: TC9901" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-xs text-amber-300 uppercase font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500">
         </div>
         <button type="submit" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold rounded-xl text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
-          <span>রেজিস্ট্রেশন করুন (+৫০ কয়েন বোনাস)</span>
+          <span>রেজিস্ট্রেশন করুন (+২৫ কয়েন বোনাস)</span>
           <i data-lucide="check-circle" class="w-4 h-4"></i>
         </button>
       </form>
@@ -182,7 +182,7 @@
       </span>
       <div class="overflow-hidden whitespace-nowrap w-full">
         <div id="notice-text" class="animate-marquee">
-          📢 স্বাগতম Task Cash Pro-তে! ছোট ছোট মাইক্রো-টাস্ক সম্পন্ন করুন, লাকি স্পিন ও স্ক্র্যাচ কার্ডে ২-অ্যাড দেখে কয়েন জমান। বিকাশ/নগদে ১০০ টাকা হলেই উত্তোলন করুন।
+          📢 স্বাগতম Task Cash Pro-তে! ছোট ছোট মাইক্রো-টাস্ক সম্পন্ন করুন, লাকি স্পিন ও স্ক্র্যাচ কার্ডে নিয়মিত কাজ করে কয়েন জমান। বিকাশ/নগদে ১০০ টাকা হলেই উত্তোলন করুন।
         </div>
       </div>
     </div>
@@ -216,26 +216,26 @@
               <i data-lucide="gift" class="w-3.5 h-3.5"></i> দৈনিক লগইন পুরস্কার
             </div>
             <h3 class="font-black text-lg">আজকের ফ্রি বোনাস</h3>
-            <p class="text-xs text-amber-100">+৩০ কয়েন এখনই সংগ্রহ করুন</p>
+            <p class="text-xs text-amber-100">+১২ কয়েন এখনই সংগ্রহ করুন</p>
           </div>
           <button id="btn-checkin" onclick="claimDailyBonus()" class="px-4 py-2.5 bg-white hover:bg-amber-50 text-orange-600 font-black text-xs rounded-2xl shadow-lg active:scale-95 transition-all">
             ক্লেইম করুন
           </button>
         </div>
 
-        <!-- Instant Earning Hub (With 2-Ads Verification for Spin, Scratch, Captcha) -->
+        <!-- Instant Earning Hub (With 3-Ads Verification for Spin, Scratch, Captcha) -->
         <div>
           <div class="flex items-center justify-between mb-2.5">
             <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
               <i data-lucide="gamepad-2" class="w-4 h-4 text-emerald-600"></i> ইনস্ট্যান্ট আর্নিং হাব
             </h3>
             <span class="text-[10px] bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-bold px-2 py-0.5 rounded-full">
-              ২-অ্যাড সিকোয়েন্স
+              ভেরিফাইড সিকোয়েন্স
             </span>
           </div>
 
           <div class="grid grid-cols-3 gap-2.5">
-            <!-- Lucky Spin (2 Ads Sequence) -->
+            <!-- Lucky Spin (3 Ads Sequence) -->
             <button onclick="openSpinModal()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-2xl text-center flex flex-col items-center shadow-xs active:scale-95 transition-all">
               <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center mb-1 shadow-md shadow-amber-500/20">
                 <i data-lucide="sparkles" class="w-5 h-5"></i>
@@ -244,7 +244,7 @@
               <span id="spin-count" class="text-[10px] text-emerald-600 font-semibold">১২ টি</span>
             </button>
 
-            <!-- Scratch Card (2 Ads Sequence) -->
+            <!-- Scratch Card (3 Ads Sequence) -->
             <button onclick="openScratchModal()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-2xl text-center flex flex-col items-center shadow-xs active:scale-95 transition-all">
               <div class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center mb-1 shadow-md shadow-purple-600/20">
                 <i data-lucide="gift" class="w-5 h-5"></i>
@@ -253,7 +253,7 @@
               <span id="scratch-count" class="text-[10px] text-purple-600 font-semibold">১০ টি</span>
             </button>
 
-            <!-- Captcha Job (2 Ads Sequence) -->
+            <!-- Captcha Job (3 Ads Sequence) -->
             <button onclick="openCaptchaModal()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-2xl text-center flex flex-col items-center shadow-xs active:scale-95 transition-all">
               <div class="w-10 h-10 rounded-xl bg-cyan-600 text-white flex items-center justify-center mb-1 shadow-md shadow-cyan-600/20">
                 <i data-lucide="keyboard" class="w-5 h-5"></i>
@@ -295,7 +295,7 @@
                 <span class="text-lg">🎬</span>
               </div>
               <span class="text-[11px] font-bold text-slate-800 dark:text-slate-200">Watch Ad</span>
-              <span id="watch-ad-count" class="text-[10px] text-indigo-600 font-semibold">+৪৫ • ২৫টি</span>
+              <span id="watch-ad-count" class="text-[10px] text-indigo-600 font-semibold">+২৮ • ২৫টি</span>
             </button>
 
             <!-- Unlock Extra -->
@@ -304,7 +304,7 @@
                 <i data-lucide="unlock" class="w-5 h-5"></i>
               </div>
               <span class="text-[11px] font-bold text-slate-800 dark:text-slate-200">Unlock Extra</span>
-              <span id="unlock-extra-count" class="text-[10px] text-orange-600 font-semibold">+৯০ • ১২টি</span>
+              <span id="unlock-extra-count" class="text-[10px] text-orange-600 font-semibold">+৪২ • ১২টি</span>
             </button>
 
             <!-- Instant Reward -->
@@ -313,7 +313,7 @@
                 <span class="text-lg">🎁</span>
               </div>
               <span class="text-[11px] font-bold text-slate-800 dark:text-slate-200">Instant Bonus</span>
-              <span id="instant-count" class="text-[10px] text-pink-600 font-semibold">+৩৫ • ২০টি</span>
+              <span id="instant-count" class="text-[10px] text-pink-600 font-semibold">+২০ • ২০টি</span>
             </button>
           </div>
         </div>
@@ -373,7 +373,7 @@
                   <i data-lucide="users" class="w-4 h-4"></i>
                 </div>
                 <h4 class="text-xs font-black text-slate-800 dark:text-white">রেফারেল প্রোগ্রাম</h4>
-                <p class="text-[10px] text-purple-700 dark:text-purple-300 font-semibold mt-0.5">প্রতি রেফারে +৪০ কয়েন</p>
+                <p class="text-[10px] text-purple-700 dark:text-purple-300 font-semibold mt-0.5">প্রতি রেফারে +২২ কয়েন</p>
               </div>
               <div class="mt-2 text-[10px] text-slate-400 font-medium flex items-center gap-1">
                 <span>লিংক শেয়ার করুন</span>
@@ -435,7 +435,7 @@
                 <span class="text-xs font-black text-slate-800 dark:text-white">ভিডিও এড</span>
               </div>
               <div class="text-[10px] text-sky-600 font-bold" id="earn-adsgram-count">১৫ টি বাকি</div>
-              <div class="text-[10px] text-slate-400">+৩০ কয়েন · Rewarded</div>
+              <div class="text-[10px] text-slate-400">+১৮ কয়েন · Rewarded</div>
             </button>
             <button onclick="watchThreeAdsOnly()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl text-left active:scale-95 transition-all">
               <div class="flex items-center gap-2 mb-1">
@@ -443,7 +443,7 @@
                 <span class="text-xs font-black text-slate-800 dark:text-white">বোনাস এড</span>
               </div>
               <div class="text-[10px] text-rose-600 font-bold" id="earn-monetag-count">৪০ টি বাকি</div>
-              <div class="text-[10px] text-slate-400">+৪০ কয়েন</div>
+              <div class="text-[10px] text-slate-400">+২৫ কয়েন</div>
             </button>
             <button onclick="startWatchAd()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl text-left active:scale-95 transition-all">
               <div class="flex items-center gap-2 mb-1">
@@ -451,7 +451,7 @@
                 <span class="text-xs font-black text-slate-800 dark:text-white">Watch Ad</span>
               </div>
               <div class="text-[10px] text-indigo-600 font-bold" id="earn-watch-count">২৫ টি বাকি</div>
-              <div class="text-[10px] text-slate-400">+৪৫ কয়েন</div>
+              <div class="text-[10px] text-slate-400">+২৮ কয়েন</div>
             </button>
             <button onclick="openUnlockExtraModal()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl text-left active:scale-95 transition-all">
               <div class="flex items-center gap-2 mb-1">
@@ -459,7 +459,7 @@
                 <span class="text-xs font-black text-slate-800 dark:text-white">Unlock Extra</span>
               </div>
               <div class="text-[10px] text-orange-600 font-bold" id="earn-unlock-count">১২ টি বাকি</div>
-              <div class="text-[10px] text-slate-400">+৯০ কয়েন</div>
+              <div class="text-[10px] text-slate-400">+৪২ কয়েন</div>
             </button>
           </div>
         </div>
@@ -526,6 +526,20 @@
           <p class="text-xs text-emerald-100 mt-0.5">১০০ কয়েন = ৳১ টাকা। সর্বনিম্ন ৳১০০ ও ৫টি সফল রেফারেল প্রয়োজন।</p>
         </div>
 
+        <!-- Withdraw Eligibility Card -->
+        <div class="grid grid-cols-2 gap-2.5">
+          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 text-center">
+            <span class="text-[10px] text-slate-400 font-bold uppercase">কয়েন ব্যালেন্স</span>
+            <div id="wdr-stat-coins" class="text-base font-black text-amber-500 font-mono mt-0.5">০</div>
+            <span id="wdr-stat-bdt" class="text-[10px] text-emerald-600 font-bold">≈ ৳০.০০</span>
+          </div>
+          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 text-center">
+            <span class="text-[10px] text-slate-400 font-bold uppercase">রেফারেল যোগ্যতা</span>
+            <div id="wdr-stat-refs" class="text-base font-black text-purple-600 font-mono mt-0.5">০/৫ জন</div>
+            <span id="wdr-stat-ref-badge" class="text-[10px] text-rose-500 font-bold">❌ শর্ত অপূর্ণ</span>
+          </div>
+        </div>
+
         <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-4 shadow-xs">
           <form onsubmit="handleWithdrawSubmit(event)" class="space-y-3">
             <div>
@@ -544,7 +558,7 @@
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">অ্যাকাউন্ট নম্বর:</label>
-              <input type="text" id="wdr-account" placeholder="01XXXXXXXXX" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-800 dark:text-white font-mono" required>
+              <input type="tel" id="wdr-account" placeholder="01XXXXXXXXX" pattern="01[3-9][0-9]{8}" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-800 dark:text-white font-mono" required>
             </div>
             <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-md active:scale-95 transition-all">
               টাকা তোলার আবেদন জমা দিন
@@ -666,7 +680,7 @@
             <i data-lucide="users" class="w-6 h-6"></i>
           </div>
           <h3 class="text-base font-black">রেফারেল প্রোগ্রাম</h3>
-          <p class="text-xs text-purple-100 mt-1">প্রতি সফল রেফারে পান ৪০ কয়েন বোনাস ও ১০% আজীবন কমিশন!</p>
+          <p class="text-xs text-purple-100 mt-1">প্রতি সফল রেফারে পান ২২ কয়েন বোনাস ও ১০% আজীবন কমিশন!</p>
         </div>
 
         <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 text-center space-y-4 shadow-xs">
@@ -949,7 +963,7 @@
             <i data-lucide="users" class="w-4 h-4"></i>
           </div>
           <div class="font-bold text-xs text-slate-800 dark:text-white mt-1">রেফারেল কোড</div>
-          <div class="text-[10px] text-purple-700 dark:text-purple-400 font-semibold">প্রতি রেফারে ৪০ কয়েন</div>
+          <div class="text-[10px] text-purple-700 dark:text-purple-400 font-semibold">প্রতি রেফারে ২২ কয়েন</div>
         </button>
 
         <!-- Deposit -->
@@ -1133,25 +1147,25 @@
 
       <div>
         <div class="flex items-center justify-center gap-1.5 mb-1">
-          <span id="ad-step-pill" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-500 border border-cyan-500/30">অ্যাড ১/২</span>
+          <span id="ad-step-pill" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-500 border border-cyan-500/30">ভেরিফিকেশন ধাপ</span>
         </div>
-        <h3 id="ad-countdown-title" class="font-black text-slate-800 dark:text-white text-base">বিজ্ঞাপন প্রদর্শিত হচ্ছে</h3>
-        <p id="ad-countdown-reward-text" class="text-xs text-emerald-600 dark:text-emerald-400 font-bold mt-0.5">+৩৫ কয়েন রিওয়ার্ড</p>
+        <h3 id="ad-countdown-title" class="font-black text-slate-800 dark:text-white text-base">ভেরিফিকেশন চলছে</h3>
+        <p id="ad-countdown-reward-text" class="text-xs text-emerald-600 dark:text-emerald-400 font-bold mt-0.5">+২৮ কয়েন রিওয়ার্ড</p>
       </div>
 
       <div class="py-2">
-        <div id="ad-countdown-timer" class="text-4xl font-black text-cyan-600 font-mono tracking-tight">10s</div>
+        <div id="ad-countdown-timer" class="text-4xl font-black text-cyan-600 font-mono tracking-tight">13s</div>
         <div id="ad-pause-alert" class="hidden my-2 px-3 py-1.5 bg-amber-500/20 border border-amber-500/40 text-amber-600 dark:text-amber-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 animate-pulse">
           <i data-lucide="pause-circle" class="w-4 h-4"></i>
-          <span>টাইমার পজড! বিজ্ঞাপনে ফিরে যান</span>
+          <span>টাইমার পজড! পেজে ফিরে যান</span>
         </div>
-        <p id="ad-countdown-status-hint" class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">বিজ্ঞাপনে অবস্থান করলে টাইমার চালু থাকবে...</p>
+        <p id="ad-countdown-status-hint" class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">পেজে অবস্থান করলে টাইমার চালু থাকবে...</p>
       </div>
 
       <div class="space-y-2 pt-1">
         <button id="ad-reopen-btn" onclick="reopenActiveAdUrl()" class="w-full py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition-all">
           <i data-lucide="external-link" class="w-4 h-4"></i>
-          <span>বিজ্ঞাপনে ফিরে যান (Reopen Ad)</span>
+          <span>পেজে ফিরে যান (Reopen Page)</span>
         </button>
         <button onclick="closeAdCountdownModal()" class="w-full py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl text-xs">
           বাতিল করুন
@@ -1169,7 +1183,7 @@
       <h3 class="font-black text-slate-800 dark:text-white text-base mb-1 text-amber-600 flex items-center justify-center gap-1.5">
         <i data-lucide="sparkles" class="w-5 h-5"></i> লাকি স্পিন হুইল
       </h3>
-      <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">স্পিন করতে ২টি স্পন্সরড অ্যাড দেখতে হবে</p>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">স্পিন করতে কাজ সম্পন্ন করুন</p>
       <div class="relative w-48 h-48 mx-auto my-2 flex items-center justify-center">
         <div class="absolute -top-2 left-1/2 -translate-x-1/2 z-20 text-rose-600">
           <i data-lucide="map-pin" class="w-6 h-6 fill-rose-600"></i>
@@ -1177,7 +1191,7 @@
         <canvas id="spin-canvas" width="200" height="200" class="rounded-full shadow-md"></canvas>
       </div>
       <button onclick="triggerSpinWithTwoAds()" class="w-full mt-3 py-3 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 text-slate-950 font-black rounded-2xl text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5">
-        <span>২টি অ্যাড দেখে স্পিন করুন</span>
+        <span>স্পিন হুইল শুরু করুন</span>
         <i data-lucide="play" class="w-4 h-4"></i>
       </button>
     </div>
@@ -1190,41 +1204,41 @@
         <i data-lucide="x" class="w-4 h-4"></i>
       </button>
       <h3 class="font-black text-slate-800 dark:text-white text-sm mb-1 text-emerald-600">ম্যাথ কুইজ</h3>
-      <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">সঠিক উত্তর বেছে নিয়ে +২৫ কয়েন নিন</p>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">সঠিক উত্তর বেছে নিয়ে +১৫ কয়েন নিন</p>
       <div id="quiz-question-box" class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-white text-xl font-black font-mono py-3 rounded-2xl mb-3 border border-slate-200 dark:border-slate-700">12 + 8 = ?</div>
       <div id="quiz-options-grid" class="grid grid-cols-2 gap-2"></div>
     </div>
   </div>
 
-  <!-- SCRATCH MODAL (2 Ads Sequence) -->
+  <!-- SCRATCH MODAL (3 Ads Sequence) -->
   <div id="modal-scratch" class="fixed inset-0 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 max-w-xs w-full text-center shadow-2xl relative border border-slate-200 dark:border-slate-700">
       <button onclick="closeModal('modal-scratch')" class="absolute top-4 right-4 p-1.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
         <i data-lucide="x" class="w-4 h-4"></i>
       </button>
       <h3 class="font-black text-slate-800 dark:text-white text-sm mb-1 text-purple-600">স্ক্র্যাচ কার্ড</h3>
-      <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">কার্ডটি আনলক করতে ২টি অ্যাড সম্পন্ন করুন</p>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">কার্ডটি আনলক করতে টাস্কটি সম্পন্ন করুন</p>
       
       <div class="relative w-48 h-32 mx-auto rounded-2xl overflow-hidden border border-slate-300 dark:border-slate-600 bg-amber-100 flex items-center justify-center shadow-inner">
-        <div class="text-2xl font-black text-amber-700 font-mono">+৪০ কয়েন 🎉</div>
+        <div class="text-2xl font-black text-amber-700 font-mono">+২২ কয়েন 🎉</div>
         <canvas id="scratch-canvas" width="192" height="128" class="absolute inset-0 cursor-pointer"></canvas>
       </div>
 
       <button onclick="triggerScratchWithTwoAds()" class="w-full mt-3 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5">
-        <span>২টি অ্যাড দেখে স্ক্র্যাচ আনলক</span>
+        <span>স্ক্র্যাচ কার্ড আনলক করুন</span>
         <i data-lucide="unlock" class="w-4 h-4"></i>
       </button>
     </div>
   </div>
 
-  <!-- CAPTCHA MODAL (2 Ads Sequence) -->
+  <!-- CAPTCHA MODAL (3 Ads Sequence) -->
   <div id="modal-captcha" class="fixed inset-0 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 max-w-xs w-full text-center shadow-2xl relative border border-slate-200 dark:border-slate-700">
       <button onclick="closeModal('modal-captcha')" class="absolute top-4 right-4 p-1.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
         <i data-lucide="x" class="w-4 h-4"></i>
       </button>
       <h3 class="font-black text-slate-800 dark:text-white text-sm mb-1 text-cyan-600">ক্যাপচা টাইপিং</h3>
-      <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">ক্যাপচা সাবমিট করে ২টি অ্যাড দেখে +১৫ কয়েন নিন</p>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">ক্যাপচা কোড লিখে ভেরিফিকেশন সম্পন্ন করুন</p>
       <div class="flex items-center justify-center gap-2 mb-3">
         <div id="captcha-display" class="bg-slate-900 text-amber-300 text-lg font-black font-mono tracking-widest px-4 py-2 rounded-xl select-none line-through">8K9W2</div>
         <button onclick="generateNewCaptcha()" class="p-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-slate-600 dark:text-slate-300">
@@ -1234,7 +1248,7 @@
       <form onsubmit="handleCaptchaSubmit(event)" class="space-y-3">
         <input type="text" id="captcha-input" placeholder="ক্যাপচা লিখুন" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-center font-mono font-bold text-sm uppercase text-slate-800 dark:text-white" required>
         <button type="submit" class="w-full py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold rounded-xl text-xs shadow-md">
-          ক্যাপচা ও ২-অ্যাড সাবমিট
+          ক্যাপচা সাবমিট করুন
         </button>
       </form>
     </div>
@@ -1243,14 +1257,12 @@
   <!-- JAVASCRIPT LOGIC -->
   <script>
     // ==========================================
-    // AERO AI CONFIGURATION (GITHUB SAFE & PLUGGABLE)
+    // AERO AI CONFIGURATION (POWERED ENGINE)
     // ==========================================
-    // ব্যবহারকারী চাইলে পরে এখানে তার Gemini API Key যুক্ত করতে পারবেন।
-    // কোডটি এমনভাবে তৈরি যাতে API Key না থাকলেও বা GitHub এ লাইভ করলেও কোনো এরর হবে না।
     const AERO_AI_CONFIG = {
-      apiKey: "", // আপনার Gemini/OpenAI API Key এখানে দিতে পারেন (ঐচ্ছিক)
-      apiEndpoint: "", // ঐচ্ছিক কাস্টম প্রক্সি
-      model: "gemini-1.5-flash"
+      apiKey: "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",
+      apiEndpoint: "https://openrouter.ai/api/v1/chat/completions",
+      model: "google/gemini-2.0-flash-001"
     };
 
     const firebaseConfig = {
@@ -1278,7 +1290,7 @@
     const COINS_PER_BDT = 100;
     const MIN_WITHDRAW_BDT = 100;
     const MIN_REFS_FOR_WITHDRAW = 5;
-    const WELCOME_COINS = 50;
+    const WELCOME_COINS = 25;
 
     let appData = {
       user: {
@@ -1306,14 +1318,14 @@
       adLinks: {}
     };
 
-    // Anti-Ban Ad Rotation Engine
+    // Anti-Ban Ad Rotation Engine (3-Ad Sequence & 13s Safe Duration)
     let recentAdUrlsHistory = [];
     let currentActiveAdUrl = '';
     let currentAdQueue = [];
     let currentAdStep = 0;
     let adCountdownInterval = null;
-    let adCountdownTime = 10;
-    let currentAdRewardCoins = 35;
+    let adCountdownTime = 13;
+    let currentAdRewardCoins = 20;
     let currentAdName = 'বিজ্ঞাপন';
     let currentAdCountProp = 'dailyInstant';
     let onAdSequenceSuccessCallback = null;
@@ -1331,7 +1343,7 @@
     function sanitizeKey(k) { return (k || '').replace(/[.#$[\]]/g, '_'); }
 
     // ==========================================
-    // ANTI-BAN 2-AD ROTATION ENGINE (ADMIN LINK SYNC)
+    // ANTI-BAN 3-AD ROTATION ENGINE (ADMIN LINK SYNC)
     // ==========================================
     function getRotatedAdLinks(category) {
       const linksObj = appData.adLinks || {};
@@ -1352,33 +1364,36 @@
       let availableUrls = pool.map(l => l.url);
       if (availableUrls.length === 0) availableUrls = fallbackDefaults;
 
-      // Filter out recently visited URLs to protect admin accounts from ban
-      let candidateUrls = availableUrls.filter(u => !recentAdUrlsHistory.slice(-5).includes(u));
-      if (candidateUrls.length < 2) candidateUrls = availableUrls;
+      // Filter out recently visited URLs to protect admin accounts from ban (Buffer: 35-40 URLs)
+      let candidateUrls = availableUrls.filter(u => !recentAdUrlsHistory.slice(-35).includes(u));
+      if (candidateUrls.length < 3) candidateUrls = availableUrls;
 
       // Shuffle candidates
       const shuffled = [...candidateUrls].sort(() => Math.random() - 0.5);
 
-      const ad1 = shuffled[0];
+      const ad1 = shuffled[0] || availableUrls[0];
       const ad2 = shuffled[1] || (availableUrls.find(u => u !== ad1) || ad1);
+      const ad3 = shuffled[2] || (availableUrls.find(u => u !== ad1 && u !== ad2) || availableUrls[0]);
 
-      // Record in history ring buffer
+      // Record in history ring buffer (maintains last 35-40 entries)
       recentAdUrlsHistory.push(ad1);
-      if (ad1 !== ad2) recentAdUrlsHistory.push(ad2);
-      if (recentAdUrlsHistory.length > 20) recentAdUrlsHistory = recentAdUrlsHistory.slice(-15);
+      if (ad2 !== ad1) recentAdUrlsHistory.push(ad2);
+      if (ad3 !== ad2 && ad3 !== ad1) recentAdUrlsHistory.push(ad3);
+      if (recentAdUrlsHistory.length > 50) recentAdUrlsHistory = recentAdUrlsHistory.slice(-38);
 
-      return [ad1, ad2];
+      return [ad1, ad2, ad3];
     }
 
-    function playTwoAdsSequence(category, rewardCoins, adName, countProp, onSuccessCallback) {
+    function playThreeAdsSequence(category, rewardCoins, adName, countProp, onSuccessCallback) {
       if (countProp && (appData.user[countProp] || 0) <= 0) {
         return alert(`আজকের ${adName} সীমা শেষ! আগামীকাল আবার চেষ্টা করুন।`);
       }
 
-      const [url1, url2] = getRotatedAdLinks(category);
+      const [url1, url2, url3] = getRotatedAdLinks(category);
       currentAdQueue = [
-        { url: url1, duration: 10, label: 'অ্যাড ১/২' },
-        { url: url2, duration: 10, label: 'অ্যাড ২/২' }
+        { url: url1, duration: 13, label: 'ধাপ ১' },
+        { url: url2, duration: 13, label: 'ধাপ ২' },
+        { url: url3, duration: 13, label: 'চূড়ান্ত ধাপ' }
       ];
       currentAdStep = 0;
       currentAdRewardCoins = rewardCoins;
@@ -1388,6 +1403,9 @@
 
       executeAdStep();
     }
+
+    // Alias for backward compatibility
+    const playTwoAdsSequence = playThreeAdsSequence;
 
     function executeAdStep() {
       if (currentAdStep >= currentAdQueue.length) {
@@ -1404,7 +1422,7 @@
         }
 
         confetti({ particleCount: 90, spread: 80 });
-        showToast(`🎉 ২-অ্যাড সম্পন্ন! ${currentAdRewardCoins > 0 ? '+' + currentAdRewardCoins + ' কয়েন যোগ হয়েছে!' : ''}`);
+        showToast(`🎉 কাজ সফলভাবে সম্পন্ন! ${currentAdRewardCoins > 0 ? '+' + currentAdRewardCoins + ' কয়েন যোগ হয়েছে!' : ''}`);
 
         if (typeof onAdSequenceSuccessCallback === 'function') {
           onAdSequenceSuccessCallback();
@@ -1437,7 +1455,7 @@
 
       if (adCountdownInterval) clearInterval(adCountdownInterval);
       adCountdownInterval = setInterval(() => {
-        // Strict visibility pause
+        // Strict visibility pause - paused when tab is active in app (user not looking at ad)
         if (document.visibilityState === 'visible') {
           document.getElementById('ad-pause-alert').classList.remove('hidden');
           return;
@@ -1466,13 +1484,14 @@
     }
 
     // ==========================================
-    // 2-ADS INTEGRATION FOR SPIN, SCRATCH & CAPTCHA
+    // 3-ADS INTEGRATION FOR SPIN, SCRATCH & CAPTCHA
     // ==========================================
     function triggerSpinWithTwoAds() {
       if ((appData.user.dailySpins || 0) <= 0) return alert('আজকের ফ্রি স্পিন শেষ!');
       closeModal('modal-spin');
-      playTwoAdsSequence('general', 0, 'লাকি স্পিন আনলক', 'dailySpins', () => {
-        const SLICES = [15, 35, 20, 80, 25, 50];
+      playThreeAdsSequence('general', 0, 'লাকি স্পিন আনলক', 'dailySpins', () => {
+        // Average ~22 coins: [10, 25, 15, 40, 18, 24] -> sum 132 / 6 = 22
+        const SLICES = [10, 25, 15, 40, 18, 24];
         const won = SLICES[Math.floor(Math.random() * SLICES.length)];
         awardCoins(won, 'লাকি স্পিন');
         confetti({ particleCount: 90, spread: 80 });
@@ -1483,10 +1502,10 @@
     function triggerScratchWithTwoAds() {
       if ((appData.user.dailyScratch || 0) <= 0) return alert('আজকের স্ক্র্যাচ কার্ড শেষ!');
       closeModal('modal-scratch');
-      playTwoAdsSequence('general', 0, 'স্ক্র্যাচ কার্ড আনলক', 'dailyScratch', () => {
-        awardCoins(40, 'স্ক্র্যাচ কার্ড');
+      playThreeAdsSequence('general', 0, 'স্ক্র্যাচ কার্ড আনলক', 'dailyScratch', () => {
+        awardCoins(22, 'স্ক্র্যাচ কার্ড');
         confetti({ particleCount: 80, spread: 70 });
-        showToast('🎉 স্ক্র্যাচ কার্ড সফল! +৪০ কয়েন ক্রেডিট হয়েছে!');
+        showToast('🎉 স্ক্র্যাচ কার্ড সফল! +২২ কয়েন ক্রেডিট হয়েছে!');
       });
     }
 
@@ -1495,9 +1514,9 @@
       const userCode = document.getElementById('captcha-input').value.trim().toUpperCase();
       if (userCode === curCaptcha) {
         closeModal('modal-captcha');
-        playTwoAdsSequence('general', 0, 'ক্যাপচা জব ভেরিফিকেশন', 'dailyCaptcha', () => {
-          awardCoins(15, 'ক্যাপচা টাইপিং');
-          showToast('🎉 ক্যাপচা সঠিক! +১৫ কয়েন অর্জিত!');
+        playThreeAdsSequence('general', 0, 'ক্যাপচা জব ভেরিফিকেশন', 'dailyCaptcha', () => {
+          awardCoins(10, 'ক্যাপচা টাইপিং');
+          showToast('🎉 ক্যাপচা সঠিক! +১০ কয়েন অর্জিত!');
           generateNewCaptcha();
         });
       } else {
@@ -1506,12 +1525,12 @@
       }
     }
 
-    // Direct Ad Buttons
-    function watchAdsgramAd() { playTwoAdsSequence('adsgram', 30, 'ভিডিও এড', 'dailyAdsgram'); }
-    function watchThreeAdsOnly() { playTwoAdsSequence('three_ads', 40, 'বোনাস এড', 'dailyMonetag'); }
-    function startWatchAd() { playTwoAdsSequence('watch_ad', 45, 'Watch Ad', 'dailyWatchAd'); }
-    function openUnlockExtraModal() { playTwoAdsSequence('unlock_extra', 90, 'Unlock Extra Ad', 'dailyUnlockExtra'); }
-    function startInstantReward() { playTwoAdsSequence('instant_reward', 35, 'Instant Reward Ad', 'dailyInstant'); }
+    // Direct Ad Buttons (Optimized Rewards & 3-Ad Sequences)
+    function watchAdsgramAd() { playThreeAdsSequence('adsgram', 18, 'ভিডিও এড', 'dailyAdsgram'); }
+    function watchThreeAdsOnly() { playThreeAdsSequence('three_ads', 25, 'বোনাস এড', 'dailyMonetag'); }
+    function startWatchAd() { playThreeAdsSequence('watch_ad', 28, 'Watch Ad', 'dailyWatchAd'); }
+    function openUnlockExtraModal() { playThreeAdsSequence('unlock_extra', 42, 'Unlock Extra Ad', 'dailyUnlockExtra'); }
+    function startInstantReward() { playThreeAdsSequence('instant_reward', 20, 'Instant Reward Ad', 'dailyInstant'); }
 
     // ==========================================
     // AERO AI ASSISTANT LOGIC (SMART BENGALI ENGINE)
@@ -1538,55 +1557,81 @@
       input.value = '';
       appendAeroMessage('user', query);
 
-      // Intelligent Offline Fallback Engine Responses in Bengali
+      // Intelligent Offline Fallback Engine Responses in Bengali (Per-Button Guidance)
       const q = query.toLowerCase();
       let reply = '';
 
-      if (q.includes('টাস্ক') || q.includes('কাজ') || q.includes('task') || q.includes('ডেইলি') || q.includes('প্রতিদিন') || q.includes('আনলিমিটেড')) {
+      if (q.includes('unlock extra') || q.includes('আনলক এক্সট্রা')) {
+        reply = "🔓 **Unlock Extra (+৪২ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **পেজে প্রবেশ:** বাটনে চাপ দিয়ে নির্দিষ্ট পেজটি ওপেন হলে সাথে সাথে ব্যাক করবেন না। পেজটি পুরো লোড হতে ৫-১০ সেকেন্ড সময় দিন।\n২. **স্ক্রোলিং (১৩-১৫ সেকেন্ড):** পেজটি ধীরে ধীরে উপর-নিচ স্ক্রোল করে স্বাভাবিক ভিজিটরের মতো কনটেন্ট দেখুন।\n৩. **ইন্টারনাল ব্রাউজিং:** পেজের ভেতরের যেকোনো মেনু, ছবি বা লিংকে স্বাভাবিকভাবে একবার ক্লিক করে ৩-৫ সেকেন্ড ব্রাউজ করুন।\n৪. **ভেরিফিকেশন সম্পন্ন:** নির্ধারিত সময় পূর্ণ হলে আপনার একাউন্টে সাথে সাথে +৪২ কয়েন নিশ্চিতভাবে ক্রেডিট হয়ে যাবে।\n\n⚠️ *সতর্কতা: ভিপিএন বা অটো-ক্লিকার ব্যবহার করবেন না, স্বাভাবিকভাবে পেজটি ব্রাউজ করুন।*";
+      } else if (q.includes('watch ad') || q.includes('ওয়াচ এড') || q.includes('ওয়াচ এড')) {
+        reply = "🎬 **Watch Ad (+২৮ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **পেজ লোড হতে দিন:** Watch Ad বাটনে চাপ দিয়ে পেজে গিয়ে ৫-১০ সেকেন্ড অপেক্ষা করুন যাতে পেজ পুরোপুরি লোড হয়।\n২. **সক্রিয় ব্রাউজিং:** অন্তত ১৩-১৫ সেকেন্ড পেজটিতে স্বাভাবিকভাবে স্ক্রোল করে দেখুন। কোনো ভিডিও কনটেন্ট আসলে তা পুরোটা দেখুন।\n৩. **ভেতরের লিংকে টাচ:** পেজের যেকোনো বাটনে বা আর্টিকেলে স্বাভাবিকভাবে একবার ক্লিক করে ৩ সেকেন্ড সময় কাটান।\n৪. **রিওয়ার্ড গ্রহণ:** সময় শেষ হলে স্বয়ংক্রিয়ভাবে +২৮ কয়েন আপনার ওয়ালেটে জমা হবে।";
+      } else if (q.includes('বোনাস এড') || q.includes('bonus ad')) {
+        reply = "🎁 **বোনাস এড (+২৫ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **পেজে উপস্থিতি:** বোনাস এড ওপেন হলে পেজটি সম্পূর্ণ লোড হতে দিন (৫-৮ সেকেন্ড)।\n২. **স্ক্রোল ও নিরীক্ষণ:** পুরো পেজটি স্ক্রোল করুন এবং স্বাভাবিক ব্যবহারকারীর মতো ১৩-১৫ সেকেন্ড পেজে অবস্থান করুন।\n৩. **ইন্টারঅ্যাকশন:** পেজের ভেতরের যেকোনো লিংকে ক্লিক করে পেজটি একটু ঘুরে দেখুন। এতে আপনার ভিজিট সফলভাবে ভেরিফাই হবে এবং নিশ্চিতভাবে +২৫ কয়েন পাবেন।";
+      } else if (q.includes('ভিডিও এড') || q.includes('video ad') || q.includes('adsgram')) {
+        reply = "📹 **ভিডিও এড (+১৮ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **সম্পূর্ণ ভিডিও দেখুন:** ভিডিওটি শুরু হলে কোনো অবস্থাতেই মাঝে কেটে দেবেন না। সম্পূর্ণ সময় শেষ না হওয়া পর্যন্ত অপেক্ষা করুন।\n২. **ভিডিও শেষে পেজ ভিজিট:** ভিডিও শেষ হওয়ার পর যদি কোনো পেজ ওপেন হয়, সেখানে ৫-১০ সেকেন্ড স্বাভাবিকভাবে থাকুন এবং স্ক্রোল করুন।\n৩. **নিশ্চিত পয়েন্ট:** ভিডিও সম্পন্ন হলে সাথে সাথে +১৮ কয়েন আপনার অ্যাকাউন্টে সফলভাবে যোগ হবে।";
+      } else if (q.includes('instant') || q.includes('ইনস্ট্যান্ট') || q.includes('instant bonus')) {
+        reply = "⚡ **Instant Bonus (+২০ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **পেজ ভিজিট:** Instant Bonus এ ক্লিক করে পেজটিতে প্রবেশ করুন এবং পেজটি লোড হওয়া পর্যন্ত অপেক্ষা করুন।\n২. **ন্যাচারাল স্ক্রোল:** পেজে গিয়ে অন্তত ১৩-১৫ সেকেন্ড ওপর-নিচ স্ক্রোল করুন।\n৩. **ক্লিক ও ব্রাউজ:** পেজের ভেতরের কোনো আর্টিকেলে বা লিংকে একবার আলতো করে ক্লিক করে ৩ সেকেন্ড সময় কাটান।\n৪. **রিওয়ার্ড:** কাজ সম্পন্ন হওয়া মাত্রই +২০ কয়েন ক্রেডিট হবে।";
+      } else if (q.includes('স্পিন') || q.includes('spin') || q.includes('লাকি স্পিন')) {
+        reply = "🎡 **লাকি স্পিন হুইল এ কাজের সম্পূর্ণ গাইড:**\n\n১. **স্পিন আনলক:** 'দেখে স্পিন করুন' বাটনে ক্লিক করে স্পন্সরড পেজে যান।\n২. **পেজে ১৩-১৫ সেকেন্ড স্ক্রোল:** প্রতিটি পেজ ভালো করে লোড হতে দিন এবং স্বাভাবিকভাবে স্ক্রোল করে ১৩-১৫ সেকেন্ড অবস্থান করুন।\n৩. **পেজ ব্রাউজিং:** পেজের যেকোনো লিংকে একবার ক্লিক করে ঘুরে দেখুন।\n৪. **স্পিন ও কয়েন:** ভেরিফিকেশন ধাপগুলো শেষ হলে হুইলটি স্বয়ংক্রিয়ভাবে ঘুরবে এবং আপনি সর্বোচ্চ ৪০ কয়েন পর্যন্ত জিতে নিতে পারবেন (গড় ২২ কয়েন)।";
+      } else if (q.includes('স্ক্র্যাচ') || q.includes('scratch')) {
+        reply = "🎫 **স্ক্র্যাচ কার্ড (+২২ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **কার্ড আনলক:** আনলক বাটনে ক্লিক করে স্পন্সর পেজটি ওপেন করুন।\n২. **স্বাভাবিক ব্রাউজ:** পেজটি ৫-১০ সেকেন্ড লোড হতে দিয়ে অন্তত ১৩-১৫ সেকেন্ড স্ক্রোল করুন এবং একটি ভেতরের লিংকে স্বাভাবিক ক্লিক করুন।\n৩. **কার্ড স্ক্র্যাচ:** পেজের কাজ সফলভাবে সম্পন্ন হলে স্ক্র্যাচ কার্ডটি উন্মুক্ত হবে এবং হাত দিয়ে ঘষে সাথে সাথে +২২ কয়েন আপনার অ্যাকাউন্টে নিয়ে নিন।";
+      } else if (q.includes('ক্যাপচা') || q.includes('captcha')) {
+        reply = "⌨️ **ক্যাপচা জব (+১০ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **সঠিক কোড টাইপ:** স্ক্রিনে প্রদর্শিত ইংরেজি বড় হাতের কোডটি নির্ভুলভাবে লিখে সাবমিট করুন।\n২. **ভেরিফিকেশন পেজ ব্রাউজিং:** পেজ ওপেন হলে ১৩-১৫ সেকেন্ড থাকুন, ওপর-নিচ স্ক্রোল করুন এবং একটি লিংকে স্বাভাবিক ক্লিক করুন।\n৩. **কয়েন অর্জন:** ভেরিফিকেশন সফল হলে সাথে সাথে +১০ কয়েন ওয়ালেটে জমা হবে।";
+      } else if (q.includes('কুইজ') || q.includes('quiz') || q.includes('ম্যাথ')) {
+        reply = "🧠 **ম্যাথ কুইজ (+১৫ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **সহজ প্রশ্নের সঠিক উত্তর:** স্ক্রিনে থাকা সহজ যোগ/বিয়োগ অংকটির সঠিক অপশনটি বেছে নিন।\n২. **সফল উত্তর:** সঠিক উত্তরে ক্লিক করলেই সরাসরি +১৫ কয়েন অ্যাকাউন্টে ক্রেডিট হয়ে যাবে।";
+      } else if (q.includes('টাস্ক') || q.includes('কাজ') || q.includes('task') || q.includes('ডেইলি') || q.includes('প্রতিদিন') || q.includes('আনলিমিটেড')) {
         reply = "📌 **মাইক্রো-টাস্ক সম্পন্ন করার সম্পূর্ণ গাইড:**\n\nঅ্যাপের টাস্কগুলো মূলত ৩ ধরণের ক্যাটাগরিতে পাওয়া যায়:\n\n১. 📅 **প্রতিদিন ১ বার (Daily):** এই টাস্কগুলো দিনে একবার সম্পন্ন করা যায়। প্রতিদিন রাত ১২টায় আবার নতুন করে আসে।\n২. ⚡ **আনলিমিটেড (Unlimited):** কোনো দৈনিক সীমা নেই, যত ইচ্ছা ততবার সম্পন্ন করে বারবার পয়েন্ট আয় করা যায়।\n৩. 🔒 **ওয়ান-টাইম (One-Time):** অ্যাকাউন্ট খোলার পর কেবল ১ বার সম্পন্ন করার টাস্ক (যেমন অফিসিয়াল টেলিগ্রাম চ্যানেলে জয়েন)।\n\n⏱️ **টাস্ক করার নিয়ম:**\n• টাস্কের 'শুরু করুন' বাটনে ক্লিক করে নির্দিষ্ট পেজে যান।\n• নির্ধারিত পুরো সময় (যেমন ২০, ৩০ বা ৬০ সেকেন্ড) পেজে অবস্থান করুন।\n• সময় পূর্ণ হলে স্বয়ংক্রিয়ভাবে আপনার ব্যালেন্সে কয়েন যোগ হবে এবং টাস্কটি সম্পন্ন হিসেবে চিহ্নিত হবে।";
       } else if (q.includes('অ্যাড') || q.includes('বিজ্ঞাপন') || q.includes('এড') || q.includes('ad') || q.includes('কি করতে হবে') || q.includes('নিয়ম')) {
-        reply = "💎 **বিজ্ঞাপন ও স্পন্সর পেজে সঠিক কাজের নিয়মাবলী:**\n\nআপনার ভিজিট যাতে সিস্টেমে শতভাগ সফলভাবে ভেরিফাই হয় এবং কয়েন নিশ্চিতভাবে যোগ হয়, তার নিয়মাবলী নিচে দেওয়া হলো:\n\n১. 🌐 **ওয়েবসাইট বা পেজ ভিজিট:**\n• পেজে প্রবেশের সাথে সাথে ব্যাক বা ক্লোজ করবেন না। পেজটি পুরো লোড হতে ৫-১০ সেকেন্ড দিন।\n• পেজটি ওপর-নিচ ধীরে ধীরে স্ক্রোল (Scroll) করে স্বাভাবিকভাবে কনটেন্টগুলো দেখুন (কমপক্ষে ১৫-২০ সেকেন্ড)।\n• পেজের ভেতরের যেকোনো আকর্ষণীয় আর্টিকেল, বাটন বা মেনুতে স্বাভাবিকভাবে একবার ক্লিক করে ভেতরের পাতা ৩-৫ সেকেন্ড ব্রাউজ করুন। এতে আপনার ভিজিট স্বয়ংক্রিয়ভাবে জেনুইন ইউজার ভিজিট হিসেবে অনুমোদিত হয়।\n\n২. 🎬 **ভিডিও কনটেন্ট:**\n• ভিডিও চলাকালীন কোনোভাবেই কেটে দেবেন না। সম্পূর্ণ ভিডিও শেষ হওয়া পর্যন্ত অপেক্ষা করুন।\n\n৩. 📲 **অ্যাপ অফার:**\n• প্লে স্টোর বা স্টোর পেজে গেলে অ্যাপটির বিবরণ ও স্ক্রিনশট স্বাভাবিকভাবে দেখুন। ইনস্টল করার নির্দেশনা থাকলে অন্তত একবার ইনস্টল করে ওপেন করুন।\n\n৪. 🛡️ **অ্যাকাউন্ট সুরক্ষা:**\n• কোনো প্রকার VPN বা অটো-ক্লিকার ব্যবহার করবেন না। রিয়েল ইউজারের মতো স্বাভাবিক সময় দিয়ে কাজ সম্পন্ন করলে কয়েন দ্রুত জমা হবে।";
+        reply = "💎 **বিজ্ঞাপনে সঠিক কাজের সাধারণ নিয়মাবলী (কয়েন নিশ্চিত করার উপায়):**\n\nআপনার প্রতিটি ভিজিট যাতে সিস্টেমে শতভাগ সফলভাবে অনুমোদিত হয় এবং কয়েন নিশ্চিতভাবে জমা হয়:\n\n১. 🌐 **পেজ লোড হতে দেওয়া:** পেজে প্রবেশের সাথে সাথে ব্যাক করবেন না। পেজটি পুরো লোড হতে ৫-১০ সেকেন্ড সময় দিন।\n২. 📜 **১৩-১৫ সেকেন্ড স্ক্রোল:** পেজটি ধীরে ধীরে উপর-নিচ স্ক্রোল করুন এবং ভেতরের তথ্যগুলো স্বাভাবিকভাবে দেখুন।\n৩. 👆 **ইন্টারনাল ক্লিক:** পেজের ভেতরের যেকোনো আর্টিকেল, বাটন বা মেনুতে স্বাভাবিকভাবে একবার ক্লিক করে ৩-৫ সেকেন্ড ব্রাউজ করুন।\n৪. 🎬 **ভিডিও পুরো দেখা:** কোনো ভিডিও থাকলে তা শেষ না হওয়া পর্যন্ত ব্যাক করবেন না।\n৫. 🛡️ **অ্যাকাউন্ট সুরক্ষা:** কোনো প্রকার VPN, অটো-ক্লিকার বা বট ব্যবহার সম্পূর্ণ নিষিদ্ধ। স্বাভাবিক ব্রাউজিং করলেই সাথে সাথে কয়েন জমা হয়ে যাবে।";
       } else if (q.includes('উইথড্র') || q.includes('টাকা') || q.includes('বিকাশ') || q.includes('নগদ') || q.includes('withdraw') || q.includes('পেমেন্ট')) {
         reply = "💸 **টাকা উত্তোলন (Withdraw) পলিসি:**\n\n• কয়েন রেট: ১০০ কয়েন = ৳১ টাকা।\n• সর্বনিম্ন উত্তোলন: ৳১০০ (১০,০০০ কয়েন)।\n• শর্তাবলী: ন্যূনতম ৫টি সফল রেফারেল থাকতে হবে এবং নিয়ম মেনে নিয়মিত টাস্ক করতে হবে।\n• পেমেন্ট মেথড: বিকাশ, নগদ, রকেট এবং মোবাইল রিচার্জ।\n• প্রসেসিং সময়: উইথড্র আবেদন করার পর তথ্য যাচাই করে দ্রুত সময়ের মধ্যে বিকাশ/নগদে টাকা পাঠিয়ে দেওয়া হয়।";
       } else if (q.includes('ব্যান') || q.includes('ban') || q.includes('ভিপিএন') || q.includes('vpn') || q.includes('invalid') || q.includes('সুরক্ষা')) {
-        reply = "🚫 **একাউন্ট ব্যান ও ইনভ্যালিড ক্লিক থেকে সুরক্ষার উপায়:**\n\n১. 🛡️ **ভিপিএন সম্পূর্ণ নিষিদ্ধ:** কোনো প্রকার VPN বা প্রক্সি ব্যবহার করবেন না। ভিপিএন ডিটেক্ট হলে একাউন্ট বাতিল হতে পারে।\n২. 📱 **স্বাভাবিক ব্রাউজিং:** বিজ্ঞাপনে গিয়ে সাথে সাথে বের না হয়ে অন্তত ১৫-২০ সেকেন্ড স্ক্রোল করুন।\n৩. 👤 **এক ডিভাইসে এক একাউন্ট:** একাধিক একাউন্ট বা ক্লোন অ্যাপ ব্যবহার করা যাবে না।\n৪. 🤖 **অটো-ক্লিকার নিষিদ্ধ:** কোনো বট বা অটোমেশন স্ক্রিপ্ট ব্যবহার করা সম্পূর্ণ নিষিদ্ধ।";
+        reply = "🚫 **একাউন্ট ব্যান ও ইনভ্যালিড ক্লিক থেকে সুরক্ষার উপায়:**\n\n১. 🛡️ **ভিপিএন সম্পূর্ণ নিষিদ্ধ:** কোনো প্রকার VPN বা প্রক্সি ব্যবহার করবেন না। ভিপিএন ডিটেক্ট হলে একাউন্ট বাতিল হতে পারে।\n২. 📱 **স্বাভাবিক ব্রাউজিং:** পেজে গিয়ে সাথে সাথে বের না হয়ে অন্তত ১৩-১৫ সেকেন্ড স্ক্রোল করুন।\n৩. 👤 **এক ডিভাইসে এক একাউন্ট:** একাধিক একাউন্ট বা ক্লোন অ্যাপ ব্যবহার করা যাবে না।\n৪. 🤖 **অটো-ক্লিকার নিষিদ্ধ:** কোনো বট বা অটোমেশন স্ক্রিপ্ট ব্যবহার করা সম্পূর্ণ নিষিদ্ধ।";
       } else if (q.includes('রেফার') || q.includes('কমিশন') || q.includes('স্যালারি') || q.includes('বেতন') || q.includes('refer')) {
-        reply = "👥 **রেফারেল ও মাসিক ফিক্সড স্যালারি প্রোগ্রাম:**\n\n• 🎁 **রেফারেল বোনাস:** প্রতি রেফারে সাথে সাথে +৪০ কয়েন।\n• 💰 **১০% লাইফটাইম কমিশন:** আপনার রেফার করা সদস্যরা যত টাস্ক সম্পন্ন করবে, তাদের আয়ের ১০% আজীবন আপনার একাউন্টে জমা হবে।\n• 🏆 **মাসিক ফিক্সড স্যালারি (প্রতি মাসের ১ তারিখে পেমেন্ট):**\n  - ব্রোঞ্জ টায়ার (৩০ রেফারেল): ৳৫০০ মাসিক বেতন\n  - সিলভার টায়ার (৭৫ রেফারেল): ৳১,২০০ মাসিক বেতন\n  - গোল্ড টায়ার (২০০ রেফারেল): ৳৩,০০০ মাসিক বেতন";
+        reply = "👥 **রেফারেল ও মাসিক ফিক্সড স্যালারি প্রোগ্রাম:**\n\n• 🎁 **রেফারেল বোনাস:** প্রতি সফল রেফারে সাথে সাথে +২২ কয়েন বোনাস।\n• 💰 **১০% লাইফটাইম কমিশন:** আপনার রেফার করা সদস্যরা যত টাস্ক সম্পন্ন করবে, তাদের আয়ের ১০% আজীবন আপনার একাউন্টে জমা হবে।\n• 🏆 **মাসিক ফিক্সড স্যালারি (প্রতি মাসের ১ তারিখে পেমেন্ট):**\n  - ব্রোঞ্জ টায়ার (৩০ রেফারেল): ৳৫০০ মাসিক বেতন\n  - সিলভার টায়ার (৭৫ রেফারেল): ৳১,২০০ মাসিক বেতন\n  - গোল্ড টায়ার (২০০ রেফারেল): ৳৩,০০০ মাসিক বেতন";
       } else {
-        reply = `ধন্যবাদ আপনার প্রশ্নের জন্য! Task Cash Pro অ্যাপে নিয়ম মেনে প্রতিটি টাস্ক সম্পন্ন করলে এবং পেজে স্বাভাবিক সময় কাটালে আপনার সব কয়েন নিরাপদে অ্যাকাউন্টে জমা হবে। আপনার আর কোনো কিছু জানার থাকলে আমাকে নির্দ্বিধায় জিজ্ঞাসা করুন!`;
+        reply = `ধন্যবাদ আপনার প্রশ্নের জন্য! Task Cash Pro অ্যাপে নিয়ম মেনে প্রতিটি কাজ সম্পন্ন করলে এবং পেজে ১৩-১৫ সেকেন্ড স্বাভাবিক স্ক্রোল করে সময় কাটালে আপনার সব কয়েন নিরাপদে অ্যাকাউন্টে জমা হবে। নির্দিষ্ট কোনো বাটন (যেমন: Unlock Extra, Watch Ad, বোনাস এড, স্পিন, স্ক্র্যাচ) সম্পর্কে জানতে আমাকে জিজ্ঞাসা করুন!`;
       }
 
-      // If user configured a real Gemini API token in AERO_AI_CONFIG, gracefully try calling it
-      if (AERO_AI_CONFIG.apiKey && AERO_AI_CONFIG.apiKey.length > 5) {
+      // If user configured a valid AI API Key, call AI engine with strict confidentiality rules
+      if (AERO_AI_CONFIG.apiKey && AERO_AI_CONFIG.apiKey.length > 10) {
         try {
-          const endpoint = AERO_AI_CONFIG.apiEndpoint || `https://generativelanguage.googleapis.com/v1beta/models/${AERO_AI_CONFIG.model}:generateContent?key=${AERO_AI_CONFIG.apiKey}`;
+          const endpoint = AERO_AI_CONFIG.apiEndpoint || "https://openrouter.ai/api/v1/chat/completions";
+          const sysPrompt = `You are Aero AI, the smart user assistant of Task Cash Pro earning web app.
+STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
+1. NEVER mention any ad network names under any circumstances (FORBIDDEN words: Monetag, AdsGram, Adsterra, PopAds, HilltopAds, Google, AdSense, etc.).
+2. NEVER mention admin revenue, profit margins, eCPM, publisher earnings, or backend business monetization.
+3. ALWAYS speak 100% from the USER'S perspective: politely guide the user how to visit pages naturally (wait 5-10s for page to fully load, scroll smoothly for 13-15 seconds, click an internal link/article to browse for 3-5 seconds, watch videos completely, never use VPNs or auto-clickers) so that the user's task visit is successfully verified and coins are credited smoothly.
+4. Button coin values: Unlock Extra (+42 coins), Watch Ad (+28 coins), Bonus Ad (+25 coins), Scratch Card (+22 coins), Lucky Spin (~22 coins average), Instant Bonus (+20 coins), Video Ad (+18 coins), Math Quiz (+15 coins), Captcha (+10 coins), Daily Bonus (+12 coins), Welcome Bonus (+25 coins), Referral Bonus (+22 coins). 100 coins = 1 BDT.
+5. Answer concisely, cleanly, warmly and step-by-step in natural Bengali.`;
+
           const res = await fetch(endpoint, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${AERO_AI_CONFIG.apiKey}`
+            },
             body: JSON.stringify({
-              contents: [{
-                parts: [{
-                  text: `You are Aero AI, the smart task & user guidance assistant of Task Cash Pro earnings app.
-STRICT CONFIDENTIALITY & SCOPE RULES:
-1. NEVER mention any ad network names (e.g. Monetag, AdsGram, Adsterra, AdSense, etc.).
-2. NEVER discuss admin income, admin revenue, eCPM, or backend monetization. Keep all admin business completely hidden.
-3. Speak 100% from the USER's perspective: guide the user on how to browse landing pages naturally (scrolling up/down, clicking an internal link to explore for a few seconds), watching videos fully, and avoiding VPNs/bots so that the USER'S visit is verified successfully and coins are credited smoothly.
-4. Answer concisely and politely in friendly Bengali to: "${query}".`
-                }]
-              }]
+              model: AERO_AI_CONFIG.model || "google/gemini-2.0-flash-001",
+              messages: [
+                { role: "system", content: sysPrompt },
+                { role: "user", content: query }
+              ]
             })
           });
           const data = await res.json();
-          const apiReply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (apiReply) reply = apiReply;
+          const apiReply = data?.choices?.[0]?.message?.content;
+          if (apiReply && apiReply.trim().length > 0) {
+            reply = apiReply.trim();
+          }
         } catch (err) {
-          console.warn("Aero AI external API skipped, using smart built-in engine:", err);
+          console.warn("Aero AI external API call skipped, smart built-in engine used:", err);
         }
       }
 
       setTimeout(() => {
         appendAeroMessage('ai', reply);
-      }, 500);
+      }, 400);
     }
 
     function appendAeroMessage(sender, text) {
@@ -1698,9 +1743,24 @@ STRICT CONFIDENTIALITY & SCOPE RULES:
       document.getElementById('captcha-count').innerText = `${u.dailyCaptcha || 0} টি`;
       document.getElementById('adsgram-count').innerText = `${u.dailyAdsgram || 0} টি`;
       document.getElementById('monetag-count').innerText = `${u.dailyMonetag || 0} টি`;
-      document.getElementById('watch-ad-count').innerText = `+45 • ${u.dailyWatchAd || 0}টি`;
-      document.getElementById('unlock-extra-count').innerText = `+90 • ${u.dailyUnlockExtra || 0}টি`;
-      document.getElementById('instant-count').innerText = `+35 • ${u.dailyInstant || 0}টি`;
+      document.getElementById('watch-ad-count').innerText = `+28 • ${u.dailyWatchAd || 0}টি`;
+      document.getElementById('unlock-extra-count').innerText = `+42 • ${u.dailyUnlockExtra || 0}টি`;
+      document.getElementById('instant-count').innerText = `+20 • ${u.dailyInstant || 0}টি`;
+
+      // Withdraw View Eligibility Stats
+      if (document.getElementById('wdr-stat-coins')) document.getElementById('wdr-stat-coins').innerText = (u.coins || 0).toLocaleString();
+      if (document.getElementById('wdr-stat-bdt')) document.getElementById('wdr-stat-bdt').innerText = `≈ ৳${((u.coins || 0) / COINS_PER_BDT).toFixed(2)}`;
+      if (document.getElementById('wdr-stat-refs')) document.getElementById('wdr-stat-refs').innerText = `${refCount}/${MIN_REFS_FOR_WITHDRAW} জন`;
+      const refBadge = document.getElementById('wdr-stat-ref-badge');
+      if (refBadge) {
+        if (refCount >= MIN_REFS_FOR_WITHDRAW) {
+          refBadge.innerText = '✅ শর্ত পূরণ হয়েছে';
+          refBadge.className = 'text-[10px] text-emerald-600 font-bold';
+        } else {
+          refBadge.innerText = `❌ বাকি ${MIN_REFS_FOR_WITHDRAW - refCount} জন`;
+          refBadge.className = 'text-[10px] text-rose-500 font-bold';
+        }
+      }
     }
 
     function switchTab(tabId) {
@@ -1764,14 +1824,14 @@ STRICT CONFIDENTIALITY & SCOPE RULES:
     function shareWhatsApp() {
       const code = appData.user.referralCode || (appData.user.phone ? 'TC' + appData.user.phone.slice(-4) : 'TC7701');
       const link = `${window.location.origin}${window.location.pathname}?ref=${code}`;
-      const text = encodeURIComponent(`Task Cash Pro তে যোগ দিন এবং প্রতিদিন টাস্ক ও ২-অ্যাড দেখে বিকাশে টাকা ইনকাম করুন!\n🎁 আমার রেফারেল কোড: ${code}\n👉 জয়েন লিংক: ${link}`);
+      const text = encodeURIComponent(`Task Cash Pro তে যোগ দিন এবং প্রতিদিন সহজ কাজ সম্পন্ন করে বিকাশে টাকা ইনকাম করুন!\n🎁 আমার রেফারেল কোড: ${code}\n👉 জয়েন লিংক: ${link}`);
       window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
     }
 
     function shareTelegram() {
       const code = appData.user.referralCode || (appData.user.phone ? 'TC' + appData.user.phone.slice(-4) : 'TC7701');
       const link = `${window.location.origin}${window.location.pathname}?ref=${code}`;
-      const text = encodeURIComponent(`Task Cash Pro - ঘরে বসে প্রতিদিন আয় করুন!\n🎁 রেফারেল কোড: ${code}\n👉 জয়েন লিংক: ${link}`);
+      const text = encodeURIComponent(`Task Cash Pro - ঘরে বসে প্রতিদিন সহজ কাজ করে আয় করুন!\n🎁 রেফারেল কোড: ${code}\n👉 জয়েন লিংক: ${link}`);
       window.open(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${text}`, '_blank');
     }
 
@@ -1864,8 +1924,8 @@ STRICT CONFIDENTIALITY & SCOPE RULES:
         b.onclick = () => {
           if (opt === ans) {
             closeModal('modal-quiz');
-            awardCoins(25, 'ম্যাথ কুইজ');
-            showToast('সঠিক উত্তর! +২৫ কয়েন');
+            awardCoins(15, 'ম্যাথ কুইজ');
+            showToast('সঠিক উত্তর! +১৫ কয়েন');
           } else {
             alert('ভুল উত্তর');
           }
@@ -1886,10 +1946,10 @@ STRICT CONFIDENTIALITY & SCOPE RULES:
     }
 
     function claimDailyBonus() {
-      awardCoins(30, 'দৈনিক বোনাস');
+      awardCoins(12, 'দৈনিক বোনাস');
       document.getElementById('btn-checkin').disabled = true;
       document.getElementById('btn-checkin').innerText = 'ক্লেইমড';
-      showToast('দৈনিক বোনাস +৩০ কয়েন ক্লেইমড!');
+      showToast('দৈনিক বোনাস +১২ কয়েন ক্লেইমড!');
     }
     function handleRedeemPromo(e) {
       e.preventDefault();
@@ -1903,8 +1963,56 @@ STRICT CONFIDENTIALITY & SCOPE RULES:
     function handleWithdrawSubmit(e) {
       e.preventDefault();
       const amt = Number(document.getElementById('wdr-amount').value);
-      if (amt < MIN_WITHDRAW_BDT) return alert(`সর্বনিম্ন উইথড্র ৳${MIN_WITHDRAW_BDT}`);
-      showToast('উইথড্র আবেদন জমা হয়েছে! ২৪ ঘণ্টার মধ্যে পরিশোধ করা হবে।');
+      const method = document.getElementById('wdr-method').value;
+      const account = document.getElementById('wdr-account').value.trim();
+
+      // 1. Minimum withdraw amount check
+      if (amt < MIN_WITHDRAW_BDT) {
+        return alert(`⚠️ সর্বনিম্ন উত্তোলন ৳${MIN_WITHDRAW_BDT} টাকা!`);
+      }
+
+      // 2. Sufficient coin balance check
+      const requiredCoins = amt * COINS_PER_BDT;
+      const currentCoins = Number(appData.user.coins) || 0;
+      if (currentCoins < requiredCoins) {
+        return alert(`❌ অপর্যাপ্ত কয়েন ব্যালেন্স!\n\n৳${amt} উইথড্র করার জন্য ${requiredCoins.toLocaleString()} কয়েন প্রয়োজন।\nআপনার বর্তমান ব্যালেন্স: ${currentCoins.toLocaleString()} কয়েন (ঘাটতি: ${(requiredCoins - currentCoins).toLocaleString()} কয়েন)।\n\nঅনুগ্রহ করে আরো কাজ করে কয়েন সংগ্রহ করুন।`);
+      }
+
+      // 3. Referral condition check (Minimum 5 referrals required)
+      const currentRefs = Number(appData.user.referralsCount) || 0;
+      if (currentRefs < MIN_REFS_FOR_WITHDRAW) {
+        const needed = MIN_REFS_FOR_WITHDRAW - currentRefs;
+        return alert(`❌ উইথড্র শর্ত অপূর্ণ!\n\nটাকা তুলতে হলে কমপক্ষে ${MIN_REFS_FOR_WITHDRAW}টি সফল রেফারেল থাকতে হবে।\nআপনার বর্তমান রেফারেল: ${currentRefs} জন।\n(উইথড্র আনলক করতে আরও ${needed} জন বন্ধুকে রেফার করুন)।`);
+      }
+
+      // 4. Valid account number check
+      if (!account || account.length < 11) {
+        return alert('⚠️ অনুগ্রহ করে সঠিক ১১ ডিজিটের মোবাইল নম্বর লিখুন (যেমন: 017XXXXXXXX)।');
+      }
+
+      // Deduct coins from user balance
+      appData.user.coins = currentCoins - requiredCoins;
+
+      // Send request to Firebase Realtime Database
+      if (isFirebaseReady && fbDatabase && appData.user?.phone) {
+        fbDatabase.ref('withdrawRequests').push({
+          userPhone: appData.user.phone,
+          userName: appData.user.name || '',
+          method: method,
+          amount: amt,
+          coinsDeducted: requiredCoins,
+          accountNumber: account,
+          timestamp: Date.now(),
+          status: 'pending'
+        }).catch(err => console.warn('Firebase withdraw sync error:', err));
+      }
+
+      saveData();
+      renderUserHeader();
+      confetti({ particleCount: 100, spread: 80 });
+      showToast(`🎉 ৳${amt} উইথড্র আবেদন সফলভাবে জমা হয়েছে!`);
+      document.getElementById('wdr-account').value = '';
+      switchTab('home');
     }
 
     function handleUserLogin(e) {
@@ -1947,9 +2055,9 @@ STRICT CONFIDENTIALITY & SCOPE RULES:
                 fbDatabase.ref('users/' + k).transaction(parent => {
                   if (parent) {
                     parent.referralsCount = (Number(parent.referralsCount) || 0) + 1;
-                    parent.coins = (Number(parent.coins) || 0) + 40; // 40 coins bonus for successful referral
-                    parent.refEarnedCoins = (Number(parent.refEarnedCoins) || 0) + 40;
-                    parent.lifetimeCoins = (Number(parent.lifetimeCoins) || 0) + 40;
+                    parent.coins = (Number(parent.coins) || 0) + 22; // 22 coins bonus for successful referral
+                    parent.refEarnedCoins = (Number(parent.refEarnedCoins) || 0) + 22;
+                    parent.lifetimeCoins = (Number(parent.lifetimeCoins) || 0) + 22;
                   }
                   return parent;
                 });
@@ -1965,7 +2073,7 @@ STRICT CONFIDENTIALITY & SCOPE RULES:
       saveData();
       renderUserHeader();
       initFirebaseSync();
-      showToast('🎉 রেজিস্ট্রেশন সফল! ওয়েলকাম বোনাস +৫০ কয়েন যুক্ত হয়েছে।');
+      showToast('🎉 রেজিস্ট্রেশন সফল! ওয়েলকাম বোনাস +২৫ কয়েন যুক্ত হয়েছে।');
     }
 
     function handleUserLogout() {
