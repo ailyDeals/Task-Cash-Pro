@@ -15,7 +15,6 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
   <script src="//libtl.com/sdk.js" data-zone="10335982" data-sdk="show_10335982"></script>
-  
   <style>
     @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
     .animate-marquee { display: inline-block; white-space: nowrap; animation: marquee 22s linear infinite; }
@@ -1139,11 +1138,11 @@
     </div>
   </div>
 
-  <!-- 2-AD COUNTDOWN & VERIFICATION MODAL -->
+  <!-- 3-AD COUNTDOWN & HIGH-eCPM VERIFICATION MODAL -->
   <div id="modal-ad-countdown" class="fixed inset-0 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
     <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 max-w-xs w-full text-center shadow-2xl border border-slate-200 dark:border-slate-700 space-y-3">
-      <div class="w-14 h-14 rounded-2xl bg-cyan-100 dark:bg-cyan-950/60 text-cyan-600 flex items-center justify-center mx-auto shadow-inner">
-        <i data-lucide="tv" class="w-7 h-7 animate-pulse"></i>
+      <div class="w-12 h-12 rounded-2xl bg-cyan-100 dark:bg-cyan-950/60 text-cyan-600 flex items-center justify-center mx-auto shadow-inner">
+        <i data-lucide="tv" class="w-6 h-6 animate-pulse"></i>
       </div>
 
       <div>
@@ -1154,13 +1153,38 @@
         <p id="ad-countdown-reward-text" class="text-xs text-emerald-600 dark:text-emerald-400 font-bold mt-0.5">+২৮ কয়েন রিওয়ার্ড</p>
       </div>
 
-      <div class="py-2">
-        <div id="ad-countdown-timer" class="text-4xl font-black text-cyan-600 font-mono tracking-tight">13s</div>
+      <!-- Instruction / Notice Box (Smart CPA vs High eCPM) -->
+      <div id="ad-countdown-instruction-box" class="p-2.5 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-200 text-left text-[11px] space-y-1">
+        <div class="font-bold flex items-center gap-1.5 text-cyan-300">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> <span>সর্বোচ্চ eCPM অ্যাক্টিভিটি রুলস:</span>
+        </div>
+        <p class="leading-relaxed text-[10px]">১. পেজে গিয়ে চুপচাপ বসে থাকবেন না। ওপর-নিচ স্ক্রোল করুন।<br>২. পেজের ভেতরের যেকোনো মেনু বা আর্টিকেলে ক্লিক করুন।<br>৩. নির্ধারিত সময় সক্রিয় থাকলে ভেরিফিকেশন টিক চিহ্ন আসবে।</p>
+      </div>
+
+      <!-- Live Countdown Timer Box -->
+      <div id="ad-timer-box" class="py-1">
+        <div id="ad-countdown-timer" class="text-4xl font-black text-cyan-600 font-mono tracking-tight">14s</div>
         <div id="ad-pause-alert" class="hidden my-2 px-3 py-1.5 bg-amber-500/20 border border-amber-500/40 text-amber-600 dark:text-amber-400 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 animate-pulse">
           <i data-lucide="pause-circle" class="w-4 h-4"></i>
           <span>টাইমার পজড! পেজে ফিরে যান</span>
         </div>
-        <p id="ad-countdown-status-hint" class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">পেজে অবস্থান করলে টাইমার চালু থাকবে...</p>
+        <p id="ad-countdown-status-hint" class="text-[10px] text-slate-500 dark:text-slate-400 mt-1">বিজ্ঞাপনে সক্রিয়ভাবে ব্রাউজ করুন...</p>
+      </div>
+
+      <!-- Human Interaction Confirmation Box (After Timer Completes) -->
+      <div id="ad-step-confirm-box" class="hidden p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-left space-y-2.5">
+        <div class="flex items-center gap-1.5 text-emerald-400 font-bold text-xs">
+          <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+          <span>সময় সফলভাবে সম্পন্ন হয়েছে!</span>
+        </div>
+        <label class="flex items-start gap-2 cursor-pointer text-[11px] text-slate-700 dark:text-slate-300 font-medium">
+          <input type="checkbox" id="ad-activity-check" class="mt-0.5 rounded text-emerald-600 focus:ring-emerald-500">
+          <span>আমি পেজে স্ক্রোল ও আর্টিকেলে ক্লিক করেছি।</span>
+        </label>
+        <button onclick="confirmAdActivityAndProceed()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition-all">
+          <span>ভেরিফাই করে পরের ধাপে যান</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </button>
       </div>
 
       <div class="space-y-2 pt-1">
@@ -1354,6 +1378,7 @@
       const pool = categoryFiltered.length > 0 ? categoryFiltered : (allActive.length > 0 ? allActive : []);
 
       const fallbackDefaults = [
+        'https://vast.yomeno.xyz/vast?spot_id=1501671',
         'https://rm358.com/4/11770071?var=rot_1',
         'https://rm358.com/4/11770069?var=rot_2',
         'https://rm358.com/4/11770066?var=rot_3',
@@ -1385,16 +1410,62 @@
       return [ad1, ad2, ad3];
     }
 
+    // Helper: Detect Ad Type (CPA Offer vs High-eCPM Direct/CPM)
+    function detectAdClassification(url) {
+      if (!url) return { isCPA: false, network: 'direct', minTime: 14 };
+      const u = url.toLowerCase();
+      // CPA networks that require lead/conversion/postback rather than mere impression
+      if (u.includes('zeydoo') || u.includes('cpagrip') || u.includes('friendlybunny') || u.includes('mylead') || u.includes('cpalead') || u.includes('offertoro')) {
+        let net = 'cpa';
+        if (u.includes('zeydoo')) net = 'zeydoo';
+        else if (u.includes('cpagrip')) net = 'cpagrip';
+        else if (u.includes('friendlybunny')) net = 'friendlybunny';
+        return { isCPA: true, network: net, minTime: 18 };
+      }
+      // High eCPM Ad networks (Monetag, Adsterra, PropellerAds, HilltopAds, ProPush)
+      let net = 'cpm';
+      if (u.includes('rm358.com') || u.includes('profitableratecpmnetwork') || u.includes('adsterra')) net = 'adsterra';
+      else if (u.includes('monetag') || u.includes('al5sm') || u.includes('yomeno') || u.includes('propush')) net = 'monetag';
+      return { isCPA: false, network: net, minTime: 14 };
+    }
+
+    // High eCPM User Interaction & Verification Engine
+    let userAdInteractionConfirmed = false;
+    let pendingAdVerificationCallback = null;
+
+    // Helper: Attach Tracking/SubID parameters for S2S Postback networks (Zeydoo, CPAGrip, FriendlyBunny, Monetag, Adsterra)
+    function attachTrackingParams(rawUrl) {
+      if (!rawUrl) return rawUrl;
+      const uid = (appData.user && appData.user.phone) ? appData.user.phone : 'guest';
+      try {
+        const urlObj = new URL(rawUrl, window.location.origin);
+        // Common postback tracking parameters across top CPA networks
+        urlObj.searchParams.set('ymid', uid);         // Zeydoo / PropellerAds
+        urlObj.searchParams.set('subid', uid);        // FriendlyBunny / General CPA
+        urlObj.searchParams.set('tracking_id', uid);  // CPAGrip
+        urlObj.searchParams.set('var', uid);          // Adsterra / ProPush
+        urlObj.searchParams.set('click_id', uid);     // Monetag S2S
+        return urlObj.toString();
+      } catch (e) {
+        const sep = rawUrl.includes('?') ? '&' : '?';
+        return `${rawUrl}${sep}ymid=${uid}&subid=${uid}&tracking_id=${uid}&var=${uid}&click_id=${uid}`;
+      }
+    }
+
     function playThreeAdsSequence(category, rewardCoins, adName, countProp, onSuccessCallback) {
       if (countProp && (appData.user[countProp] || 0) <= 0) {
         return alert(`আজকের ${adName} সীমা শেষ! আগামীকাল আবার চেষ্টা করুন।`);
       }
 
       const [url1, url2, url3] = getRotatedAdLinks(category);
+      const c1 = detectAdClassification(url1);
+      const c2 = detectAdClassification(url2);
+      const c3 = detectAdClassification(url3);
+
       currentAdQueue = [
-        { url: url1, duration: 13, label: 'ধাপ ১' },
-        { url: url2, duration: 13, label: 'ধাপ ২' },
-        { url: url3, duration: 13, label: 'চূড়ান্ত ধাপ' }
+        { url: url1, duration: c1.minTime, label: 'ধাপ ১/৩', classification: c1 },
+        { url: url2, duration: c2.minTime, label: 'ধাপ ২/৩', classification: c2 },
+        { url: url3, duration: c3.minTime, label: 'চূড়ান্ত ধাপ', classification: c3 }
       ];
       currentAdStep = 0;
       currentAdRewardCoins = rewardCoins;
@@ -1423,7 +1494,7 @@
         }
 
         confetti({ particleCount: 90, spread: 80 });
-        showToast(`🎉 কাজ সফলভাবে সম্পন্ন! ${currentAdRewardCoins > 0 ? '+' + currentAdRewardCoins + ' কয়েন যোগ হয়েছে!' : ''}`);
+        showToast(`🎉 উচ্চ মানের ভেরিফিকেশন সফল! ${currentAdRewardCoins > 0 ? '+' + currentAdRewardCoins + ' কয়েন যোগ হয়েছে!' : ''}`);
 
         if (typeof onAdSequenceSuccessCallback === 'function') {
           onAdSequenceSuccessCallback();
@@ -1432,8 +1503,12 @@
       }
 
       const item = currentAdQueue[currentAdStep];
-      currentActiveAdUrl = item.url;
+      const classification = item.classification || detectAdClassification(item.url);
+      currentActiveAdUrl = attachTrackingParams(item.url);
       adCountdownTime = item.duration;
+
+      // Reset activity verification flags for step
+      userAdInteractionConfirmed = false;
 
       // Update Modal UI
       document.getElementById('ad-step-pill').innerText = item.label;
@@ -1441,9 +1516,38 @@
       document.getElementById('ad-countdown-reward-text').innerText = currentAdRewardCoins > 0 ? `+${currentAdRewardCoins} কয়েন রিওয়ার্ড` : 'ভেরিফিকেশন সম্পন্ন হবে';
       document.getElementById('ad-countdown-timer').innerText = `${adCountdownTime}s`;
       document.getElementById('ad-pause-alert').classList.add('hidden');
-      document.getElementById('modal-ad-countdown').classList.remove('hidden');
+      
+      // Smart instructions badge based on Network (Monetag/Adsterra vs CPA)
+      const instructEl = document.getElementById('ad-countdown-instruction-box');
+      if (instructEl) {
+        if (classification.isCPA) {
+          instructEl.className = 'p-2.5 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-left text-[11px] space-y-1';
+          instructEl.innerHTML = `
+            <div class="font-bold flex items-center gap-1.5 text-amber-400">
+              <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> <span>স্পেশাল CPA অফার নির্দেশিকা:</span>
+            </div>
+            <p class="leading-relaxed text-[10px]">এই পেজে গিয়ে অ্যাপ ইনস্টল বা সাইন-আপ অফার সম্পন্ন করুন। কোম্পানি থেকে পোস্টব্যাক কনফার্মেশন আসলেই অ্যাকাউন্টে মেগা বোনাস কয়েন যোগ হবে।</p>
+          `;
+        } else {
+          instructEl.className = 'p-2.5 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-200 text-left text-[11px] space-y-1';
+          instructEl.innerHTML = `
+            <div class="font-bold flex items-center gap-1.5 text-cyan-300">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> <span>সর্বোচ্চ eCPM অ্যাক্টিভিটি রুলস:</span>
+            </div>
+            <p class="leading-relaxed text-[10px]">১. পেজে গিয়ে চুপচাপ বসে থাকবেন না। ওপর-নিচ স্ক্রোল করুন।<br>২. পেজের ভেতরের যেকোনো মেনু বা আর্টিকেলে ক্লিক করুন।<br>৩. নির্ধারিত সময় সক্রিয় থাকলে ভেরিফিকেশন টিক চিহ্ন আসবে।</p>
+          `;
+        }
+      }
 
-      // Open URL safely
+      // Hide verification claim button initially
+      const confirmBox = document.getElementById('ad-step-confirm-box');
+      if (confirmBox) confirmBox.classList.add('hidden');
+      document.getElementById('ad-timer-box').classList.remove('hidden');
+
+      document.getElementById('modal-ad-countdown').classList.remove('hidden');
+      lucide.createIcons();
+
+      // Open URL safely with tracking
       try {
         if (window.Telegram?.WebApp?.openLink) {
           window.Telegram.WebApp.openLink(currentActiveAdUrl, { try_instant_view: false });
@@ -1456,7 +1560,7 @@
 
       if (adCountdownInterval) clearInterval(adCountdownInterval);
       adCountdownInterval = setInterval(() => {
-        // Strict visibility pause - paused when tab is active in app (user not looking at ad)
+        // Strict anti-cheat: if app tab is active, user is NOT on the ad page (pause timer)
         if (document.visibilityState === 'visible') {
           document.getElementById('ad-pause-alert').classList.remove('hidden');
           return;
@@ -1467,12 +1571,40 @@
         adCountdownTime--;
         if (adCountdownTime <= 0) {
           clearInterval(adCountdownInterval);
-          currentAdStep++;
-          executeAdStep();
+          // High eCPM verification check
+          promptAdStepVerification(classification);
         } else {
           document.getElementById('ad-countdown-timer').innerText = `${adCountdownTime}s`;
         }
       }, 1000);
+    }
+
+    // Require user confirmation / interaction check after ad visit
+    function promptAdStepVerification(classification) {
+      document.getElementById('ad-timer-box').classList.add('hidden');
+      const confirmBox = document.getElementById('ad-step-confirm-box');
+      if (confirmBox) {
+        confirmBox.classList.remove('hidden');
+        lucide.createIcons();
+      } else {
+        proceedToNextAdStep();
+      }
+    }
+
+    function confirmAdActivityAndProceed() {
+      const checkbox = document.getElementById('ad-activity-check');
+      if (checkbox && !checkbox.checked) {
+        alert('অনুগ্রহ করে পেজে স্ক্রোল ও ইন্টারঅ্যাকশন সম্পন্ন করেছেন মর্মে বক্সে টিক চিহ্ন দিন!');
+        return;
+      }
+      proceedToNextAdStep();
+    }
+
+    function proceedToNextAdStep() {
+      const confirmBox = document.getElementById('ad-step-confirm-box');
+      if (confirmBox) confirmBox.classList.add('hidden');
+      currentAdStep++;
+      executeAdStep();
     }
 
     function reopenActiveAdUrl() {
@@ -2374,8 +2506,9 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     function startActiveTaskVisit() {
       if (!activeTaskObj) return;
 
-      // Open target URL
-      const targetUrl = activeTaskObj.targetUrl || 'https://google.com';
+      // Open target URL with tracking
+      const rawTargetUrl = activeTaskObj.targetUrl || 'https://google.com';
+      const targetUrl = attachTrackingParams(rawTargetUrl);
       window.open(targetUrl, '_blank');
 
       // Setup countdown
@@ -2424,6 +2557,13 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       const userKey = sanitizeKey(appData.user.phone);
       fbDatabase.ref('users/' + userKey).on('value', snap => {
         if (snap.val()) {
+          const oldCoins = Number(appData.user.coins) || 0;
+          const newCoins = Number(snap.val().coins) || 0;
+          if (oldCoins > 0 && newCoins > oldCoins) {
+            const diff = newCoins - oldCoins;
+            showToast(`🎉 অফার সফল! পোস্টব্যাক থেকে +${diff} কয়েন যোগ হয়েছে!`);
+            confetti({ particleCount: 90, spread: 80 });
+          }
           appData.user = { ...appData.user, ...snap.val() };
           renderUserHeader();
         }
