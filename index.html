@@ -23,6 +23,10 @@
     .scrollbar-none::-webkit-scrollbar { display: none; }
     @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.5); } 50% { box-shadow: 0 0 25px rgba(6, 182, 212, 0.8); } }
     .glow-ai-btn { animation: pulse-glow 3s infinite; }
+    @keyframes float-coin { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-4px) rotate(4deg); } }
+    .coin-float { animation: float-coin 3s ease-in-out infinite; }
+    .glass-card { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    .gold-gradient-text { background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 50%, #D97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   </style>
 <script src="/_aistudio-iframe.js?v=2c34bde1"></script></head>
 <body class="bg-slate-900 text-slate-800 dark:text-slate-100 antialiased font-sans min-h-screen flex justify-center selection:bg-emerald-500 selection:text-white transition-colors">
@@ -104,72 +108,114 @@
   <div id="main-app-container" class="w-full max-w-md bg-slate-50 dark:bg-slate-900 min-h-screen shadow-2xl relative flex flex-col pb-24 border-x border-slate-200 dark:border-slate-800 hidden">
     
     <!-- HEADER -->
-    <header class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white p-4 rounded-b-3xl shadow-lg relative overflow-hidden">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('profile')">
-          <div id="u-avatar" class="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center font-black text-xl border border-white/30 shadow-inner">র</div>
+    <header class="bg-gradient-to-br from-slate-900 via-slate-850 to-emerald-950 text-white p-4.5 rounded-b-[2rem] shadow-2xl relative overflow-hidden border-b border-emerald-500/20">
+      <!-- Glow ambient backdrop -->
+      <div class="absolute -top-10 -right-10 w-40 h-40 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="flex items-center justify-between mb-3.5 relative z-10">
+        <div class="flex items-center gap-3 cursor-pointer group" onclick="switchTab('profile')">
+          <div class="relative">
+            <div id="u-avatar" class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-black text-xl shadow-lg shadow-emerald-500/25 border border-emerald-300/40">র</div>
+            <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-400 border-2 border-slate-900 flex items-center justify-center text-[8px] font-black text-slate-950">✓</span>
+          </div>
           <div>
             <div class="flex items-center gap-1.5">
-              <h2 id="u-name" class="font-bold text-sm leading-tight">রাকিবুল হাসান</h2>
-              <span id="u-rank-badge" class="px-2 py-0.5 rounded-full text-[10px] bg-amber-400 text-slate-950 font-black shadow-xs">ব্রোঞ্জ</span>
+              <h2 id="u-name" class="font-black text-sm leading-tight text-white group-hover:text-emerald-300 transition-colors">রাকিবুল হাসান</h2>
+              <span id="u-rank-badge" class="px-2 py-0.5 rounded-full text-[9px] bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 font-black shadow-xs tracking-wider uppercase">ব্রোঞ্জ</span>
             </div>
-            <p id="u-phone" class="text-[11px] text-emerald-100 font-mono">017XXXXXXXX</p>
+            <p id="u-phone" class="text-[11px] text-emerald-300/80 font-mono tracking-tight">017XXXXXXXX</p>
           </div>
         </div>
 
-        <div class="flex items-center gap-1.5">
+        <div class="flex items-center gap-1.5 relative z-10">
           <!-- Header Aero AI Button -->
-          <button onclick="openAeroAiModal()" class="p-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-xl border border-cyan-300/40 text-cyan-200 transition-all active:scale-95" title="Aero AI গাইড">
+          <button onclick="openAeroAiModal()" class="p-2 bg-cyan-500/15 hover:bg-cyan-500/25 rounded-xl border border-cyan-400/30 text-cyan-300 transition-all active:scale-95 shadow-xs" title="Aero AI গাইড">
             <i data-lucide="bot" class="w-4 h-4 text-cyan-300"></i>
           </button>
-          <button onclick="openServicesMenu()" class="p-2 bg-white/15 hover:bg-white/25 rounded-xl border border-white/20 text-white transition-all active:scale-95" title="সার্ভিস সমূহ">
+          <button onclick="openServicesMenu()" class="p-2 bg-slate-800/80 hover:bg-slate-700/80 rounded-xl border border-slate-700/80 text-white transition-all active:scale-95" title="সার্ভিস সমূহ">
             <i data-lucide="grid" class="w-4 h-4"></i>
           </button>
-          <button onclick="openNotificationCenter()" class="relative p-2 bg-white/15 hover:bg-white/25 rounded-xl border border-white/20 text-white transition-all active:scale-95" title="নোটিফিকেশন">
+          <button onclick="openNotificationCenter()" class="relative p-2 bg-slate-800/80 hover:bg-slate-700/80 rounded-xl border border-slate-700/80 text-white transition-all active:scale-95" title="নোটিফিকেশন">
             <i data-lucide="bell" class="w-4 h-4"></i>
             <span id="notif-badge" class="w-2 h-2 rounded-full bg-amber-400 absolute top-1.5 right-1.5 animate-ping hidden"></span>
           </button>
-          <button onclick="toggleDarkMode()" class="p-2 bg-white/15 hover:bg-white/25 rounded-xl border border-white/20 text-white transition-all active:scale-95" title="থিম পরিবর্তন">
+          <button onclick="toggleDarkMode()" class="p-2 bg-slate-800/80 hover:bg-slate-700/80 rounded-xl border border-slate-700/80 text-white transition-all active:scale-95" title="থিম পরিবর্তন">
             <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
           </button>
-          <button onclick="handleUserLogout()" title="লগআউট" class="p-2 bg-white/15 hover:bg-white/25 rounded-xl border border-white/20 text-white transition-all active:scale-95">
+          <button onclick="handleUserLogout()" title="লগআউট" class="p-2 bg-rose-500/15 hover:bg-rose-500/25 rounded-xl border border-rose-500/30 text-rose-300 transition-all active:scale-95">
             <i data-lucide="log-out" class="w-4 h-4"></i>
           </button>
         </div>
       </div>
 
       <!-- Level Progress Bar -->
-      <div class="bg-black/20 rounded-xl p-2 mb-3 border border-white/15">
-        <div class="flex justify-between text-[11px] font-bold text-emerald-100 mb-1">
-          <span id="rank-level-label">লেভেল: ব্রোঞ্জ</span>
-          <span id="rank-progress-text">০ / ৫০০ কয়েন</span>
+      <div class="bg-slate-950/60 rounded-2xl p-2.5 mb-3.5 border border-slate-800/80 backdrop-blur-sm relative z-10">
+        <div class="flex justify-between items-center text-[11px] font-bold text-slate-300 mb-1.5">
+          <span id="rank-level-label" class="flex items-center gap-1.5 text-amber-300">
+            <i data-lucide="crown" class="w-3.5 h-3.5"></i> লেভেল: ব্রোঞ্জ মেম্বার
+          </span>
+          <span id="rank-progress-text" class="font-mono text-emerald-400 font-black">০ / ৫০০ কয়েন</span>
         </div>
-        <div class="w-full h-2 bg-white/20 rounded-full overflow-hidden">
-          <div id="rank-progress-bar" class="h-full bg-gradient-to-r from-amber-400 to-yellow-300 rounded-full transition-all duration-500" style="width: 10%;"></div>
+        <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
+          <div id="rank-progress-bar" class="h-full bg-gradient-to-r from-amber-400 via-yellow-300 to-emerald-400 rounded-full transition-all duration-700 shadow-sm" style="width: 10%;"></div>
         </div>
       </div>
 
-      <!-- Balances Grid -->
-      <div class="grid grid-cols-2 gap-2.5">
-        <div class="bg-white/15 backdrop-blur-md border border-white/25 rounded-2xl p-3 shadow-inner">
-          <div class="flex items-center justify-between text-xs text-emerald-100 mb-1">
-            <span>মোট কয়েন</span>
-            <span id="u-coins-bdt" class="text-[10px] bg-amber-400/30 px-1.5 py-0.5 rounded-md text-amber-200 font-mono font-bold">≈ ৳০.০০</span>
+      <!-- Modern Futuristic Balances Grid -->
+      <div class="grid grid-cols-2 gap-3 relative z-10">
+        <!-- Main Coin Card -->
+        <div class="bg-gradient-to-b from-slate-800/90 to-slate-900/95 border border-amber-500/30 rounded-2xl p-3.5 shadow-xl shadow-black/40 relative overflow-hidden group">
+          <div class="absolute -right-2 -bottom-2 opacity-15 pointer-events-none">
+            <div class="w-16 h-16 rounded-full bg-amber-400 blur-xl"></div>
           </div>
-          <div id="u-coins" class="text-2xl font-black text-amber-300 font-mono tracking-tight">0</div>
-          <button onclick="switchTab('withdraw')" class="mt-2 w-full py-1.5 bg-white hover:bg-slate-100 text-emerald-800 rounded-xl text-xs font-bold text-center shadow-xs active:scale-95 transition-all">
-            টাকা তুলুন (Withdraw)
+          
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span class="text-slate-400 font-bold flex items-center gap-1 text-[11px]">
+              <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> মোট কয়েন
+            </span>
+            <div class="coin-float w-5 h-5 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 text-slate-950 flex items-center justify-center font-black text-[10px] shadow-sm">
+              ৳
+            </div>
+          </div>
+          
+          <div class="flex items-baseline gap-1 my-0.5">
+            <span id="u-coins" class="text-2xl font-black text-amber-300 font-mono tracking-tight drop-shadow-xs">0</span>
+            <span class="text-[10px] font-bold text-amber-500/80">কয়েন</span>
+          </div>
+          
+          <div id="u-coins-bdt" class="text-[11px] font-bold font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-lg inline-block my-1">
+            ≈ ৳০.০০ BDT
+          </div>
+
+          <button onclick="switchTab('withdraw')" class="mt-2 w-full py-2 bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 rounded-xl text-xs font-black text-center shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
+            <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+            <span>টাকা তুলুন (Withdraw)</span>
           </button>
         </div>
 
-        <div class="bg-white/15 backdrop-blur-md border border-white/25 rounded-2xl p-3 shadow-inner">
-          <div class="flex items-center justify-between text-xs text-emerald-100 mb-1">
-            <span>ক্যাম্পেইন ব্যালেন্স</span>
-            <span class="text-[10px] text-emerald-200 font-semibold">ডিপোজিট</span>
+        <!-- Campaign Cash Deposit Card -->
+        <div class="bg-gradient-to-b from-slate-800/90 to-slate-900/95 border border-emerald-500/30 rounded-2xl p-3.5 shadow-xl shadow-black/40 relative overflow-hidden group">
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span class="text-slate-400 font-bold flex items-center gap-1 text-[11px]">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span> ক্যাম্পেইন ফান্ড
+            </span>
+            <div class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-[10px]">
+              <i data-lucide="credit-card" class="w-3 h-3"></i>
+            </div>
           </div>
-          <div id="u-cash" class="text-2xl font-black text-white font-mono tracking-tight">৳০.০০</div>
-          <button onclick="switchTab('deposit')" class="mt-2 w-full py-1.5 bg-amber-400 hover:bg-amber-300 text-amber-950 rounded-xl text-xs font-bold text-center shadow-xs active:scale-95 transition-all">
-            + ডিপোজিট করুন
+          
+          <div class="flex items-baseline gap-1 my-0.5">
+            <span id="u-cash" class="text-2xl font-black text-white font-mono tracking-tight drop-shadow-xs">৳০.০০</span>
+          </div>
+          
+          <div class="text-[10px] font-bold text-emerald-300/80 bg-slate-800/60 border border-slate-700/60 px-2 py-0.5 rounded-lg inline-block my-1">
+            ডিপোজিট ব্যালেন্স
+          </div>
+
+          <button onclick="switchTab('deposit')" class="mt-2 w-full py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-black text-center shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+            <span>+ ডিপোজিট করুন</span>
           </button>
         </div>
       </div>
@@ -188,7 +234,7 @@
     </div>
 
     <!-- MAIN SCROLLABLE BODY -->
-    <main class="flex-1 p-4 overflow-y-auto space-y-4">
+    <main class="flex-1 p-4 pb-28 overflow-y-auto space-y-4">
       
       <!-- VIEW: HOME -->
       <section id="view-home" class="space-y-4">
@@ -206,6 +252,38 @@
               <path id="goal-ring-path" class="text-emerald-500 transition-all duration-700" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
             </svg>
             <span id="goal-percent-text" class="absolute text-[11px] font-black font-mono text-slate-800 dark:text-white">0%</span>
+          </div>
+        </div>
+
+        <!-- IDLE TIME REWARD CHEST (ব্যবহারকারী অ্যাপে থাকলেই অটো কয়েন ও হাই সিপিএম রিওয়ার্ড) -->
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-indigo-500/30 rounded-3xl p-4 text-white shadow-lg relative overflow-hidden">
+          <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl pointer-events-none"></div>
+          <div class="flex items-center justify-between gap-3">
+            <div class="space-y-1">
+              <div class="flex items-center gap-1.5 text-indigo-300 font-bold text-[10px] tracking-wide uppercase">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                </span>
+                <span>টাইম মাইনর (Time Chest)</span>
+              </div>
+              <h3 class="font-black text-sm text-white flex items-center gap-1.5">
+                <span>অ্যাপে থাকুন ও কয়েন সংগ্রহ করুন</span>
+              </h3>
+              <p class="text-[11px] text-indigo-200/80 leading-tight">
+                প্রতি ৩ মিনিট অ্যাপে সক্রিয় থাকলে আনলক হবে +২৫ কয়েন!
+              </p>
+              <div class="pt-1 flex items-center gap-2">
+                <div class="w-32 bg-slate-800 rounded-full h-2 overflow-hidden border border-indigo-500/20">
+                  <div id="idle-progress-bar" class="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full w-0 transition-all duration-500"></div>
+                </div>
+                <span id="idle-timer-text" class="text-[11px] font-mono font-bold text-cyan-300">০৩:০০</span>
+              </div>
+            </div>
+            <button id="btn-idle-claim" onclick="claimIdleReward()" disabled class="px-3.5 py-2.5 bg-slate-800/80 text-slate-500 font-black text-xs rounded-2xl border border-slate-700 transition-all shrink-0 flex flex-col items-center justify-center gap-0.5">
+              <i data-lucide="lock" class="w-4 h-4"></i>
+              <span class="text-[10px]">লকড</span>
+            </button>
           </div>
         </div>
 
@@ -467,27 +545,66 @@
 
       <!-- VIEW: WALLET -->
       <section id="view-wallet" class="space-y-4 hidden">
-        <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-3xl p-4 text-white shadow-md">
-          <h3 class="text-base font-black flex items-center gap-1.5">
-            <i data-lucide="wallet" class="w-5 h-5"></i> ওয়ালেট
-          </h3>
-          <p class="text-xs text-emerald-100 mt-0.5">কয়েন ও ক্যাশ ব্যালেন্স · উইথড্র ও ডিপোজিট</p>
+        <div class="bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 border border-emerald-500/30 rounded-3xl p-4.5 text-white shadow-xl relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-black flex items-center gap-2">
+              <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                <i data-lucide="wallet" class="w-4.5 h-4.5"></i>
+              </div>
+              <span>আমার ডিজিটাল ওয়ালেট</span>
+            </h3>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-400 text-slate-950 uppercase tracking-wider">১০০ কয়েন = ৳১.০০</span>
+          </div>
+          <p class="text-xs text-slate-300 mt-1.5">আপনার অর্জিত সমস্ত কয়েন নিরাপদে সংরক্ষিত এবং যেকোনো সময় বিকাশ, নগদ ও রিচার্জে উত্তোলনযোগ্য।</p>
         </div>
+
+        <!-- Balances Grid -->
         <div class="grid grid-cols-2 gap-3">
-          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-center">
-            <div class="text-[10px] text-slate-400 font-bold uppercase">কয়েন</div>
-            <div id="wallet-coins" class="text-xl font-black text-amber-500 font-mono mt-1">0</div>
-            <div id="wallet-coins-bdt" class="text-[10px] text-slate-400">≈ ৳০.০০</div>
+          <div class="bg-gradient-to-b from-white to-slate-50 dark:from-slate-800 dark:to-slate-850 border border-amber-500/30 rounded-2xl p-4 text-center shadow-xs">
+            <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">রিওয়ার্ড ব্যালেন্স</div>
+            <div id="wallet-coins" class="text-2xl font-black text-amber-500 font-mono mt-1">0</div>
+            <div id="wallet-coins-bdt" class="text-xs font-black text-emerald-600 dark:text-emerald-400 mt-0.5">≈ ৳০.০০ BDT</div>
           </div>
-          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-center">
-            <div class="text-[10px] text-slate-400 font-bold uppercase">ক্যাশ (ডিপোজিট)</div>
-            <div id="wallet-cash" class="text-xl font-black text-emerald-600 font-mono mt-1">৳০.০০</div>
-            <div class="text-[10px] text-slate-400">ক্যাম্পেইন ফান্ড</div>
+          <div class="bg-gradient-to-b from-white to-slate-50 dark:from-slate-800 dark:to-slate-850 border border-emerald-500/30 rounded-2xl p-4 text-center shadow-xs">
+            <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ক্যাম্পেইন ফান্ড (ক্যাশ)</div>
+            <div id="wallet-cash" class="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono mt-1">৳০.০০</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">বিজ্ঞাপন বাজেট</div>
           </div>
         </div>
+
         <div class="grid grid-cols-2 gap-2.5">
-          <button onclick="switchTab('withdraw')" class="py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-2xl text-xs shadow-md active:scale-95">টাকা তুলুন (Withdraw)</button>
-          <button onclick="switchTab('deposit')" class="py-3 bg-amber-400 hover:bg-amber-300 text-amber-950 font-bold rounded-2xl text-xs shadow-md active:scale-95">ডিপোজিট করুন</button>
+          <button onclick="switchTab('withdraw')" class="py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-2xl text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5">
+            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            <span>টাকা তুলুন (Withdraw)</span>
+          </button>
+          <button onclick="switchTab('deposit')" class="py-3 bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black rounded-2xl text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>+ ফান্ড ডিপোজিট</span>
+          </button>
+        </div>
+
+        <!-- Coin Exchange & Conversion Matrix Card -->
+        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-2xl p-3.5 shadow-xs space-y-2.5">
+          <div class="flex items-center justify-between text-xs font-bold text-slate-800 dark:text-white">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="arrow-left-right" class="w-4 h-4 text-emerald-600"></i> লাইভ কয়েন কনভার্শন রেট
+            </span>
+            <span class="text-[10px] text-emerald-600 font-black">অটোমেটিক ক্যালকুলেটর</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-center text-xs">
+            <div class="p-2 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-750">
+              <div class="text-[10px] text-slate-400">১,০০০ কয়েন</div>
+              <div class="font-black text-amber-500 font-mono mt-0.5">৳১০.০০</div>
+            </div>
+            <div class="p-2 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-750">
+              <div class="text-[10px] text-slate-400">৫,০০০ কয়েন</div>
+              <div class="font-black text-amber-500 font-mono mt-0.5">৳৫০.০০</div>
+            </div>
+            <div class="p-2 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-750">
+              <div class="text-[10px] text-slate-400">১০,০০০ কয়েন</div>
+              <div class="font-black text-emerald-600 font-mono mt-0.5">৳১০০.০০</div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -886,26 +1003,65 @@
 
     </main>
 
+    <!-- STICKY BOTTOM SPONSOR BANNER (AUTO-ROTATES EVERY 35s FOR HIGH IMPRESSIONS & CPM) -->
+    <div id="sticky-banner-container" class="fixed bottom-[60px] max-w-md w-full px-3 z-30 pointer-events-auto">
+      <div onclick="clickStickyBanner()" class="cursor-pointer bg-slate-900/95 dark:bg-slate-950/95 backdrop-blur-md border border-amber-500/40 hover:border-amber-400 rounded-2xl p-2.5 shadow-xl flex items-center justify-between gap-2.5 transition-all duration-300 group">
+        <div class="flex items-center gap-2.5 overflow-hidden">
+          <div id="sticky-banner-icon-box" class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0 text-amber-400">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
+          </div>
+          <div class="overflow-hidden">
+            <div class="flex items-center gap-1.5">
+              <span class="text-[9px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 px-1.5 py-0.2 rounded">Sponsored</span>
+              <span id="sticky-banner-badge" class="text-[9px] text-emerald-400 font-bold flex items-center gap-0.5">
+                <i data-lucide="flame" class="w-2.5 h-2.5"></i> +৮ কয়েন
+              </span>
+            </div>
+            <h4 id="sticky-banner-title" class="text-xs font-black text-white truncate mt-0.5 group-hover:text-amber-300 transition-colors">
+              স্পনসর অফার চেক করুন এবং বোনাস নিশ্চিত করুন
+            </h4>
+            <p id="sticky-banner-desc" class="text-[10px] text-slate-400 truncate">
+              সরাসরি পার্টনার লিংকে ভিজিট করে অ্যাক্টিভ রিওয়ার্ড পান
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1 shrink-0 text-amber-400 font-bold text-[11px] bg-amber-500/10 px-2 py-1 rounded-xl group-hover:bg-amber-500 group-hover:text-slate-950 transition-all">
+          <span>যান</span>
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        </div>
+      </div>
+    </div>
+
     <!-- BOTTOM NAVIGATION -->
-    <nav class="fixed bottom-0 max-w-md w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 flex items-center justify-around py-2.5 z-40 shadow-xl">
-      <button onclick="switchTab('home')" class="nav-btn active flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400" data-target="home">
-        <i data-lucide="home" class="w-5 h-5"></i>
-        <span class="text-[10px] font-bold">হোম</span>
+    <nav class="fixed bottom-0 max-w-md w-full bg-slate-900/90 dark:bg-slate-950/90 backdrop-blur-xl border-t border-slate-800/90 flex items-center justify-around py-2.5 z-40 shadow-2xl">
+      <button onclick="switchTab('home')" class="nav-btn active flex flex-col items-center gap-0.5 text-emerald-400 transition-all active:scale-95" data-target="home">
+        <div class="p-1 rounded-xl bg-emerald-500/15">
+          <i data-lucide="home" class="w-5 h-5"></i>
+        </div>
+        <span class="text-[10px] font-black">হোম</span>
       </button>
-      <button onclick="switchTab('earn')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600" data-target="earn">
-        <i data-lucide="coins" class="w-5 h-5"></i>
+      <button onclick="switchTab('earn')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-400 transition-all active:scale-95" data-target="earn">
+        <div class="p-1 rounded-xl">
+          <i data-lucide="coins" class="w-5 h-5"></i>
+        </div>
         <span class="text-[10px] font-bold">আর্ন</span>
       </button>
-      <button onclick="switchTab('tasks')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600" data-target="tasks">
-        <i data-lucide="check-square" class="w-5 h-5"></i>
+      <button onclick="switchTab('tasks')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-400 transition-all active:scale-95" data-target="tasks">
+        <div class="p-1 rounded-xl">
+          <i data-lucide="check-square" class="w-5 h-5"></i>
+        </div>
         <span class="text-[10px] font-bold">টাস্ক</span>
       </button>
-      <button onclick="switchTab('wallet')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600" data-target="wallet">
-        <i data-lucide="wallet" class="w-5 h-5"></i>
+      <button onclick="switchTab('wallet')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-400 transition-all active:scale-95" data-target="wallet">
+        <div class="p-1 rounded-xl">
+          <i data-lucide="wallet" class="w-5 h-5"></i>
+        </div>
         <span class="text-[10px] font-bold">ওয়ালেট</span>
       </button>
-      <button onclick="switchTab('profile')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600" data-target="profile">
-        <i data-lucide="user" class="w-5 h-5"></i>
+      <button onclick="switchTab('profile')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-400 transition-all active:scale-95" data-target="profile">
+        <div class="p-1 rounded-xl">
+          <i data-lucide="user" class="w-5 h-5"></i>
+        </div>
         <span class="text-[10px] font-bold">প্রোফাইল</span>
       </button>
     </nav>
@@ -1115,6 +1271,24 @@
         </div>
       </div>
 
+      <!-- Tutorial Video Box (Shows when admin adds a video link) -->
+      <div id="trun-video-box" class="hidden my-2 p-3 bg-sky-50 dark:bg-sky-950/40 rounded-2xl border border-sky-200 dark:border-sky-900/50 text-left space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-sky-700 dark:text-sky-300 flex items-center gap-1.5">
+            <i data-lucide="play-circle" class="w-4 h-4 text-sky-600"></i>
+            <span>কাজের টিউটোরিয়াল ভিডিও গাইড</span>
+          </span>
+          <span class="text-[9px] px-2 py-0.5 rounded-full bg-sky-200 dark:bg-sky-900 text-sky-800 dark:text-sky-200 font-bold">ভিডিও দেখে শিখুন</span>
+        </div>
+        <p class="text-[10px] text-slate-600 dark:text-slate-300 leading-tight">
+          কাজটি কিভাবে সঠিকভাবে সম্পন্ন করবেন এবং কয়েন নিশ্চিত করবেন তা নিচের ভিডিওতে দেখানো হয়েছে:
+        </p>
+        <button id="trun-video-btn" onclick="openTaskTutorialVideo()" class="w-full py-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all">
+          <i data-lucide="video" class="w-4 h-4"></i>
+          <span>টিউটোরিয়াল ভিডিও দেখুন (Watch Video)</span>
+        </button>
+      </div>
+
       <!-- Active Timer & Status (when running) -->
       <div id="trun-timer-box" class="hidden my-2 p-3 bg-emerald-50 dark:bg-slate-900/80 rounded-2xl border border-emerald-300 dark:border-emerald-800/40 text-center">
         <div class="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold uppercase">ভেরিফিকেশন টাইমার</div>
@@ -1125,11 +1299,40 @@
         <p id="trun-status-text" class="text-[10px] text-slate-500">লিংকে অবস্থান করুন, সময় শেষ হলে অটো কয়েন যোগ হবে...</p>
       </div>
 
+      <!-- Proof Submission Section (for tasks with proof required) -->
+      <div id="trun-proof-box" class="hidden my-2 p-3 bg-amber-500/10 dark:bg-slate-900/90 rounded-2xl border border-amber-500/30 text-left space-y-2">
+        <div class="flex items-center gap-1.5 text-amber-500 font-bold text-xs">
+          <i data-lucide="shield-alert" class="w-4 h-4"></i>
+          <span>কাজের প্রমাণ (Proof Verification) বাধ্যতামূলক</span>
+        </div>
+        <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-tight">
+          এডমিন এই টাস্কে সাইন আপ বা কাজের স্ক্রিনশট যাচাই করবেন। সঠিক স্ক্রিনশট ও তথ্য জমা দিন:
+        </p>
+        
+        <div>
+          <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">📸 কাজের স্ক্রিনশট ছবি আপলোড করুন:</label>
+          <input type="file" id="trun-proof-file" accept="image/*" onchange="handleTaskScreenshotSelect(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 cursor-pointer" />
+          <div id="trun-screenshot-preview-container" class="hidden mt-2 relative">
+            <img id="trun-screenshot-preview" class="w-full h-28 object-cover rounded-xl border border-slate-300 dark:border-slate-700 shadow-xs" />
+            <button onclick="clearTaskScreenshot()" class="absolute top-1 right-1 bg-rose-600 text-white rounded-lg p-1 text-[10px] font-bold shadow-xs">✕ মুছুন</button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1">📝 প্রমাণ নোট / সাইন আপ ইউজারনেম / ইমেইল (যদি থাকে):</label>
+          <input type="text" id="trun-proof-text" placeholder="যেমন: demo@mail.com বা সাইন আপ সফল" class="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500" />
+        </div>
+      </div>
+
       <!-- Actions -->
       <div class="space-y-2 mt-auto pt-2">
         <button id="trun-action-btn" onclick="startActiveTaskVisit()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
           <i data-lucide="external-link" class="w-4 h-4"></i>
           <span id="trun-btn-text">টাস্ক শুরু করুন ও লিংকে যান</span>
+        </button>
+        <button id="trun-submit-proof-btn" onclick="submitTaskProof()" class="hidden w-full py-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
+          <i data-lucide="send" class="w-4 h-4"></i>
+          <span>ভেরিফিকেশনের জন্য প্রুফ জমা দিন</span>
         </button>
         <button onclick="closeTaskRunModal()" class="w-full py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl text-xs">
           বাতিল করুন
@@ -1228,9 +1431,13 @@
       <button onclick="closeModal('modal-quiz')" class="absolute top-4 right-4 p-1.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
         <i data-lucide="x" class="w-4 h-4"></i>
       </button>
-      <h3 class="font-black text-slate-800 dark:text-white text-sm mb-1 text-emerald-600">ম্যাথ কুইজ</h3>
-      <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">সঠিক উত্তর বেছে নিয়ে +১৫ কয়েন নিন</p>
-      <div id="quiz-question-box" class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-white text-xl font-black font-mono py-3 rounded-2xl mb-3 border border-slate-200 dark:border-slate-700">12 + 8 = ?</div>
+      <div class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full mb-1">
+        <i data-lucide="award" class="w-3 h-3 text-emerald-600"></i>
+        <span>ইনস্ট্যান্ট স্পনসর রিওয়ার্ড</span>
+      </div>
+      <h3 class="font-black text-slate-800 dark:text-white text-base mb-0.5 text-emerald-600">ম্যাথ কুইজ</h3>
+      <p class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">সঠিক উত্তর নির্বাচন করে স্পনসর ভেরিফিকেশনে +১৫ কয়েন সংগ্রহ করুন</p>
+      <div id="quiz-question-box" class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-white text-xl font-black font-mono py-3 rounded-2xl mb-3 border border-slate-200 dark:border-slate-700 shadow-inner">12 + 8 = ?</div>
       <div id="quiz-options-grid" class="grid grid-cols-2 gap-2"></div>
     </div>
   </div>
@@ -1466,6 +1673,29 @@
         { url: url1, duration: c1.minTime, label: 'ধাপ ১/৩', classification: c1 },
         { url: url2, duration: c2.minTime, label: 'ধাপ ২/৩', classification: c2 },
         { url: url3, duration: c3.minTime, label: 'চূড়ান্ত ধাপ', classification: c3 }
+      ];
+      currentAdStep = 0;
+      currentAdRewardCoins = rewardCoins;
+      currentAdName = adName;
+      currentAdCountProp = countProp;
+      onAdSequenceSuccessCallback = onSuccessCallback;
+
+      executeAdStep();
+    }
+
+    // Play single ad (Optimized for quick interactive rewards like Math Quiz)
+    function playSingleAdSequence(category, rewardCoins, adName, countProp, onSuccessCallback) {
+      if (countProp && (appData.user[countProp] || 0) <= 0) {
+        return alert(`আজকের ${adName} সীমা শেষ! আগামীকাল আবার চেষ্টা করুন।`);
+      }
+
+      const [url1] = getRotatedAdLinks(category);
+      const c1 = detectAdClassification(url1);
+      // Fast comfortable countdown for quiz (8-10 seconds)
+      const duration = Math.min(10, c1.minTime || 10);
+
+      currentAdQueue = [
+        { url: url1, duration: duration, label: 'স্পনসর রিওয়ার্ড যাচাই', classification: c1 }
       ];
       currentAdStep = 0;
       currentAdRewardCoins = rewardCoins;
@@ -1848,6 +2078,47 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (document.getElementById('wallet-coins-bdt')) document.getElementById('wallet-coins-bdt').innerText = `≈ ৳${((u.coins || 0) / COINS_PER_BDT).toFixed(2)}`;
       if (document.getElementById('wallet-cash')) document.getElementById('wallet-cash').innerText = `৳${(u.cashBalance || 0).toFixed(2)}`;
 
+      // Dynamic VIP Level / Rank Calculation
+      const totalCoins = Number(u.lifetimeCoins || u.coins) || 0;
+      let rankName = 'ব্রোঞ্জ';
+      let rankColor = 'from-amber-400 to-yellow-300';
+      let maxTierCoins = 500;
+      let tierPercent = 10;
+
+      if (totalCoins >= 10000) {
+        rankName = '💎 ডায়মন্ড ভিআইপি';
+        rankColor = 'from-cyan-400 to-blue-500';
+        maxTierCoins = 20000;
+        tierPercent = Math.min(100, Math.round((totalCoins / maxTierCoins) * 100));
+      } else if (totalCoins >= 3000) {
+        rankName = '👑 গোল্ড মেম্বার';
+        rankColor = 'from-amber-300 via-yellow-400 to-orange-400';
+        maxTierCoins = 10000;
+        tierPercent = Math.min(100, Math.round((totalCoins / maxTierCoins) * 100));
+      } else if (totalCoins >= 500) {
+        rankName = '⭐ সিলভার মেম্বার';
+        rankColor = 'from-slate-200 via-slate-300 to-slate-400';
+        maxTierCoins = 3000;
+        tierPercent = Math.min(100, Math.round((totalCoins / maxTierCoins) * 100));
+      } else {
+        rankName = '🥉 ব্রোঞ্জ মেম্বার';
+        rankColor = 'from-amber-400 to-yellow-300';
+        maxTierCoins = 500;
+        tierPercent = Math.max(8, Math.min(100, Math.round((totalCoins / maxTierCoins) * 100)));
+      }
+
+      const rankBadge = document.getElementById('u-rank-badge');
+      if (rankBadge) rankBadge.innerText = rankName;
+      const rankLabel = document.getElementById('rank-level-label');
+      if (rankLabel) rankLabel.innerHTML = `<i data-lucide="crown" class="w-3.5 h-3.5"></i> লেভেল: ${rankName}`;
+      const rankProgText = document.getElementById('rank-progress-text');
+      if (rankProgText) rankProgText.innerText = `${totalCoins.toLocaleString()} / ${maxTierCoins.toLocaleString()} কয়েন`;
+      const rankBar = document.getElementById('rank-progress-bar');
+      if (rankBar) {
+        rankBar.style.width = `${tierPercent}%`;
+        rankBar.className = `h-full bg-gradient-to-r ${rankColor} rounded-full transition-all duration-700 shadow-sm`;
+      }
+
       // Referral View details
       if (document.getElementById('refer-code-box')) document.getElementById('refer-code-box').innerText = refCode;
       if (document.getElementById('full-refer-link-input')) {
@@ -1906,10 +2177,18 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (activeEl) activeEl.classList.remove('hidden');
 
       document.querySelectorAll('.nav-btn').forEach(btn => {
-        if (btn.getAttribute('data-target') === tabId) {
-          btn.className = 'nav-btn active flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400';
+        const isTarget = btn.getAttribute('data-target') === tabId;
+        const iconContainer = btn.querySelector('div');
+        if (isTarget) {
+          btn.className = 'nav-btn active flex flex-col items-center gap-0.5 text-emerald-400 transition-all active:scale-95';
+          if (iconContainer) iconContainer.className = 'p-1 rounded-xl bg-emerald-500/20 text-emerald-400';
+          const label = btn.querySelector('span');
+          if (label) label.className = 'text-[10px] font-black';
         } else {
-          btn.className = 'nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600';
+          btn.className = 'nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-400 transition-all active:scale-95';
+          if (iconContainer) iconContainer.className = 'p-1 rounded-xl';
+          const label = btn.querySelector('span');
+          if (label) label.className = 'text-[10px] font-bold';
         }
       });
       renderUserHeader();
@@ -2052,15 +2331,18 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       grid.innerHTML = '';
       [ans, ans + 1, ans - 2, ans + 3].sort(() => Math.random() - 0.5).forEach(opt => {
         const b = document.createElement('button');
-        b.className = 'py-2 bg-slate-100 dark:bg-slate-700 rounded-xl font-bold font-mono';
+        b.className = 'py-2.5 bg-slate-100 hover:bg-emerald-50 dark:bg-slate-700 dark:hover:bg-emerald-950/40 border border-slate-200 dark:border-slate-600 rounded-xl font-bold font-mono text-base text-slate-800 dark:text-white transition-all active:scale-95';
         b.innerText = opt;
         b.onclick = () => {
           if (opt === ans) {
             closeModal('modal-quiz');
-            awardCoins(15, 'ম্যাথ কুইজ');
-            showToast('সঠিক উত্তর! +১৫ কয়েন');
+            showToast('🎉 সঠিক উত্তর! স্পনসর বিজ্ঞাপন ভেরিফিকেশনের পর +১৫ কয়েন যোগ হবে...');
+            // Seamless, pleasant single-ad sequence with tracking
+            playSingleAdSequence('cpm', 15, 'ম্যাথ কুইজ', null, () => {
+              showToast('🎉 ম্যাথ কুইজ রিওয়ার্ড সফল! +১৫ কয়েন যোগ হয়েছে!');
+            });
           } else {
-            alert('ভুল উত্তর');
+            showToast('❌ ভুল উত্তর! আবার চেষ্টা করুন');
           }
         };
         grid.appendChild(b);
@@ -2079,10 +2361,17 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     }
 
     function claimDailyBonus() {
-      awardCoins(12, 'দৈনিক বোনাস');
-      document.getElementById('btn-checkin').disabled = true;
-      document.getElementById('btn-checkin').innerText = 'ক্লেইমড';
-      showToast('দৈনিক বোনাস +১২ কয়েন ক্লেইমড!');
+      const btn = document.getElementById('btn-checkin');
+      if (btn && btn.disabled) return;
+      
+      showToast('🎁 দৈনিক বোনাস আনলক করতে স্পনসর ভেরিফিকেশন সম্পন্ন করুন...');
+      playSingleAdSequence('cpm', 12, 'দৈনিক বোনাস', null, () => {
+        if (btn) {
+          btn.disabled = true;
+          btn.innerText = 'ক্লেইমড';
+        }
+        showToast('🎉 দৈনিক বোনাস +১২ কয়েন সফলভাবে জমা হয়েছে!');
+      });
     }
     function handleRedeemPromo(e) {
       e.preventDefault();
@@ -2267,6 +2556,19 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         duration: 25,
         frequency: 'daily',
         status: 'active'
+      },
+      'task_cpalead_giftcard': {
+        id: 'task_cpalead_giftcard',
+        title: 'Claim Your Instant Free Gift Card (স্পেশাল অফার)',
+        description: '১. "টাস্ক শুরু করুন" এ চাপ দিয়ে গিফট কার্ড অফার পেজটি ওপেন করুন।\n২. পেজে আপনার সঠিক নাম/ইমেইল দিয়ে সাইন আপ বা ফর্মটি সম্পূর্ণ করুন।\n৩. রেজিস্ট্রেশন বা সাইন আপ সফল হলে যে কনফার্মেশন স্ক্রিন আসবে সেটির একটি পরিষ্কার স্ক্রিনশট নিন।\n৪. অ্যাপে ফিরে এসে কাজের প্রমাণ হিসেবে স্ক্রিনশটটি আপলোড করে সাবমিট করুন। এডমিন যাচাই করে কয়েন যোগ করে দিবেন।',
+        platform: 'website',
+        targetUrl: 'https://www.qckclk.com/view.php?id=5546832&pub=3305542',
+        rewardCoins: 85,
+        duration: 45,
+        frequency: 'once',
+        requiresProof: true,
+        videoTutorialUrl: '',
+        status: 'active'
       }
     };
 
@@ -2337,9 +2639,9 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (!completedInfo) return false;
       const freqMeta = getFrequencyMeta(taskObj?.frequency || taskObj?.type);
       if (freqMeta.key === 'unlimited') return false;
-      if (freqMeta.key === 'once') return true;
+      if (freqMeta.key === 'once') return completedInfo;
       const todayStr = new Date().toISOString().split('T')[0];
-      return completedInfo.date === todayStr;
+      return completedInfo.date === todayStr ? completedInfo : false;
     }
 
     function filterTasks(category) {
@@ -2368,7 +2670,9 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         title: t.title || t.name || 'নতুন মাইক্রো-টাস্ক',
         description: t.description || t.details || t.desc || 'এডমিন নির্ধারিত লিংকে গিয়ে ভিজিট করুন এবং নির্দিষ্ট সময় অবস্থান করে রিওয়ার্ড সংগ্রহ করুন।',
         targetUrl: t.targetUrl || t.url || t.link || 'https://google.com',
-        frequency: t.frequency || t.type || 'daily'
+        frequency: t.frequency || t.type || 'daily',
+        requiresProof: t.requiresProof === true,
+        videoTutorialUrl: t.videoTutorialUrl || t.videoUrl || ''
       }));
 
       // Filter by category
@@ -2413,6 +2717,18 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${fMeta.badgeClass}">
                   ${fMeta.label}
                 </span>
+                ${t.requiresProof ? `
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center gap-1">
+                    <i data-lucide="shield-check" class="w-3 h-3"></i>
+                    প্রমাণ আবশ্যক
+                  </span>
+                ` : ''}
+                ${(t.videoTutorialUrl || t.videoUrl) ? `
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/15 text-sky-600 dark:text-sky-400 border border-sky-500/30 flex items-center gap-1">
+                    <i data-lucide="video" class="w-3 h-3"></i>
+                    ভিডিও গাইড
+                  </span>
+                ` : ''}
               </div>
               <div class="flex items-center gap-1 text-xs font-black text-amber-500 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-lg border border-amber-200 dark:border-amber-900/50">
                 <i data-lucide="coins" class="w-3.5 h-3.5"></i>
@@ -2438,7 +2754,11 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
                 <span>সময়: <strong class="text-slate-700 dark:text-slate-200 font-mono">${t.duration}s</strong> অবস্থান</span>
               </div>
 
-              ${completed ? `
+              ${completed && completed.status === 'pending' ? `
+                <button disabled class="px-3.5 py-1.5 bg-amber-500/15 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-xl text-xs font-bold flex items-center gap-1 cursor-not-allowed">
+                  <i data-lucide="clock" class="w-3.5 h-3.5 animate-spin"></i> প্রুফ যাচাই চলছে
+                </button>
+              ` : completed ? `
                 <button disabled class="px-3.5 py-1.5 bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500 rounded-xl text-xs font-bold flex items-center gap-1 cursor-not-allowed">
                   <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> সম্পন্ন হয়েছে
                 </button>
@@ -2456,6 +2776,112 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       lucide.createIcons();
     }
 
+    let currentTaskScreenshotBase64 = null;
+
+    function handleTaskScreenshotSelect(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        alert('অনুগ্রহ করে একটি ছবি ফাইল নির্বাচন করুন (jpg/png/webp)');
+        return;
+      }
+
+      // Resize or read image to prevent exceeding Firebase RTDB node limits
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 900;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          currentTaskScreenshotBase64 = canvas.toDataURL('image/jpeg', 0.75);
+
+          const previewImg = document.getElementById('trun-screenshot-preview');
+          const previewCont = document.getElementById('trun-screenshot-preview-container');
+          if (previewImg && previewCont) {
+            previewImg.src = currentTaskScreenshotBase64;
+            previewCont.classList.remove('hidden');
+          }
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearTaskScreenshot() {
+      currentTaskScreenshotBase64 = null;
+      const fileInput = document.getElementById('trun-proof-file');
+      if (fileInput) fileInput.value = '';
+      const previewCont = document.getElementById('trun-screenshot-preview-container');
+      if (previewCont) previewCont.classList.add('hidden');
+    }
+
+    function submitTaskProof() {
+      if (!activeTaskObj) return;
+
+      const userNote = (document.getElementById('trun-proof-text')?.value || '').trim();
+      if (!currentTaskScreenshotBase64 && !userNote) {
+        alert('অনুগ্রহ করে টাস্ক সম্পন্ন করার প্রমাণ হিসেবে একটি স্ক্রিনশট আপলোড করুন অথবা বিস্তারিত নোট লিখুন!');
+        return;
+      }
+
+      const proofId = 'proof_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+      const proofData = {
+        id: proofId,
+        taskId: activeTaskObj.id,
+        taskTitle: activeTaskObj.title || 'মাইক্রো-টাস্ক',
+        targetUrl: activeTaskObj.targetUrl || '',
+        rewardCoins: activeTaskObj.rewardCoins || 30,
+        userId: appData.user.phone,
+        userPhone: appData.user.phone,
+        userName: appData.user.name || 'ইউজার',
+        screenshotBase64: currentTaskScreenshotBase64 || '',
+        userNote: userNote,
+        status: 'pending',
+        submittedAt: Date.now()
+      };
+
+      if (isFirebaseReady && fbDatabase) {
+        fbDatabase.ref(`taskProofs/${proofId}`).set(proofData).then(() => {
+          // Record local pending status
+          const todayStr = new Date().toISOString().split('T')[0];
+          if (!appData.user.completedTasks) appData.user.completedTasks = {};
+          appData.user.completedTasks[activeTaskObj.id] = {
+            timestamp: Date.now(),
+            date: todayStr,
+            proofId: proofId,
+            status: 'pending'
+          };
+          saveData();
+
+          showToast('📸 আপনার প্রুফ সফলভাবে জমা হয়েছে! এডমিন যাচাই করে দ্রুত কয়েন যোগ করে দিবেন।');
+          closeTaskRunModal();
+        }).catch(err => {
+          console.error("Proof submission error:", err);
+          showToast('প্রুফ জমা দিতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+        });
+      } else {
+        // Offline fallback
+        showToast('📸 প্রুফ সংরক্ষিত হয়েছে (অফলাইন মোড)।');
+        closeTaskRunModal();
+      }
+    }
+
     function openTaskRunModal(taskId) {
       const allTasksMap = { ...DEFAULT_SYSTEM_TASKS, ...(appData.tasks || {}) };
       const task = allTasksMap[taskId];
@@ -2470,7 +2896,9 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         title: task.title || task.name || 'নতুন মাইক্রো-টাস্ক',
         description: task.description || task.details || task.desc || 'এডমিন নির্ধারিত লিংকে গিয়ে ভিজিট করুন এবং নির্দিষ্ট সময় অবস্থান করে রিওয়ার্ড সংগ্রহ করুন।',
         targetUrl: task.targetUrl || task.url || task.link || 'https://google.com',
-        frequency: task.frequency || task.type || 'daily'
+        frequency: task.frequency || task.type || 'daily',
+        requiresProof: task.requiresProof === true,
+        videoTutorialUrl: task.videoTutorialUrl || task.videoUrl || ''
       };
 
       const pMeta = getPlatformMeta(activeTaskObj.platform, activeTaskObj.targetUrl);
@@ -2484,8 +2912,25 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       document.getElementById('trun-platform-badge').innerText = pMeta.name;
       document.getElementById('trun-frequency-badge').innerText = fMeta.label;
 
-      // Reset modal controls
+      // Video tutorial preview
+      const videoUrl = activeTaskObj.videoTutorialUrl || activeTaskObj.videoUrl || '';
+      const videoBox = document.getElementById('trun-video-box');
+      if (videoBox) {
+        if (videoUrl) {
+          videoBox.classList.remove('hidden');
+        } else {
+          videoBox.classList.add('hidden');
+        }
+      }
+
+      // Reset modal controls & proof inputs
+      clearTaskScreenshot();
+      const textInput = document.getElementById('trun-proof-text');
+      if (textInput) textInput.value = '';
+
       document.getElementById('trun-timer-box').classList.add('hidden');
+      document.getElementById('trun-proof-box').classList.add('hidden');
+      document.getElementById('trun-submit-proof-btn').classList.add('hidden');
       document.getElementById('trun-action-btn').classList.remove('hidden');
       document.getElementById('trun-action-btn').disabled = false;
       document.getElementById('trun-btn-text').innerText = 'টাস্ক শুরু করুন ও লিংকে যান';
@@ -2499,8 +2944,16 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         clearInterval(taskTimerInterval);
         taskTimerInterval = null;
       }
+      clearTaskScreenshot();
       document.getElementById('modal-task-run').classList.add('hidden');
       renderTaskList();
+    }
+
+    function openTaskTutorialVideo() {
+      if (!activeTaskObj) return;
+      const videoUrl = activeTaskObj.videoTutorialUrl || activeTaskObj.videoUrl;
+      if (!videoUrl) return alert('এই কাজের জন্য কোনো ভিডিও টিউটোরিয়াল যুক্ত নেই।');
+      window.open(videoUrl, '_blank');
     }
 
     function startActiveTaskVisit() {
@@ -2533,21 +2986,30 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           clearInterval(taskTimerInterval);
           taskTimerInterval = null;
 
-          // Award coins and record completion
-          const todayStr = new Date().toISOString().split('T')[0];
-          if (!appData.user.completedTasks) appData.user.completedTasks = {};
-          appData.user.completedTasks[activeTaskObj.id] = {
-            timestamp: Date.now(),
-            date: todayStr
-          };
+          if (activeTaskObj.requiresProof) {
+            // Task requires user to submit proof / screenshot
+            timerBox.classList.add('hidden');
+            document.getElementById('trun-proof-box').classList.remove('hidden');
+            document.getElementById('trun-submit-proof-btn').classList.remove('hidden');
+            showToast('⏰ সময় শেষ! এবার আপনার কাজের প্রমাণ (স্ক্রিনশট বা নোট) জমা দিন।');
+            lucide.createIcons();
+          } else {
+            // Standard instant auto-reward task
+            const todayStr = new Date().toISOString().split('T')[0];
+            if (!appData.user.completedTasks) appData.user.completedTasks = {};
+            appData.user.completedTasks[activeTaskObj.id] = {
+              timestamp: Date.now(),
+              date: todayStr
+            };
 
-          awardCoins(activeTaskObj.rewardCoins, `টাস্ক: ${activeTaskObj.title}`);
-          saveData();
+            awardCoins(activeTaskObj.rewardCoins, `টাস্ক: ${activeTaskObj.title}`);
+            saveData();
 
-          showToast(`🎉 চমৎকার! টাস্ক সম্পন্ন হয়েছে এবং +${activeTaskObj.rewardCoins} কয়েন যোগ হয়েছে!`);
-          setTimeout(() => {
-            closeTaskRunModal();
-          }, 1200);
+            showToast(`🎉 চমৎকার! টাস্ক সম্পন্ন হয়েছে এবং +${activeTaskObj.rewardCoins} কয়েন যোগ হয়েছে!`);
+            setTimeout(() => {
+              closeTaskRunModal();
+            }, 1200);
+          }
         }
       }, 1000);
     }
@@ -2566,6 +3028,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           }
           appData.user = { ...appData.user, ...snap.val() };
           renderUserHeader();
+          renderTaskList();
         }
       });
       fbDatabase.ref('adLinks').on('value', snap => {
@@ -2577,8 +3040,138 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       });
     }
 
+    // ==========================================
+    // STICKY SPONSOR BANNER ENGINE (Rotates Every 35s)
+    // ==========================================
+    let currentStickyBannerUrl = '';
+    const stickyAdsCatalog = [
+      {
+        title: '🔥 মেগা গিভঅ্যাওয়ে এবং স্পনসর বোনাস!',
+        desc: 'অফারটি ভিজিট করে ২০ সেকেন্ড ব্রাউজ করুন এবং ইনস্ট্যান্ট কয়েন নিশ্চিত করুন।',
+        badge: '+৮ কয়েন',
+        category: 'cpm'
+      },
+      {
+        title: '💎 নতুন স্পনসর অ্যাপ অফার লাইভ!',
+        desc: 'পার্টনার পেজ ঘুরে আসুন এবং ডাবল রিওয়ার্ড আনলক করুন।',
+        badge: '+১২ কয়েন',
+        category: 'cpm'
+      },
+      {
+        title: '⚡ প্রিমিয়াম স্পনসর সার্ভে ও টাস্ক!',
+        desc: 'হাই পেয়িং স্পনসর অফারে ক্লিক করে সহজে অতিরিক্ত কয়েন নিন।',
+        badge: '+১০ কয়েন',
+        category: 'cpm'
+      }
+    ];
+    let stickyAdIndex = 0;
+
+    function refreshStickyBanner() {
+      const bannerContainer = document.getElementById('sticky-banner-container');
+      if (!bannerContainer) return;
+
+      const adMeta = stickyAdsCatalog[stickyAdIndex % stickyAdsCatalog.length];
+      stickyAdIndex++;
+
+      const [url] = getRotatedAdLinks(adMeta.category);
+      currentStickyBannerUrl = attachTrackingParams(url);
+
+      const titleEl = document.getElementById('sticky-banner-title');
+      const descEl = document.getElementById('sticky-banner-desc');
+      const badgeEl = document.getElementById('sticky-banner-badge');
+
+      if (titleEl) titleEl.innerText = adMeta.title;
+      if (descEl) descEl.innerText = adMeta.desc;
+      if (badgeEl) badgeEl.innerHTML = `<i data-lucide="flame" class="w-2.5 h-2.5"></i> ${adMeta.badge}`;
+
+      lucide.createIcons();
+    }
+
+    function clickStickyBanner() {
+      if (!currentStickyBannerUrl) {
+        refreshStickyBanner();
+      }
+      if (currentStickyBannerUrl) {
+        window.open(currentStickyBannerUrl, '_blank');
+        showToast('স্পনসর পেজ ভিজিট করার জন্য ধন্যবাদ! পেজটি কিছুক্ষণ ব্রাউজ করুন।');
+      }
+    }
+
+    // Auto-refresh banner every 35 seconds
+    setInterval(refreshStickyBanner, 35000);
+
+    // ==========================================
+    // IDLE TIME CHEST / USER RETENTION ENGINE
+    // ==========================================
+    const IDLE_CYCLE_SECONDS = 180; // 3 minutes active presence in app
+    let idleSecondsCount = 0;
+    let idleChestUnlocked = false;
+
+    function initIdleRetentionTimer() {
+      setInterval(() => {
+        // Only count if user is logged in and app is visible
+        if (document.hidden) return;
+        if (!appData.user || !appData.user.phone) return;
+
+        if (!idleChestUnlocked) {
+          idleSecondsCount++;
+          const remaining = Math.max(0, IDLE_CYCLE_SECONDS - idleSecondsCount);
+          const minutes = Math.floor(remaining / 60);
+          const seconds = remaining % 60;
+          const timeStr = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+          const timerText = document.getElementById('idle-timer-text');
+          const progressBar = document.getElementById('idle-progress-bar');
+          if (timerText) timerText.innerText = timeStr;
+          if (progressBar) {
+            const percent = Math.min(100, Math.floor((idleSecondsCount / IDLE_CYCLE_SECONDS) * 100));
+            progressBar.style.width = `${percent}%`;
+          }
+
+          if (idleSecondsCount >= IDLE_CYCLE_SECONDS) {
+            idleChestUnlocked = true;
+            const claimBtn = document.getElementById('btn-idle-claim');
+            if (claimBtn) {
+              claimBtn.disabled = false;
+              claimBtn.className = 'px-3.5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 text-white font-black text-xs rounded-2xl shadow-lg active:scale-95 transition-all shrink-0 flex flex-col items-center justify-center gap-0.5 animate-bounce';
+              claimBtn.innerHTML = `
+                <i data-lucide="gift" class="w-4 h-4"></i>
+                <span class="text-[10px]">ক্লেইম করুন</span>
+              `;
+              lucide.createIcons();
+            }
+            showToast('🎉 অভিনন্দন! ৩ মিনিট অ্যাপে অবস্থানের জন্য টাইম চেস্ট আনলক হয়েছে!');
+          }
+        }
+      }, 1000);
+    }
+
+    function claimIdleReward() {
+      if (!idleChestUnlocked) return;
+
+      showToast('🎁 টাইম চেস্ট আনলক করতে স্পনসর ভেরিফিকেশন সম্পন্ন করুন...');
+      playSingleAdSequence('cpm', 25, 'টাইম চেস্ট রিওয়ার্ড', null, () => {
+        // Reset cycle for next 3 minutes retention
+        idleSecondsCount = 0;
+        idleChestUnlocked = false;
+        const claimBtn = document.getElementById('btn-idle-claim');
+        if (claimBtn) {
+          claimBtn.disabled = true;
+          claimBtn.className = 'px-3.5 py-2.5 bg-slate-800/80 text-slate-500 font-black text-xs rounded-2xl border border-slate-700 transition-all shrink-0 flex flex-col items-center justify-center gap-0.5';
+          claimBtn.innerHTML = `
+            <i data-lucide="lock" class="w-4 h-4"></i>
+            <span class="text-[10px]">লকড</span>
+          `;
+          lucide.createIcons();
+        }
+        showToast('🎉 টাইম চেস্ট থেকে +২৫ কয়েন অ্যাকাউন্টে যোগ হয়েছে!');
+      });
+    }
+
     window.onload = () => {
       lucide.createIcons();
+      refreshStickyBanner();
+      initIdleRetentionTimer();
 
       // Check URL query parameters for referral link (?ref=TCXXXX)
       const urlParams = new URLSearchParams(window.location.search);
