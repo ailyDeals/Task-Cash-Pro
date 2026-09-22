@@ -37,8 +37,8 @@
     .animate-marquee:hover { animation-play-state: paused; }
     body { font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; }
     .scrollbar-none::-webkit-scrollbar { display: none; }
-    @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.5); } 50% { box-shadow: 0 0 25px rgba(6, 182, 212, 0.8); } }
-    .glow-ai-btn { animation: pulse-glow 3s infinite; }
+    @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); opacity: 0.95; } 50% { box-shadow: 0 0 18px rgba(6, 182, 212, 0.7); opacity: 1; } }
+    .glow-ai-btn { animation: pulse-glow 3s ease-in-out infinite; will-change: transform, box-shadow; }
     @keyframes float-coin { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-3px) rotate(3deg); } }
     .coin-float { animation: float-coin 3s ease-in-out infinite; }
     .glass-card { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); }
@@ -49,17 +49,6 @@
 <body class="bg-slate-900 text-slate-800 dark:text-slate-100 antialiased font-sans min-h-screen flex justify-center selection:bg-emerald-500 selection:text-white transition-colors">
 
   <div id="toast-container" class="fixed top-4 right-4 z-50 pointer-events-none space-y-2 max-w-[90vw]"></div>
-
-  <!-- FLOATING AERO AI BUTTON (এরু AI বাটন) -->
-  <div class="fixed bottom-20 right-4 z-40">
-    <button onclick="openAeroAiModal()" class="glow-ai-btn flex items-center gap-2 px-3.5 py-2.5 bg-gradient-to-r from-cyan-600 via-teal-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white rounded-full shadow-2xl active:scale-95 transition-all text-xs font-black border border-cyan-300/40">
-      <div class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-cyan-200">
-        <i data-lucide="bot" class="w-3.5 h-3.5"></i>
-      </div>
-      <span>Aero AI গাইড</span>
-      <span class="w-2 h-2 rounded-full bg-emerald-300 animate-ping"></span>
-    </button>
-  </div>
 
   <!-- AUTH SCREEN -->
   <div id="auth-screen" class="w-full max-w-md bg-slate-900 min-h-screen flex flex-col justify-center p-5 relative z-40 text-white">
@@ -75,12 +64,14 @@
         <button type="button" id="tab-btn-register" onclick="toggleAuthMode('register')" class="py-2.5 rounded-xl text-slate-400 hover:text-white transition-all">নতুন একাউন্ট</button>
       </div>
 
+      <div id="auth-error-msg" class="hidden mb-3.5 p-2.5 bg-rose-500/15 border border-rose-500/40 rounded-xl text-rose-300 text-xs text-center font-medium"></div>
+
       <form id="form-login" onsubmit="handleUserLogin(event)" class="space-y-3.5">
         <div>
           <label class="block text-xs text-slate-300 font-bold mb-1">মোবাইল নম্বর:</label>
           <div class="relative">
             <i data-lucide="phone" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3"></i>
-            <input type="tel" id="login-phone" placeholder="017XXXXXXXX" pattern="01[3-9][0-9]{8}" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 pl-10 pr-3 text-xs text-white font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500">
+            <input type="tel" id="login-phone" placeholder="017XXXXXXXX" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 pl-10 pr-3 text-xs text-white font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500">
           </div>
         </div>
         <div>
@@ -90,7 +81,7 @@
             <input type="password" id="login-password" placeholder="••••••••" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 pl-10 pr-3 text-xs text-white font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500">
           </div>
         </div>
-        <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
+        <button type="submit" id="login-submit-btn" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
           <span>একাউন্টে প্রবেশ করুন</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
@@ -103,7 +94,7 @@
         </div>
         <div>
           <label class="block text-xs text-slate-300 font-bold mb-1">মোবাইল নম্বর (১১ ডিজিট):</label>
-          <input type="tel" id="reg-phone" placeholder="017XXXXXXXX" pattern="01[3-9][0-9]{8}" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-xs text-white font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500">
+          <input type="tel" id="reg-phone" placeholder="017XXXXXXXX" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-xs text-white font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500">
         </div>
         <div>
           <label class="block text-xs text-slate-300 font-bold mb-1">পাসওয়ার্ড (কমপক্ষে ৪ অক্ষর):</label>
@@ -113,7 +104,7 @@
           <label class="block text-xs text-slate-300 font-bold mb-1">রেফারেল কোড (ঐচ্ছিক):</label>
           <input type="text" id="reg-refer" placeholder="যেমন: TC9901" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-xs text-amber-300 uppercase font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500">
         </div>
-        <button type="submit" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold rounded-xl text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
+        <button type="submit" id="reg-submit-btn" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold rounded-xl text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
           <span>রেজিস্ট্রেশন করুন (+২৫ কয়েন বোনাস)</span>
           <i data-lucide="check-circle" class="w-4 h-4"></i>
         </button>
@@ -253,76 +244,79 @@
     <!-- MAIN SCROLLABLE BODY -->
     <main class="flex-1 p-4 pb-28 overflow-y-auto space-y-4">
       
-      <!-- VIEW: HOME -->
+      <!-- VIEW: HOME (STREAMLINED & PROFESSIONAL REDESIGN) -->
       <section id="view-home" class="space-y-4">
         
-        <!-- Daily Goal & Progress Ring Card -->
-        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60 rounded-3xl p-4 shadow-sm flex items-center justify-between">
-          <div>
-            <div class="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400 tracking-wider">আজকের টার্গেট</div>
-            <h3 class="text-sm font-black text-slate-800 dark:text-white mt-0.5">দৈনিক গোল প্রগ্রেস</h3>
-            <p id="daily-goal-text" class="text-xs text-slate-500 dark:text-slate-400 mt-1">০ / ১৫০ কয়েন অর্জিত</p>
-          </div>
-          <div class="relative w-16 h-16 flex items-center justify-center shrink-0">
-            <svg class="w-16 h-16 -rotate-90" viewBox="0 0 36 36">
-              <path class="text-slate-100 dark:text-slate-700" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-              <path id="goal-ring-path" class="text-emerald-500 transition-all duration-700" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-            </svg>
-            <span id="goal-percent-text" class="absolute text-[11px] font-black font-mono text-slate-800 dark:text-white">0%</span>
-          </div>
-        </div>
+        <!-- 1. UNIFIED DAILY HUB: Daily Progress, Streaks & Attendance -->
+        <div class="bg-gradient-to-br from-slate-900 via-slate-850 to-indigo-950 border border-indigo-500/30 rounded-3xl p-4.5 text-white shadow-xl relative overflow-hidden space-y-3.5">
+          <div class="absolute -top-10 -right-10 w-36 h-36 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
-        <!-- IDLE TIME REWARD CHEST (ব্যবহারকারী অ্যাপে থাকলেই অটো কয়েন ও হাই সিপিএম রিওয়ার্ড) -->
-        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-indigo-500/30 rounded-3xl p-4 text-white shadow-lg relative overflow-hidden">
-          <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl pointer-events-none"></div>
-          <div class="flex items-center justify-between gap-3">
-            <div class="space-y-1">
-              <div class="flex items-center gap-1.5 text-indigo-300 font-bold text-[10px] tracking-wide uppercase">
-                <span class="relative flex h-2 w-2">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-                </span>
-                <span>টাইম মাইনর (Time Chest)</span>
+          <!-- Header row: Daily Goal & Ring -->
+          <div class="flex items-center justify-between gap-3 relative z-10">
+            <div>
+              <div class="flex items-center gap-1.5 text-[10px] uppercase font-black tracking-wider text-emerald-400">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>আজকের দৈনিক টার্গেট</span>
               </div>
-              <h3 class="font-black text-sm text-white flex items-center gap-1.5">
-                <span>অ্যাপে থাকুন ও কয়েন সংগ্রহ করুন</span>
-              </h3>
-              <p class="text-[11px] text-indigo-200/80 leading-tight">
-                প্রতি ৩ মিনিট অ্যাপে সক্রিয় থাকলে আনলক হবে +২৫ কয়েন!
-              </p>
-              <div class="pt-1 flex items-center gap-2">
-                <div class="w-32 bg-slate-800 rounded-full h-2 overflow-hidden border border-indigo-500/20">
-                  <div id="idle-progress-bar" class="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full w-0 transition-all duration-500"></div>
+              <h3 class="text-base font-black text-white mt-0.5">ডেইলি গোল ও রিওয়ার্ড</h3>
+              <p id="daily-goal-text" class="text-xs text-slate-300 font-medium mt-0.5">০ / ১৫০ কয়েন অর্জিত</p>
+            </div>
+            <div class="relative w-14 h-14 flex items-center justify-center shrink-0">
+              <svg class="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
+                <path class="text-slate-800" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path id="goal-ring-path" class="text-emerald-400 transition-all duration-700" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              </svg>
+              <span id="goal-percent-text" class="absolute text-[10px] font-black font-mono text-white">0%</span>
+            </div>
+          </div>
+
+          <!-- Integrated Daily Actions: Attendance & Time Mining Chest -->
+          <div class="grid grid-cols-2 gap-2.5 pt-1 relative z-10">
+            <!-- Attendance Bonus -->
+            <div class="bg-white/5 border border-white/10 hover:border-amber-400/40 rounded-2xl p-3 flex flex-col justify-between transition-all">
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-[10px] font-bold text-amber-300 flex items-center gap-1">
+                    <i data-lucide="gift" class="w-3 h-3"></i> ডেইলি বোনাস
+                  </span>
+                  <span class="text-[10px] font-black text-amber-400 font-mono">+১২ কয়েন</span>
                 </div>
-                <span id="idle-timer-text" class="text-[11px] font-mono font-bold text-cyan-300">০৩:০০</span>
+                <p class="text-[10px] text-slate-300 leading-tight">প্রতিদিন ১ বার ফ্রি বোনাস</p>
               </div>
+              <button id="btn-checkin" onclick="claimDailyBonus()" class="mt-2.5 w-full py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-[11px] rounded-xl shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
+                <span>ক্লেইম করুন</span>
+              </button>
             </div>
-            <button id="btn-idle-claim" onclick="claimIdleReward()" disabled class="px-3.5 py-2.5 bg-slate-800/80 text-slate-500 font-black text-xs rounded-2xl border border-slate-700 transition-all shrink-0 flex flex-col items-center justify-center gap-0.5">
-              <i data-lucide="lock" class="w-4 h-4"></i>
-              <span class="text-[10px]">লকড</span>
-            </button>
+
+            <!-- Time Mining Chest -->
+            <div class="bg-white/5 border border-white/10 hover:border-cyan-400/40 rounded-2xl p-3 flex flex-col justify-between transition-all">
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-[10px] font-bold text-cyan-300 flex items-center gap-1">
+                    <i data-lucide="clock" class="w-3 h-3"></i> টাইম চেস্ট
+                  </span>
+                  <span class="text-[10px] font-black text-emerald-400 font-mono">+২৫ কয়েন</span>
+                </div>
+                <div class="flex items-center justify-between gap-1 mt-1">
+                  <div class="flex-1 bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                    <div id="idle-progress-bar" class="bg-gradient-to-r from-cyan-400 to-emerald-400 h-full w-0 transition-all duration-500"></div>
+                  </div>
+                  <span id="idle-timer-text" class="text-[9px] font-mono font-bold text-cyan-300">০৩:০০</span>
+                </div>
+              </div>
+              <button id="btn-idle-claim" onclick="claimIdleReward()" disabled class="mt-2.5 w-full py-2 bg-slate-800/90 text-slate-500 font-black text-[11px] rounded-xl border border-slate-700/80 transition-all flex items-center justify-center gap-1">
+                <i data-lucide="lock" class="w-3 h-3"></i>
+                <span>লকড</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- Daily Bonus & Quick Streak Banner (Streamlined) -->
-        <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 rounded-2.5xl p-4 text-white flex items-center justify-between shadow-md">
-          <div class="space-y-0.5">
-            <div class="text-[11px] text-amber-200 font-bold flex items-center gap-1.5">
-              <i data-lucide="gift" class="w-3.5 h-3.5"></i>
-              <span>দৈনিক ফ্রি বোনাস</span>
-            </div>
-            <h3 class="font-black text-base text-white">প্রতিদিনের উপস্থিতি রিওয়ার্ড</h3>
-            <p class="text-[11px] text-amber-100">+১২ কয়েন নিশ্চিত করুন</p>
-          </div>
-          <button id="btn-checkin" onclick="claimDailyBonus()" class="px-4 py-2.5 bg-white hover:bg-amber-50 text-orange-600 font-black text-xs rounded-xl shadow-md active:scale-95 transition-all shrink-0">
-            ক্লেইম করুন
-          </button>
-        </div>
-
-        <!-- PROMINENT TIMEWALL GLOBAL OFFERWALL BANNER (FEATURED HERO CARD) -->
+        <!-- 2. TIMEWALL FEATURED HERO BANNER (PROMINENT & HIGH-PAYING) -->
         <div id="home-timewall-banner" class="relative overflow-hidden bg-gradient-to-br from-indigo-950 via-slate-900 to-blue-950 border-2 border-indigo-500/50 rounded-3xl p-4.5 shadow-xl text-white space-y-3">
           <div class="absolute -right-6 -top-6 w-28 h-28 bg-cyan-500/15 rounded-full blur-xl pointer-events-none"></div>
-          <div class="flex items-start justify-between gap-3">
+          <div class="flex items-start justify-between gap-3 relative z-10">
             <div class="space-y-1">
               <div class="flex items-center gap-1.5 flex-wrap">
                 <span class="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-[10px] font-black uppercase tracking-wider shadow-xs">
@@ -336,7 +330,7 @@
                 TimeWall গেম ও অ্যাপ টাস্ক
               </h3>
               <p class="text-xs text-slate-300 leading-relaxed">
-                আন্তর্জাতিক গেম ডাউনলোড, লেভেল খেলা ও সহজ সার্ভে পূরণ করে বড় কয়েন আয় করুন। কাজ শেষে হিস্ট্রির স্ক্রিনশট দিলেই সরাসরি একাউন্টে কয়েন জমা হবে!
+                আন্তর্জাতিক গেম ডাউনলোড, লেভেল খেলা ও সহজ সার্ভে করে বড় কয়েন আয় করুন। কাজ শেষে হিস্ট্রির স্ক্রিনশট দিলেই সরাসরি একাউন্টে কয়েন জমা হবে!
               </p>
             </div>
             <div class="shrink-0 text-center bg-indigo-900/60 border border-indigo-500/40 px-3 py-2 rounded-2xl">
@@ -346,192 +340,169 @@
             </div>
           </div>
 
-          <!-- 3 Quick Step Guide for Users -->
-          <div class="grid grid-cols-3 gap-2 py-1 text-center text-[10px]">
+          <!-- 3 Quick Steps -->
+          <div class="grid grid-cols-3 gap-2 py-1 text-center text-[10px] relative z-10">
             <div class="bg-white/5 border border-white/10 rounded-xl p-2">
               <span class="block font-black text-cyan-400 text-xs">১. ওপেন করুন</span>
-              <span class="text-slate-300 text-[9px] leading-tight block mt-0.5">লিংকে ক্লিক করে কাজ পছন্দ করুন</span>
+              <span class="text-slate-300 text-[9px] leading-tight block mt-0.5">পছন্দের কাজ বেছে নিন</span>
             </div>
             <div class="bg-white/5 border border-white/10 rounded-xl p-2">
               <span class="block font-black text-amber-400 text-xs">২. স্ক্রিনশট নিন</span>
-              <span class="text-slate-300 text-[9px] leading-tight block mt-0.5">টাস্ক কমপ্লিটের স্ক্রিনশট তুলুন</span>
+              <span class="text-slate-300 text-[9px] leading-tight block mt-0.5">টাস্ক কমপ্লিটের প্রুফ তুলুন</span>
             </div>
             <div class="bg-white/5 border border-white/10 rounded-xl p-2">
               <span class="block font-black text-emerald-400 text-xs">৩. কয়েন নিন</span>
-              <span class="text-slate-300 text-[9px] leading-tight block mt-0.5">প্রুফ সাবমিট করলেই রিওয়ার্ড</span>
+              <span class="text-slate-300 text-[9px] leading-tight block mt-0.5">প্রুফ দিলেই রিওয়ার্ড</span>
             </div>
           </div>
 
-          <!-- Buttons -->
-          <div class="flex items-center gap-2 pt-0.5">
+          <!-- Action Buttons -->
+          <div class="flex items-center gap-2 pt-0.5 relative z-10">
             <button onclick="openTimeWallOfferwall()" class="flex-1 py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white rounded-2xl text-xs font-black shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all">
               <i data-lucide="external-link" class="w-4 h-4"></i>
               <span>TimeWall-এ কাজ শুরু করুন</span>
             </button>
             <button onclick="openTimeWallProofModal()" class="flex-1 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-2xl text-xs shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all">
               <i data-lucide="camera" class="w-4 h-4 text-slate-950"></i>
-              <span>📸 স্ক্রিনশট প্রুফ জমা দিন</span>
+              <span>📸 প্রুফ জমা দিন</span>
             </button>
           </div>
         </div>
 
-        <!-- TOP 3 POPULAR QUICK EARNINGS (CLEAN, SPACIOUS 3-CARD ROW) -->
-        <div class="space-y-2">
-          <div class="flex items-center justify-between px-0.5">
-            <h3 class="text-xs font-black uppercase text-slate-750 dark:text-slate-200 tracking-wider flex items-center gap-1.5">
-              <i data-lucide="zap" class="w-4 h-4 text-amber-500"></i> জনপ্রিয় দ্রুত কাজ
-            </h3>
-            <span class="text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full">প্রতিদিন ফ্রেশ লিমিট</span>
-          </div>
-
-          <div class="grid grid-cols-3 gap-2.5">
-            <!-- 1. Lucky Spin -->
-            <button onclick="openSpinModal()" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 p-3.5 rounded-2.5xl text-center flex flex-col items-center shadow-xs hover:border-amber-400/60 transition-all group">
-              <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-950 flex items-center justify-center mb-2 shadow-md shadow-amber-500/25 group-hover:scale-105 transition-transform">
-                <i data-lucide="sparkles" class="w-5 h-5"></i>
-              </div>
-              <span class="text-xs font-black text-slate-850 dark:text-slate-100">লাকি স্পিন</span>
-              <span id="spin-count" class="text-[10px] text-emerald-600 dark:text-emerald-400 font-black mt-1 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded-md">১২ টি বাকি</span>
-            </button>
-
-            <!-- 2. Scratch Card -->
-            <button onclick="openScratchModal()" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 p-3.5 rounded-2.5xl text-center flex flex-col items-center shadow-xs hover:border-purple-400/60 transition-all group">
-              <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-500 text-white flex items-center justify-center mb-2 shadow-md shadow-purple-600/25 group-hover:scale-105 transition-transform">
-                <i data-lucide="gift" class="w-5 h-5"></i>
-              </div>
-              <span class="text-xs font-black text-slate-850 dark:text-slate-100">স্ক্র্যাচ কার্ড</span>
-              <span id="scratch-count" class="text-[10px] text-purple-600 dark:text-purple-400 font-black mt-1 bg-purple-50 dark:bg-purple-950/50 px-2 py-0.5 rounded-md">১০ টি বাকি</span>
-            </button>
-
-            <!-- 3. Captcha Job -->
-            <button onclick="openCaptchaModal()" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 p-3.5 rounded-2.5xl text-center flex flex-col items-center shadow-xs hover:border-cyan-400/60 transition-all group">
-              <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-600 to-teal-500 text-white flex items-center justify-center mb-2 shadow-md shadow-cyan-600/25 group-hover:scale-105 transition-transform">
-                <i data-lucide="keyboard" class="w-5 h-5"></i>
-              </div>
-              <span class="text-xs font-black text-slate-850 dark:text-slate-100">ক্যাপচা টাইপিং</span>
-              <span id="captcha-count" class="text-[10px] text-cyan-600 dark:text-cyan-400 font-black mt-1 bg-cyan-50 dark:bg-cyan-950/50 px-2 py-0.5 rounded-md">২০ টি বাকি</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- 4 CLEAN CORE ACTION TILES (TASK HUB, VIDEO ADS, MATH QUIZ, SALARY) -->
-        <div class="space-y-2">
-          <div class="flex items-center justify-between px-0.5">
-            <h3 class="text-xs font-black uppercase text-slate-750 dark:text-slate-200 tracking-wider flex items-center gap-1.5">
-              <i data-lucide="layers" class="w-4 h-4 text-emerald-600"></i> কাজের প্রধান বিভাগসমূহ
-            </h3>
+        <!-- 3. QUICK EARN HUB: 4 Core Activities (Spin, Scratch, Captcha, Quiz) -->
+        <div class="space-y-2.5">
+          <div class="flex items-center justify-between px-1">
+            <div>
+              <h3 class="text-xs font-black uppercase text-slate-800 dark:text-slate-200 tracking-wider flex items-center gap-1.5">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i> কুইক আর্ন হাব
+              </h3>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400">প্রতিদিন ফ্রি সুযোগ + বোনাস কয়েন</p>
+            </div>
             <button onclick="switchTab('earn')" class="text-[10px] font-black text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5 hover:underline">
-              <span>সব অপশন</span>
+              <span>সব কাজ দেখুন</span>
               <i data-lucide="arrow-right" class="w-3 h-3"></i>
             </button>
           </div>
 
           <div class="grid grid-cols-2 gap-2.5">
-            <!-- Tile 1: Micro-Tasks Hub -->
-            <div onclick="switchTab('tasks')" class="card-touch-feedback p-4 bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 rounded-2.5xl cursor-pointer hover:border-emerald-400/60 transition-all shadow-xs flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between mb-2">
-                  <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center shadow-md shadow-emerald-600/20">
-                    <i data-lucide="check-square" class="w-5 h-5"></i>
-                  </div>
-                  <span class="text-[10px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded-full">টাস্ক হাব</span>
-                </div>
-                <h4 class="text-xs font-black text-slate-850 dark:text-white">মাইক্রো-টাস্ক কাজ</h4>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">সাবস্ক্রাইব, ভিজিট ও সাইনআপ</p>
+            <!-- 1. Lucky Spin -->
+            <button onclick="openSpinModal()" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 p-3.5 rounded-2.5xl text-left flex items-center gap-3 shadow-xs hover:border-amber-400/60 transition-all group">
+              <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-950 flex items-center justify-center shrink-0 shadow-md shadow-amber-500/25 group-hover:scale-105 transition-transform">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
               </div>
-              <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-700/60 text-[10px] text-emerald-650 dark:text-emerald-400 font-black flex items-center justify-between">
-                <span>কাজ শুরু করুন</span>
-                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              <div class="overflow-hidden">
+                <div class="text-xs font-black text-slate-900 dark:text-white truncate">লাকি স্পিন</div>
+                <div class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">সর্বোচ্চ ৪০ কয়েন</div>
+                <span id="spin-count" class="inline-block text-[9px] text-amber-600 dark:text-amber-400 font-black mt-1 bg-amber-50 dark:bg-amber-950/50 px-1.5 py-0.2 rounded">১২ টি বাকি</span>
+              </div>
+            </button>
+
+            <!-- 2. Scratch Card -->
+            <button onclick="openScratchModal()" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 p-3.5 rounded-2.5xl text-left flex items-center gap-3 shadow-xs hover:border-purple-400/60 transition-all group">
+              <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-purple-600/25 group-hover:scale-105 transition-transform">
+                <i data-lucide="gift" class="w-5 h-5"></i>
+              </div>
+              <div class="overflow-hidden">
+                <div class="text-xs font-black text-slate-900 dark:text-white truncate">স্ক্র্যাচ কার্ড</div>
+                <div class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">+২২ কয়েন ফিক্সড</div>
+                <span id="scratch-count" class="inline-block text-[9px] text-purple-600 dark:text-purple-400 font-black mt-1 bg-purple-50 dark:bg-purple-950/50 px-1.5 py-0.2 rounded">১০ টি বাকি</span>
+              </div>
+            </button>
+
+            <!-- 3. Math Quiz -->
+            <button onclick="openQuizModal()" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 p-3.5 rounded-2.5xl text-left flex items-center gap-3 shadow-xs hover:border-rose-400/60 transition-all group">
+              <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-600 to-orange-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-rose-600/20 group-hover:scale-105 transition-transform">
+                <i data-lucide="brain" class="w-5 h-5"></i>
+              </div>
+              <div class="overflow-hidden">
+                <div class="text-xs font-black text-slate-900 dark:text-white truncate">ম্যাথ কুইজ</div>
+                <div class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">+১৫ কয়েন সহজে</div>
+                <span id="quiz-count" class="inline-block text-[9px] text-rose-600 dark:text-rose-400 font-black mt-1 bg-rose-50 dark:bg-rose-950/50 px-1.5 py-0.2 rounded">১৫ টি বাকি</span>
+              </div>
+            </button>
+
+            <!-- 4. Captcha Typing -->
+            <button onclick="openCaptchaModal()" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 p-3.5 rounded-2.5xl text-left flex items-center gap-3 shadow-xs hover:border-cyan-400/60 transition-all group">
+              <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-600 to-teal-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-cyan-600/25 group-hover:scale-105 transition-transform">
+                <i data-lucide="keyboard" class="w-5 h-5"></i>
+              </div>
+              <div class="overflow-hidden">
+                <div class="text-xs font-black text-slate-900 dark:text-white truncate">ক্যাপচা টাইপিং</div>
+                <div class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">+১০ কয়েন প্রতিবার</div>
+                <span id="captcha-count" class="inline-block text-[9px] text-cyan-600 dark:text-cyan-400 font-black mt-1 bg-cyan-50 dark:bg-cyan-950/50 px-1.5 py-0.2 rounded">২০ টি বাকি</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. CORE CHANNELS & PROGRAM (MICRO-TASKS & REFERRAL) -->
+        <div class="grid grid-cols-2 gap-2.5">
+          <!-- Micro-Tasks Channel -->
+          <div onclick="switchTab('tasks')" class="card-touch-feedback p-3.5 bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 rounded-2.5xl cursor-pointer hover:border-emerald-400/60 transition-all shadow-xs flex flex-col justify-between">
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center shadow-md shadow-emerald-600/20">
+                <i data-lucide="check-square" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-black text-slate-900 dark:text-white">মাইক্রো-টাস্ক</h4>
+                <span class="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold">ভিজিট ও চ্যানেল সাব</span>
               </div>
             </div>
+            <div class="pt-2 border-t border-slate-100 dark:border-slate-700/60 text-[10px] text-emerald-600 dark:text-emerald-400 font-black flex items-center justify-between">
+              <span>টাস্ক লিস্টে যান</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </div>
+          </div>
 
-            <!-- Tile 2: Video & Ad Center -->
-            <div onclick="switchTab('earn')" class="card-touch-feedback p-4 bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 rounded-2.5xl cursor-pointer hover:border-sky-400/60 transition-all shadow-xs flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between mb-2">
-                  <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-blue-500 text-white flex items-center justify-center shadow-md shadow-sky-600/20">
-                    <i data-lucide="play-circle" class="w-5 h-5"></i>
-                  </div>
-                  <span class="text-[10px] font-black text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/50 px-2 py-0.5 rounded-full">ভিডিও এড</span>
-                </div>
-                <h4 class="text-xs font-black text-slate-850 dark:text-white">স্পন্সর ভিডিও এড</h4>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">ভিডিও দেখে ইনস্ট্যান্ট রিওয়ার্ড</p>
+          <!-- Referral Program -->
+          <div onclick="switchTab('refer')" class="card-touch-feedback p-3.5 bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 rounded-2.5xl cursor-pointer hover:border-purple-400/60 transition-all shadow-xs flex flex-col justify-between">
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-purple-600/20">
+                <i data-lucide="users" class="w-4 h-4"></i>
               </div>
-              <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-700/60 text-[10px] text-sky-650 dark:text-sky-400 font-black flex items-center justify-between">
-                <span>ভিডিও দেখুন</span>
-                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              <div>
+                <h4 class="text-xs font-black text-slate-900 dark:text-white">রেফারেল প্রোগ্রাম</h4>
+                <span class="text-[9px] text-purple-600 dark:text-purple-400 font-bold">+২২ কয়েন + ১০%</span>
               </div>
             </div>
-
-            <!-- Tile 3: Math Quiz Challenge -->
-            <div onclick="openQuizModal()" class="card-touch-feedback p-4 bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 rounded-2.5xl cursor-pointer hover:border-rose-400/60 transition-all shadow-xs flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between mb-2">
-                  <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 to-orange-500 text-white flex items-center justify-center shadow-md shadow-rose-600/20">
-                    <i data-lucide="brain" class="w-5 h-5"></i>
-                  </div>
-                  <span id="quiz-count" class="text-[10px] font-black text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 px-2 py-0.5 rounded-full">১৫ টি বাকি</span>
-                </div>
-                <h4 class="text-xs font-black text-slate-850 dark:text-white">ম্যাথ কুইজ গেম</h4>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">সহজ যোগ-বিয়োগের অঙ্ক</p>
-              </div>
-              <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-700/60 text-[10px] text-rose-650 dark:text-rose-400 font-black flex items-center justify-between">
-                <span>কুইজ খেলুন</span>
-                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-              </div>
-            </div>
-
-            <!-- Tile 4: Referral Program -->
-            <div onclick="switchTab('refer')" class="card-touch-feedback p-4 bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 rounded-2.5xl cursor-pointer hover:border-purple-400/60 transition-all shadow-xs flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between mb-2">
-                  <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-purple-600/20">
-                    <i data-lucide="users" class="w-5 h-5"></i>
-                  </div>
-                  <span class="text-[10px] font-black text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/50 px-2 py-0.5 rounded-full">+২২ কয়েন</span>
-                </div>
-                <h4 class="text-xs font-black text-slate-850 dark:text-white">রেফারেল প্রোগ্রাম</h4>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">বন্ধুদের ইনভাইট করে আয়</p>
-              </div>
-              <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-700/60 text-[10px] text-purple-650 dark:text-purple-400 font-black flex items-center justify-between">
-                <span>লিংক শেয়ার</span>
-                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-              </div>
+            <div class="pt-2 border-t border-slate-100 dark:border-slate-700/60 text-[10px] text-purple-600 dark:text-purple-400 font-black flex items-center justify-between">
+              <span>ইনভাইট করুন</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
             </div>
           </div>
         </div>
 
-        <!-- Monthly Salary High-Level Banner -->
-        <div onclick="switchTab('monthly_salary')" class="p-3.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white rounded-2xl cursor-pointer active:scale-98 transition-all shadow-md flex items-center justify-between">
+        <!-- 5. MONTHLY FIXED SALARY CALLOUT -->
+        <div onclick="switchTab('monthly_salary')" class="p-3.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white rounded-2.5xl cursor-pointer active:scale-98 transition-all shadow-md flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0">
-              <i data-lucide="award" class="w-5 h-5"></i>
+            <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0">
+              <i data-lucide="award" class="w-4.5 h-4.5"></i>
             </div>
             <div>
               <div class="flex items-center gap-1.5">
                 <h4 class="text-xs font-black">মাসিক ফিক্সড স্যালারি প্রোগ্রাম</h4>
                 <span class="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full">৳৫০০ - ৩,০০০</span>
               </div>
-              <p class="text-[10px] text-emerald-100 mt-0.5">প্রতি মাসের ১ তারিখে বিকাশ/নগদে ফিক্সড বেতন গ্রহণ করুন</p>
+              <p class="text-[10px] text-emerald-100 mt-0.5">প্রতি মাসের ১ তারিখে বিকাশ/নগদে নিশ্চিত বেতন</p>
             </div>
           </div>
-          <i data-lucide="chevron-right" class="w-5 h-5 text-emerald-200 shrink-0"></i>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-emerald-200 shrink-0"></i>
         </div>
 
-        <!-- Promo Code Box (Streamlined at bottom) -->
-        <div class="bg-gradient-to-r from-slate-100 to-slate-200/70 dark:from-slate-800 dark:to-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-2xl p-3.5 flex items-center justify-between gap-2">
+        <!-- 6. PROMO CODE ACCORDION / BOX -->
+        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 flex items-center justify-between gap-2 shadow-xs">
           <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
+            <div class="w-8 h-8 rounded-lg bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
               <i data-lucide="tag" class="w-4 h-4"></i>
             </div>
             <div>
               <span class="text-[11px] font-black text-slate-800 dark:text-white block leading-tight">প্রমো কোড আছে?</span>
-              <span class="text-[10px] text-slate-500 dark:text-slate-400">কোড লিখে ইনস্ট্যান্ট কয়েন নিন</span>
+              <span class="text-[10px] text-slate-500 dark:text-slate-400">+৫০ কয়েন ইনস্ট্যান্ট রিডিম</span>
             </div>
           </div>
           <form onsubmit="handleRedeemPromo(event)" class="flex items-center gap-1.5">
-            <input type="text" id="promo-input" placeholder="কোড লিখুন" class="w-28 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono uppercase text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-sky-500" required>
-            <button type="submit" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white font-black text-[11px] rounded-lg shrink-0 shadow-xs active:scale-95 transition-all">
+            <input type="text" id="promo-input" placeholder="কোড লিখুন" class="w-24 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1.5 text-xs font-mono uppercase text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-sky-500" required>
+            <button type="submit" class="px-2.5 py-1.5 bg-sky-600 hover:bg-sky-700 text-white font-black text-[10px] rounded-lg shrink-0 shadow-xs active:scale-95 transition-all">
               রিডিম
             </button>
           </form>
@@ -731,8 +702,8 @@
           <button onclick="filterTasks('once')" id="tf-once" class="task-filter-btn px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">🔒 ওয়ান-টাইম</button>
         </div>
 
-        <!-- Tasks Container -->
-        <div id="all-tasks-list" class="space-y-3">
+        <!-- Tasks Container (TimeWall 2-Column Grid Style) -->
+        <div id="all-tasks-list" class="grid grid-cols-2 gap-2.5">
           <!-- Dynamically populated by renderTaskList() -->
         </div>
       </section>
@@ -1133,6 +1104,17 @@
           <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
         </div>
       </div>
+    </div>
+
+    <!-- FLOATING AERO AI BUTTON (অ্যাপের ভেতরে স্থির ও নিরাপদ) -->
+    <div class="fixed bottom-20 right-4 z-30 max-w-md pointer-events-auto">
+      <button onclick="openAeroAiModal()" class="glow-ai-btn flex items-center gap-2 px-3.5 py-2.5 bg-gradient-to-r from-cyan-600 via-teal-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white rounded-full shadow-2xl active:scale-95 transition-transform text-xs font-black border border-cyan-300/40">
+        <div class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-cyan-200">
+          <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+        </div>
+        <span>Aero AI গাইড</span>
+        <span class="w-2 h-2 rounded-full bg-emerald-300"></span>
+      </button>
     </div>
 
     <!-- BOTTOM NAVIGATION -->
@@ -1679,6 +1661,9 @@
     let currentAdStep = 0;
     let adCountdownInterval = null;
     let adCountdownTime = 13;
+    let isAdTimerPaused = false;
+    let adRemainingSeconds = 13;
+    let adCategoryRoundRobinIndex = {};
     let currentAdRewardCoins = 20;
     let currentAdName = 'বিজ্ঞাপন';
     let currentAdCountProp = 'dailyInstant';
@@ -1694,6 +1679,16 @@
       setTimeout(() => toast.remove(), 3500);
     }
 
+    function safeConfetti(opts) {
+      try {
+        if (typeof confetti === 'function') {
+          confetti(opts || { particleCount: 60, spread: 70 });
+        }
+      } catch (e) {
+        console.warn('Confetti skipped:', e);
+      }
+    }
+
     function sanitizeKey(k) { return (k || '').replace(/[.#$[\]]/g, '_'); }
 
     // ==========================================
@@ -1703,8 +1698,20 @@
       const linksObj = appData.adLinks || {};
       const allActive = Object.values(linksObj).filter(l => l.active !== false && l.url);
 
-      const categoryFiltered = allActive.filter(l => l.category === category || (!l.category || l.category === 'general'));
-      const pool = categoryFiltered.length > 0 ? categoryFiltered : (allActive.length > 0 ? allActive : []);
+      // 1. Direct category matches (e.g. watch_ad, unlock_extra, instant_reward, etc.)
+      const exactCategoryMatches = allActive.filter(l => l.category === category);
+      
+      // 2. Secondary pool: Category matches OR general links
+      const generalMatches = allActive.filter(l => !l.category || l.category === 'general');
+      
+      let pool = [];
+      if (exactCategoryMatches.length > 0) {
+        pool = exactCategoryMatches;
+      } else if (generalMatches.length > 0) {
+        pool = generalMatches;
+      } else if (allActive.length > 0) {
+        pool = allActive;
+      }
 
       const fallbackDefaults = [
         'https://vast.yomeno.xyz/vast?spot_id=1501671',
@@ -1719,18 +1726,21 @@
       let availableUrls = pool.map(l => l.url);
       if (availableUrls.length === 0) availableUrls = fallbackDefaults;
 
-      // Filter out recently visited URLs to protect admin accounts from ban (Buffer: 35-40 URLs)
-      let candidateUrls = availableUrls.filter(u => !recentAdUrlsHistory.slice(-35).includes(u));
-      if (candidateUrls.length < 3) candidateUrls = availableUrls;
+      // Sequential Round-Robin per category so admin links open in a predictable, fair round-robin order
+      const catKey = category || 'general';
+      if (typeof adCategoryRoundRobinIndex[catKey] !== 'number') {
+        adCategoryRoundRobinIndex[catKey] = 0;
+      }
 
-      // Shuffle candidates
-      const shuffled = [...candidateUrls].sort(() => Math.random() - 0.5);
+      const totalUrls = availableUrls.length;
+      let startIdx = adCategoryRoundRobinIndex[catKey] % totalUrls;
+      adCategoryRoundRobinIndex[catKey] = (startIdx + 3) % totalUrls;
 
-      const ad1 = shuffled[0] || availableUrls[0];
-      const ad2 = shuffled[1] || (availableUrls.find(u => u !== ad1) || ad1);
-      const ad3 = shuffled[2] || (availableUrls.find(u => u !== ad1 && u !== ad2) || availableUrls[0]);
+      const ad1 = availableUrls[startIdx % totalUrls];
+      const ad2 = availableUrls.length > 1 ? availableUrls[(startIdx + 1) % totalUrls] : ad1;
+      const ad3 = availableUrls.length > 2 ? availableUrls[(startIdx + 2) % totalUrls] : (availableUrls[(startIdx + 1) % totalUrls] || ad1);
 
-      // Record in history ring buffer (maintains last 35-40 entries)
+      // Record in history buffer
       recentAdUrlsHistory.push(ad1);
       if (ad2 !== ad1) recentAdUrlsHistory.push(ad2);
       if (ad3 !== ad2 && ad3 !== ad1) recentAdUrlsHistory.push(ad3);
@@ -1831,11 +1841,17 @@
     // Alias for backward compatibility
     const playTwoAdsSequence = playThreeAdsSequence;
 
+    let adWindowRef = null;
+
     function executeAdStep() {
       if (currentAdStep >= currentAdQueue.length) {
         // Sequence Complete!
-        if (adCountdownInterval) clearInterval(adCountdownInterval);
-        document.getElementById('modal-ad-countdown').classList.add('hidden');
+        if (adCountdownInterval) {
+          clearInterval(adCountdownInterval);
+          adCountdownInterval = null;
+        }
+        const modal = document.getElementById('modal-ad-countdown');
+        if (modal) modal.classList.add('hidden');
 
         if (currentAdCountProp && appData.user[currentAdCountProp] > 0) {
           appData.user[currentAdCountProp]--;
@@ -1845,11 +1861,19 @@
           awardCoins(currentAdRewardCoins, currentAdName);
         }
 
-        confetti({ particleCount: 90, spread: 80 });
+        // Lightweight non-blocking celebration
+        safeConfetti({ particleCount: 40, spread: 50 });
         showToast(`🎉 উচ্চ মানের ভেরিফিকেশন সফল! ${currentAdRewardCoins > 0 ? '+' + currentAdRewardCoins + ' কয়েন যোগ হয়েছে!' : ''}`);
 
+        // Track real completed ad activity to validate referral legitimacy
+        recordUserAdActivity();
+
         if (typeof onAdSequenceSuccessCallback === 'function') {
-          onAdSequenceSuccessCallback();
+          try {
+            onAdSequenceSuccessCallback();
+          } catch (cbErr) {
+            console.warn('Ad callback error:', cbErr);
+          }
         }
         return;
       }
@@ -1863,11 +1887,16 @@
       userAdInteractionConfirmed = false;
 
       // Update Modal UI
-      document.getElementById('ad-step-pill').innerText = item.label;
-      document.getElementById('ad-countdown-title').innerText = `${currentAdName} (${item.label})`;
-      document.getElementById('ad-countdown-reward-text').innerText = currentAdRewardCoins > 0 ? `+${currentAdRewardCoins} কয়েন রিওয়ার্ড` : 'ভেরিফিকেশন সম্পন্ন হবে';
-      document.getElementById('ad-countdown-timer').innerText = `${adCountdownTime}s`;
-      document.getElementById('ad-pause-alert').classList.add('hidden');
+      const pillEl = document.getElementById('ad-step-pill');
+      if (pillEl) pillEl.innerText = item.label;
+      const titleEl = document.getElementById('ad-countdown-title');
+      if (titleEl) titleEl.innerText = `${currentAdName} (${item.label})`;
+      const rewardEl = document.getElementById('ad-countdown-reward-text');
+      if (rewardEl) rewardEl.innerText = currentAdRewardCoins > 0 ? `+${currentAdRewardCoins} কয়েন রিওয়ার্ড` : 'ভেরিফিকেশন সম্পন্ন হবে';
+      const timerEl = document.getElementById('ad-countdown-timer');
+      if (timerEl) timerEl.innerText = `${adCountdownTime}s`;
+      const pauseAlert = document.getElementById('ad-pause-alert');
+      if (pauseAlert) pauseAlert.classList.add('hidden');
       
       // Smart instructions badge based on Network (Monetag/Adsterra vs CPA)
       const instructEl = document.getElementById('ad-countdown-instruction-box');
@@ -1894,50 +1923,85 @@
       // Hide verification claim button initially
       const confirmBox = document.getElementById('ad-step-confirm-box');
       if (confirmBox) confirmBox.classList.add('hidden');
-      document.getElementById('ad-timer-box').classList.remove('hidden');
+      const timerBox = document.getElementById('ad-timer-box');
+      if (timerBox) timerBox.classList.remove('hidden');
 
-      document.getElementById('modal-ad-countdown').classList.remove('hidden');
-      lucide.createIcons();
+      const modalAd = document.getElementById('modal-ad-countdown');
+      if (modalAd) modalAd.classList.remove('hidden');
+      if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
 
-      // Open URL safely with tracking
+      // Open URL safely with tracking (reuse existing window if open to avoid mobile memory blowout)
       try {
         if (window.Telegram?.WebApp?.openLink) {
           window.Telegram.WebApp.openLink(currentActiveAdUrl, { try_instant_view: false });
         } else {
-          window.open(currentActiveAdUrl, '_blank');
+          if (adWindowRef && !adWindowRef.closed) {
+            adWindowRef.location.href = currentActiveAdUrl;
+          } else {
+            adWindowRef = window.open(currentActiveAdUrl, '_blank');
+          }
         }
       } catch (err) {
-        window.open(currentActiveAdUrl, '_blank');
+        try {
+          adWindowRef = window.open(currentActiveAdUrl, '_blank');
+        } catch (e2) {}
       }
 
       if (adCountdownInterval) clearInterval(adCountdownInterval);
-      adCountdownInterval = setInterval(() => {
-        // Strict anti-cheat: if app tab is active, user is NOT on the ad page (pause timer)
-        if (document.visibilityState === 'visible') {
-          document.getElementById('ad-pause-alert').classList.remove('hidden');
-          return;
-        } else {
-          document.getElementById('ad-pause-alert').classList.add('hidden');
-        }
 
-        adCountdownTime--;
-        if (adCountdownTime <= 0) {
-          clearInterval(adCountdownInterval);
-          // High eCPM verification check
+      // Robust countdown with pause/resume support
+      adRemainingSeconds = adCountdownTime;
+      isAdTimerPaused = false;
+      if (pauseAlert) pauseAlert.classList.add('hidden');
+
+      const tDisplay = document.getElementById('ad-countdown-timer');
+      if (tDisplay) tDisplay.innerText = `${adRemainingSeconds}s`;
+
+      adCountdownInterval = setInterval(() => {
+        // If user came back to app tab before time, pause timer and prompt to stay on ad page
+        if (isAdTimerPaused) return;
+
+        adRemainingSeconds--;
+        const tDisp = document.getElementById('ad-countdown-timer');
+        if (adRemainingSeconds <= 0) {
+          if (adCountdownInterval) {
+            clearInterval(adCountdownInterval);
+            adCountdownInterval = null;
+          }
+          if (tDisp) tDisp.innerText = '0s';
           promptAdStepVerification(classification);
         } else {
-          document.getElementById('ad-countdown-timer').innerText = `${adCountdownTime}s`;
+          if (tDisp) tDisp.innerText = `${adRemainingSeconds}s`;
         }
       }, 1000);
     }
 
+    function pauseAdTimer() {
+      if (!adCountdownInterval || adRemainingSeconds <= 0) return;
+      isAdTimerPaused = true;
+      const pauseAlert = document.getElementById('ad-pause-alert');
+      if (pauseAlert) pauseAlert.classList.remove('hidden');
+      const hint = document.getElementById('ad-countdown-status-hint');
+      if (hint) hint.innerText = '⚠️ বিজ্ঞাপনের পাতায় ফিরে গিয়ে সময় শেষ করুন...';
+    }
+
+    function resumeAdTimer() {
+      if (!adCountdownInterval) return;
+      isAdTimerPaused = false;
+      const pauseAlert = document.getElementById('ad-pause-alert');
+      if (pauseAlert) pauseAlert.classList.add('hidden');
+      const hint = document.getElementById('ad-countdown-status-hint');
+      if (hint) hint.innerText = 'বিজ্ঞাপনে সক্রিয়ভাবে ব্রাউজ করুন...';
+    }
+
     // Require user confirmation / interaction check after ad visit
     function promptAdStepVerification(classification) {
-      document.getElementById('ad-timer-box').classList.add('hidden');
+      const timerBox = document.getElementById('ad-timer-box');
+      if (timerBox) timerBox.classList.add('hidden');
       const confirmBox = document.getElementById('ad-step-confirm-box');
       if (confirmBox) {
         confirmBox.classList.remove('hidden');
-        lucide.createIcons();
+        if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
       } else {
         proceedToNextAdStep();
       }
@@ -1960,12 +2024,28 @@
     }
 
     function reopenActiveAdUrl() {
-      if (currentActiveAdUrl) window.open(currentActiveAdUrl, '_blank');
+      if (currentActiveAdUrl) {
+        resumeAdTimer();
+        try {
+          if (adWindowRef && !adWindowRef.closed) {
+            adWindowRef.location.href = currentActiveAdUrl;
+            adWindowRef.focus();
+          } else {
+            adWindowRef = window.open(currentActiveAdUrl, '_blank');
+          }
+        } catch (e) {
+          window.open(currentActiveAdUrl, '_blank');
+        }
+      }
     }
 
     function closeAdCountdownModal() {
-      if (adCountdownInterval) clearInterval(adCountdownInterval);
-      document.getElementById('modal-ad-countdown').classList.add('hidden');
+      if (adCountdownInterval) {
+        clearInterval(adCountdownInterval);
+        adCountdownInterval = null;
+      }
+      const modal = document.getElementById('modal-ad-countdown');
+      if (modal) modal.classList.add('hidden');
     }
 
     // ==========================================
@@ -1979,7 +2059,7 @@
         const SLICES = [10, 25, 15, 40, 18, 24];
         const won = SLICES[Math.floor(Math.random() * SLICES.length)];
         awardCoins(won, 'লাকি স্পিন');
-        confetti({ particleCount: 90, spread: 80 });
+        safeConfetti({ particleCount: 50, spread: 60 });
         showToast(`🎉 অভিনন্দন! স্পিন সম্পন্ন করে +${won} কয়েন জিতেছেন!`);
       });
     }
@@ -1989,7 +2069,7 @@
       closeModal('modal-scratch');
       playThreeAdsSequence('general', 0, 'স্ক্র্যাচ কার্ড আনলক', 'dailyScratch', () => {
         awardCoins(22, 'স্ক্র্যাচ কার্ড');
-        confetti({ particleCount: 80, spread: 70 });
+        safeConfetti({ particleCount: 50, spread: 60 });
         showToast('🎉 স্ক্র্যাচ কার্ড সফল! +২২ কয়েন ক্রেডিট হয়েছে!');
       });
     }
@@ -2141,14 +2221,30 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
     // General app helpers
     function awardCoins(amount, source) {
-      appData.user.coins = (Number(appData.user.coins) || 0) + amount;
-      appData.user.lifetimeCoins = (Number(appData.user.lifetimeCoins) || 0) + amount;
-      appData.user.todayCoins = (Number(appData.user.todayCoins) || 0) + amount;
+      const numAmt = Number(amount);
+      if (isNaN(numAmt) || numAmt <= 0) return;
+
+      // Anti-cheat limit: Single award cannot exceed 500 coins unless special postback
+      const safeAmt = Math.min(500, Math.floor(numAmt));
+
+      appData.user.coins = (Number(appData.user.coins) || 0) + safeAmt;
+      appData.user.lifetimeCoins = (Number(appData.user.lifetimeCoins) || 0) + safeAmt;
+      appData.user.todayCoins = (Number(appData.user.todayCoins) || 0) + safeAmt;
+
+      // Record coin history log for admin transparency
+      if (isFirebaseReady && fbDatabase && appData.user?.phone) {
+        const userKey = sanitizeKey(appData.user.phone);
+        fbDatabase.ref('users/' + userKey + '/coinHistory').push({
+          amount: safeAmt,
+          source: source || 'অ্যাপ রিওয়ার্ড',
+          timestamp: Date.now()
+        }).catch(() => {});
+      }
 
       // Distribute 10% Referral Commission to upstream referrer if exists
       if (appData.user.referredBy && isFirebaseReady && fbDatabase) {
         const refCode = appData.user.referredBy;
-        const commissionCoins = Math.max(1, Math.floor(amount * 0.10));
+        const commissionCoins = Math.max(1, Math.floor(safeAmt * 0.10));
         fbDatabase.ref('users').once('value', snap => {
           const allUsers = snap.val() || {};
           for (const [key, usr] of Object.entries(allUsers)) {
@@ -2169,6 +2265,38 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
       saveData();
       renderUserHeader();
+    }
+
+    function recordUserAdActivity() {
+      if (!isFirebaseReady || !fbDatabase || !appData.user?.phone) return;
+      const userKey = sanitizeKey(appData.user.phone);
+      
+      // Update completed ads count on user profile
+      fbDatabase.ref('users/' + userKey).transaction(u => {
+        if (u) {
+          u.completedAdsCount = (Number(u.completedAdsCount) || 0) + 1;
+        }
+        return u;
+      });
+
+      // Update referral log to verify real user activity (if referred by someone)
+      if (appData.user.referredBy) {
+        fbDatabase.ref('referralLogs').orderByChild('referredPhone').equalTo(appData.user.phone).once('value', snap => {
+          const logs = snap.val() || {};
+          Object.keys(logs).forEach(logId => {
+            fbDatabase.ref('referralLogs/' + logId).transaction(logItem => {
+              if (logItem) {
+                logItem.tasksCompleted = (Number(logItem.tasksCompleted) || 0) + 1;
+                // If user completes at least 2 real tasks/ads, mark referral as ACTIVE & REAL
+                if (logItem.tasksCompleted >= 2) {
+                  logItem.status = 'active';
+                }
+              }
+              return logItem;
+            });
+          });
+        }).catch(() => {});
+      }
     }
 
     function renderUserHeader() {
@@ -2336,8 +2464,36 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       lucide.createIcons();
     }
     function toggleAuthMode(m) {
-      document.getElementById('form-login').classList.toggle('hidden', m !== 'login');
-      document.getElementById('form-register').classList.toggle('hidden', m === 'login');
+      const formLogin = document.getElementById('form-login');
+      const formReg = document.getElementById('form-register');
+      const btnLogin = document.getElementById('tab-btn-login');
+      const btnReg = document.getElementById('tab-btn-register');
+      const errBox = document.getElementById('auth-error-msg');
+      if (errBox) {
+        errBox.innerText = '';
+        errBox.classList.add('hidden');
+      }
+
+      if (m === 'login') {
+        if (formLogin) formLogin.classList.remove('hidden');
+        if (formReg) formReg.classList.add('hidden');
+        if (btnLogin) {
+          btnLogin.className = 'py-2.5 rounded-xl bg-emerald-600 text-white transition-all shadow-md';
+        }
+        if (btnReg) {
+          btnReg.className = 'py-2.5 rounded-xl text-slate-400 hover:text-white transition-all';
+        }
+      } else {
+        if (formLogin) formLogin.classList.add('hidden');
+        if (formReg) formReg.classList.remove('hidden');
+        if (btnLogin) {
+          btnLogin.className = 'py-2.5 rounded-xl text-slate-400 hover:text-white transition-all';
+        }
+        if (btnReg) {
+          btnReg.className = 'py-2.5 rounded-xl bg-emerald-600 text-white transition-all shadow-md';
+        }
+      }
+      lucide.createIcons();
     }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
     function openServicesMenu() {
@@ -2508,8 +2664,36 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     }
     function handleRedeemPromo(e) {
       e.preventDefault();
-      awardCoins(50, 'প্রমো কোড');
-      showToast('প্রমো কোড সফল! +৫০ কয়েন');
+      const inputEl = document.getElementById('promo-input');
+      const code = (inputEl ? inputEl.value : '').trim().toUpperCase();
+      if (!code) return;
+
+      if (!isFirebaseReady || !fbDatabase) {
+        return alert('ডাটাবেজ সংযুক্ত নেই! একটু পর চেষ্টা করুন।');
+      }
+
+      // Check if user already redeemed this promo
+      if (!appData.user.redeemedPromos) appData.user.redeemedPromos = {};
+      if (appData.user.redeemedPromos[code]) {
+        return alert('⚠️ আপনি ইতিমধ্যে এই প্রমো কোডটি ব্যবহার করেছেন!');
+      }
+
+      fbDatabase.ref('promoCodes/' + code).once('value', snap => {
+        const promo = snap.val();
+        if (!promo || promo.active === false) {
+          return alert('❌ ভুল অথবা মেয়াদোত্তীর্ণ প্রমো কোড! সঠিক কোড দিন।');
+        }
+
+        const reward = Number(promo.rewardCoins || promo.reward || 50);
+        appData.user.redeemedPromos[code] = Date.now();
+        awardCoins(reward, `প্রমো কোড: ${code}`);
+
+        if (inputEl) inputEl.value = '';
+        safeConfetti({ particleCount: 50, spread: 60 });
+        showToast(`🎉 প্রমো কোড সফল! +${reward} কয়েন যুক্ত হয়েছে!`);
+      }).catch(err => {
+        alert('প্রমো কোড ভেরিফিকেশনে ত্রুটি হয়েছে।');
+      });
     }
     function updateCoinsNeeded(amt) {
       const c = Number(amt) * COINS_PER_BDT;
@@ -2564,71 +2748,245 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
       saveData();
       renderUserHeader();
-      confetti({ particleCount: 100, spread: 80 });
+      safeConfetti({ particleCount: 60, spread: 70 });
       showToast(`🎉 ৳${amt} উইথড্র আবেদন সফলভাবে জমা হয়েছে!`);
       document.getElementById('wdr-account').value = '';
       switchTab('home');
     }
 
-    function handleUserLogin(e) {
-      e.preventDefault();
-      const phone = document.getElementById('login-phone').value.trim();
-      localStorage.setItem(SESSION_USER_KEY, phone);
-      appData.user.phone = phone;
-      if (!appData.user.referralCode) {
-        appData.user.referralCode = 'TC' + phone.slice(-4);
+    function cleanPhoneNumber(raw) {
+      if (!raw) return '';
+      // Convert Bengali digits to English digits
+      const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+      let num = String(raw).trim();
+      bnDigits.forEach((bn, idx) => {
+        num = num.split(bn).join(String(idx));
+      });
+      // Remove spaces, dashes, parentheses, plus
+      num = num.replace(/[\s\-\(\)\+]/g, '');
+      // Handle country code +880 or 880
+      if (num.startsWith('880')) {
+        num = '0' + num.slice(3);
+      } else if (num.startsWith('88')) {
+        num = '0' + num.slice(2);
       }
-      document.getElementById('auth-screen').classList.add('hidden');
-      document.getElementById('main-app-container').classList.remove('hidden');
-      renderUserHeader();
-      initFirebaseSync();
+      return num;
+    }
+
+    function showAuthError(msg) {
+      const errBox = document.getElementById('auth-error-msg');
+      if (errBox) {
+        errBox.innerText = msg;
+        errBox.classList.remove('hidden');
+      } else {
+        alert(msg);
+      }
+    }
+
+    function clearAuthError() {
+      const errBox = document.getElementById('auth-error-msg');
+      if (errBox) {
+        errBox.innerText = '';
+        errBox.classList.add('hidden');
+      }
+    }
+
+    function handleUserLogin(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      clearAuthError();
+
+      const rawPhone = document.getElementById('login-phone').value;
+      const phone = cleanPhoneNumber(rawPhone);
+      const password = (document.getElementById('login-password')?.value || '').trim();
+
+      if (!phone || phone.length < 10) {
+        return showAuthError('⚠️ অনুগ্রহ করে সঠিক মোবাইল নম্বর দিন (যেমন: 017XXXXXXXX)');
+      }
+
+      const submitBtn = document.getElementById('login-submit-btn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i><span>প্রবেশ করা হচ্ছে...</span>`;
+        lucide.createIcons();
+      }
+
+      const proceedLogin = (userData) => {
+        if (userData && userData.banned) {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<span>একাউন্টে প্রবেশ করুন</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+            lucide.createIcons();
+          }
+          return showAuthError('⛔ আপনার একাউন্টটি সাময়িকভাবে ব্যান করা হয়েছে। সাপোর্টে যোগাযোগ করুন।');
+        }
+
+        localStorage.setItem(SESSION_USER_KEY, phone);
+        appData.user.phone = phone;
+        if (userData) {
+          appData.user = { ...appData.user, ...userData };
+        }
+        if (!appData.user.referralCode) {
+          appData.user.referralCode = 'TC' + phone.slice(-4);
+        }
+
+        document.getElementById('auth-screen').classList.add('hidden');
+        document.getElementById('main-app-container').classList.remove('hidden');
+        renderUserHeader();
+        initFirebaseSync();
+        renderTaskList();
+        showToast(`👋 স্বাগতম, ${appData.user.name || 'ব্যবহারকারী'}!`);
+      };
+
+      // Check if user exists in Firebase Realtime Database
+      if (isFirebaseReady && fbDatabase) {
+        const userKey = sanitizeKey(phone);
+        fbDatabase.ref('users/' + userKey).once('value', snapshot => {
+          const val = snapshot.val();
+          if (val) {
+            // Check password if previously saved
+            if (val.password && password && val.password !== password) {
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<span>একাউন্টে প্রবেশ করুন</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+                lucide.createIcons();
+              }
+              return showAuthError('❌ পাসওয়ার্ড সঠিক নয়! অনুগ্রহ করে সঠিক পাসওয়ার্ড দিন।');
+            }
+            proceedLogin(val);
+          } else {
+            // User not registered yet in Firebase
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = `<span>একাউন্টে প্রবেশ করুন</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+              lucide.createIcons();
+            }
+            // Ask user to register or auto-switch to register tab with phone pre-filled
+            const regPhoneInput = document.getElementById('reg-phone');
+            if (regPhoneInput) regPhoneInput.value = phone;
+            showAuthError('ℹ️ এই নম্বরে কোনো অ্যাকাউন্ট পাওয়া যায়নি। অনুগ্রহ করে "নতুন একাউন্ট" তৈরি করুন।');
+            toggleAuthMode('register');
+          }
+        }).catch(err => {
+          console.warn('Firebase login check failed, offline fallback:', err);
+          proceedLogin(null);
+        });
+      } else {
+        // Offline / local storage fallback login
+        proceedLogin(null);
+      }
     }
 
     function handleUserRegister(e) {
-      e.preventDefault();
-      const phone = document.getElementById('reg-phone').value.trim();
+      if (e && e.preventDefault) e.preventDefault();
+      clearAuthError();
+
+      const rawPhone = document.getElementById('reg-phone').value;
+      const phone = cleanPhoneNumber(rawPhone);
       const name = document.getElementById('reg-name').value.trim();
+      const password = (document.getElementById('reg-password')?.value || '').trim();
       const refInput = document.getElementById('reg-refer');
       const refCodeEntered = refInput ? refInput.value.trim() : '';
 
-      localStorage.setItem(SESSION_USER_KEY, phone);
-      appData.user.phone = phone;
-      appData.user.name = name;
-      appData.user.coins = WELCOME_COINS;
-      appData.user.referralCode = 'TC' + phone.slice(-4);
-      appData.user.referralsCount = 0;
-      appData.user.refEarnedCoins = 0;
-
-      // Handle referral bonus for upstream referrer
-      if (refCodeEntered) {
-        appData.user.referredBy = refCodeEntered;
-        if (isFirebaseReady && fbDatabase) {
-          fbDatabase.ref('users').once('value', snapshot => {
-            const users = snapshot.val() || {};
-            for (const [k, u] of Object.entries(users)) {
-              if (u.referralCode === refCodeEntered || k === sanitizeKey(refCodeEntered)) {
-                fbDatabase.ref('users/' + k).transaction(parent => {
-                  if (parent) {
-                    parent.referralsCount = (Number(parent.referralsCount) || 0) + 1;
-                    parent.coins = (Number(parent.coins) || 0) + 22; // 22 coins bonus for successful referral
-                    parent.refEarnedCoins = (Number(parent.refEarnedCoins) || 0) + 22;
-                    parent.lifetimeCoins = (Number(parent.lifetimeCoins) || 0) + 22;
-                  }
-                  return parent;
-                });
-                break;
-              }
-            }
-          }).catch(() => {});
-        }
+      if (!phone || phone.length < 10) {
+        return showAuthError('⚠️ অনুগ্রহ করে সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন (যেমন: 017XXXXXXXX)');
+      }
+      if (!name) {
+        return showAuthError('⚠️ অনুগ্রহ করে আপনার নাম লিখুন');
+      }
+      if (!password || password.length < 4) {
+        return showAuthError('⚠️ পাসওয়ার্ড কমপক্ষে ৪ অক্ষরের হতে হবে');
       }
 
-      document.getElementById('auth-screen').classList.add('hidden');
-      document.getElementById('main-app-container').classList.remove('hidden');
-      saveData();
-      renderUserHeader();
-      initFirebaseSync();
-      showToast('🎉 রেজিস্ট্রেশন সফল! ওয়েলকাম বোনাস +২৫ কয়েন যুক্ত হয়েছে।');
+      const submitBtn = document.getElementById('reg-submit-btn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i><span>রেজিস্ট্রেশন হচ্ছে...</span>`;
+        lucide.createIcons();
+      }
+
+      const completeRegistration = () => {
+        localStorage.setItem(SESSION_USER_KEY, phone);
+        appData.user.phone = phone;
+        appData.user.name = name;
+        appData.user.password = password;
+        appData.user.coins = WELCOME_COINS;
+        appData.user.referralCode = 'TC' + phone.slice(-4);
+        appData.user.referralsCount = 0;
+        appData.user.refEarnedCoins = 0;
+        appData.user.createdAt = Date.now();
+
+        // Handle referral tracking & anti-fraud log for upstream referrer
+        if (refCodeEntered) {
+          appData.user.referredBy = refCodeEntered;
+          if (isFirebaseReady && fbDatabase) {
+            fbDatabase.ref('users').once('value', snapshot => {
+              const users = snapshot.val() || {};
+              for (const [k, u] of Object.entries(users)) {
+                if (u.referralCode === refCodeEntered || k === sanitizeKey(refCodeEntered)) {
+                  // Increment parent referrer count
+                  fbDatabase.ref('users/' + k).transaction(parent => {
+                    if (parent) {
+                      parent.referralsCount = (Number(parent.referralsCount) || 0) + 1;
+                      parent.coins = (Number(parent.coins) || 0) + 22; // 22 coins bonus for referral
+                      parent.refEarnedCoins = (Number(parent.refEarnedCoins) || 0) + 22;
+                      parent.lifetimeCoins = (Number(parent.lifetimeCoins) || 0) + 22;
+                    }
+                    return parent;
+                  });
+
+                  // Create transparent referral log record for admin panel
+                  const logId = 'ref_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+                  fbDatabase.ref('referralLogs/' + logId).set({
+                    id: logId,
+                    referrerPhone: u.phone || k,
+                    referrerName: u.name || 'রেফারার',
+                    referralCode: refCodeEntered,
+                    referredPhone: phone,
+                    referredName: name,
+                    status: 'new', // 'new' until user completes at least 2 real ads/tasks
+                    tasksCompleted: 0,
+                    timestamp: Date.now(),
+                    date: new Date().toLocaleDateString('bn-BD')
+                  }).catch(() => {});
+                  break;
+                }
+              }
+            }).catch(() => {});
+          }
+        }
+
+        document.getElementById('auth-screen').classList.add('hidden');
+        document.getElementById('main-app-container').classList.remove('hidden');
+        saveData();
+        renderUserHeader();
+        initFirebaseSync();
+        renderTaskList();
+        showToast('🎉 রেজিস্ট্রেশন সফল! ওয়েলকাম বোনাস +২৫ কয়েন যুক্ত হয়েছে।');
+      };
+
+      if (isFirebaseReady && fbDatabase) {
+        const userKey = sanitizeKey(phone);
+        fbDatabase.ref('users/' + userKey).once('value', snapshot => {
+          if (snapshot.val()) {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = `<span>রেজিস্ট্রেশন করুন (+২৫ কয়েন বোনাস)</span><i data-lucide="check-circle" class="w-4 h-4"></i>`;
+              lucide.createIcons();
+            }
+            showAuthError('ℹ️ এই মোবাইল নম্বরে ইতিমধ্যে একটি অ্যাকাউন্ট আছে! অনুগ্রহ করে "লগইন" করুন।');
+            const loginPhoneInput = document.getElementById('login-phone');
+            if (loginPhoneInput) loginPhoneInput.value = phone;
+            toggleAuthMode('login');
+          } else {
+            completeRegistration();
+          }
+        }).catch(err => {
+          console.warn('Firebase registration check error:', err);
+          completeRegistration();
+        });
+      } else {
+        completeRegistration();
+      }
     }
 
     function handleUserLogout() {
@@ -2712,17 +3070,54 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     let isTaskWindowFocused = true;
     let activeTaskObj = null;
 
-    // Window focus/blur listeners to ensure authentic visit duration
+    // Window focus/blur listeners to pause countdown when user returns back early to app tab
     window.addEventListener('blur', () => {
-      isTaskWindowFocused = false;
-      const pauseAlert = document.getElementById('trun-pause-alert');
-      if (pauseAlert && taskTimerInterval) pauseAlert.classList.remove('hidden');
+      // User switched to external ad/task target window
+      isTaskWindowFocused = true;
+      const taskPauseAlert = document.getElementById('trun-pause-alert');
+      if (taskPauseAlert) taskPauseAlert.classList.add('hidden');
+
+      if (typeof resumeAdTimer === 'function') {
+        resumeAdTimer();
+      }
     });
 
     window.addEventListener('focus', () => {
-      isTaskWindowFocused = true;
-      const pauseAlert = document.getElementById('trun-pause-alert');
-      if (pauseAlert) pauseAlert.classList.add('hidden');
+      // User switched back to this app tab
+      // If timer is still running, user left target ad page early -> pause timer!
+      if (typeof pauseAdTimer === 'function' && adCountdownInterval && adRemainingSeconds > 0) {
+        pauseAdTimer();
+      }
+
+      if (taskTimerInterval && taskTimeRemaining > 0) {
+        isTaskWindowFocused = false;
+        const taskPauseAlert = document.getElementById('trun-pause-alert');
+        if (taskPauseAlert) taskPauseAlert.classList.remove('hidden');
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        // App tab is hidden (user is viewing external ad / task window)
+        isTaskWindowFocused = true;
+        const taskPauseAlert = document.getElementById('trun-pause-alert');
+        if (taskPauseAlert) taskPauseAlert.classList.add('hidden');
+
+        if (typeof resumeAdTimer === 'function') {
+          resumeAdTimer();
+        }
+      } else {
+        // App tab became visible again
+        if (typeof pauseAdTimer === 'function' && adCountdownInterval && adRemainingSeconds > 0) {
+          pauseAdTimer();
+        }
+
+        if (taskTimerInterval && taskTimeRemaining > 0) {
+          isTaskWindowFocused = false;
+          const taskPauseAlert = document.getElementById('trun-pause-alert');
+          if (taskPauseAlert) taskPauseAlert.classList.remove('hidden');
+        }
+      }
     });
 
     function getPlatformMeta(platform, url) {
@@ -2822,7 +3217,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
       if (filtered.length === 0) {
         container.innerHTML = `
-          <div class="text-center p-8 bg-white dark:bg-slate-800/60 rounded-3xl border border-slate-200 dark:border-slate-700 text-slate-400 space-y-2">
+          <div class="col-span-2 text-center p-8 bg-white dark:bg-slate-800/60 rounded-3xl border border-slate-200 dark:border-slate-700 text-slate-400 space-y-2">
             <i data-lucide="inbox" class="w-8 h-8 mx-auto text-slate-300"></i>
             <p class="text-xs font-bold">এই ক্যাটাগরিতে বর্তমানে কোনো টাস্ক নেই</p>
             <button onclick="filterTasks('all')" class="text-[11px] text-emerald-600 font-bold hover:underline">সব টাস্ক দেখুন</button>
@@ -2839,65 +3234,70 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         const bdtValue = (t.rewardCoins / COINS_PER_BDT).toFixed(2);
 
         return `
-          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3.5 border ${completed ? 'border-slate-200 dark:border-slate-700 opacity-80' : 'border-slate-200 dark:border-slate-700/80 shadow-xs hover:border-emerald-500/50'} transition-all space-y-2.5">
-            <!-- Top Badges Row -->
-            <div class="flex items-center justify-between gap-2 flex-wrap">
-              <div class="flex items-center gap-1.5 flex-wrap">
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${pMeta.bg} ${pMeta.color} border ${pMeta.border}">
-                  <i data-lucide="${pMeta.icon}" class="w-3 h-3"></i>
-                  ${pMeta.name}
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 border ${completed ? 'border-slate-200 dark:border-slate-700/60 opacity-80' : 'border-slate-200/90 dark:border-slate-700/80 shadow-xs hover:border-emerald-500/50 hover:shadow-md'} transition-all flex flex-col justify-between h-full relative overflow-hidden group">
+            
+            <!-- Card Top: Platform & Frequency & Coin Reward -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between gap-1">
+                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-lg text-[9px] font-black ${pMeta.bg} ${pMeta.color} border ${pMeta.border} truncate max-w-[90px]">
+                  <i data-lucide="${pMeta.icon}" class="w-3 h-3 shrink-0"></i>
+                  <span class="truncate">${pMeta.name}</span>
                 </span>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${fMeta.badgeClass}">
-                  ${fMeta.label}
+                <div class="flex items-center gap-0.5 text-[11px] font-black text-amber-500 bg-amber-50 dark:bg-amber-950/40 px-1.5 py-0.5 rounded-lg border border-amber-200 dark:border-amber-900/50 shrink-0">
+                  <i data-lucide="coins" class="w-3 h-3 text-amber-500"></i>
+                  <span>+${t.rewardCoins}</span>
+                </div>
+              </div>
+
+              <!-- Badges Row (Proof / Video / Freq) -->
+              <div class="flex items-center gap-1 flex-wrap">
+                <span class="px-1.5 py-0.5 rounded text-[8px] font-bold ${fMeta.badgeClass}">
+                  ${fMeta.key === 'unlimited' ? '⚡ আনলিমিটেড' : (fMeta.key === 'once' ? '🔒 ১ বার' : '📅 ডেইলি')}
                 </span>
                 ${t.requiresProof ? `
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center gap-1">
-                    <i data-lucide="shield-check" class="w-3 h-3"></i>
-                    প্রমাণ আবশ্যক
+                  <span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center gap-0.5">
+                    <i data-lucide="shield-check" class="w-2.5 h-2.5"></i> প্রুফ
                   </span>
                 ` : ''}
                 ${(t.videoTutorialUrl || t.videoUrl) ? `
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/15 text-sky-600 dark:text-sky-400 border border-sky-500/30 flex items-center gap-1">
-                    <i data-lucide="video" class="w-3 h-3"></i>
-                    ভিডিও গাইড
+                  <span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-sky-500/15 text-sky-600 dark:text-sky-400 border border-sky-500/30 flex items-center gap-0.5">
+                    <i data-lucide="video" class="w-2.5 h-2.5"></i> গাইড
                   </span>
                 ` : ''}
               </div>
-              <div class="flex items-center gap-1 text-xs font-black text-amber-500 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-lg border border-amber-200 dark:border-amber-900/50">
-                <i data-lucide="coins" class="w-3.5 h-3.5"></i>
-                +${t.rewardCoins} কয়েন
-                <span class="text-[9px] text-slate-400 font-normal">≈ ৳${bdtValue}</span>
+
+              <!-- Title & Brief Description -->
+              <div class="pt-0.5">
+                <h4 class="font-black text-xs text-slate-800 dark:text-white leading-snug line-clamp-2" title="${t.title}">
+                  ${t.title}
+                </h4>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                  ${t.description}
+                </p>
               </div>
             </div>
 
-            <!-- Title & Full Description -->
-            <div>
-              <h4 class="font-black text-xs text-slate-800 dark:text-white leading-snug flex items-center gap-1.5">
-                ${t.title}
-              </h4>
-              <p class="text-[11px] text-slate-500 dark:text-slate-300 mt-1 leading-relaxed line-clamp-2">
-                ${t.description}
-              </p>
-            </div>
-
-            <!-- Bottom Row with Duration & Action Button -->
-            <div class="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-700/50 text-[11px]">
-              <div class="flex items-center gap-1 text-slate-500 dark:text-slate-400 font-medium">
-                <i data-lucide="clock" class="w-3.5 h-3.5 text-emerald-600"></i>
-                <span>সময়: <strong class="text-slate-700 dark:text-slate-200 font-mono">${t.duration}s</strong> অবস্থান</span>
+            <!-- Card Bottom: Time & Action Button (TimeWall Style) -->
+            <div class="pt-2 mt-2 border-t border-slate-100 dark:border-slate-700/60 space-y-1.5">
+              <div class="flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-400 font-medium">
+                <span class="flex items-center gap-1">
+                  <i data-lucide="clock" class="w-3 h-3 text-emerald-500"></i>
+                  <strong class="text-slate-700 dark:text-slate-200 font-mono">${t.duration}s</strong>
+                </span>
+                <span class="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold">≈ ৳${bdtValue}</span>
               </div>
 
               ${completed && completed.status === 'pending' ? `
-                <button disabled class="px-3.5 py-1.5 bg-amber-500/15 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-xl text-xs font-bold flex items-center gap-1 cursor-not-allowed">
-                  <i data-lucide="clock" class="w-3.5 h-3.5 animate-spin"></i> প্রুফ যাচাই চলছে
+                <button disabled class="w-full py-1.5 bg-amber-500/15 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1 cursor-not-allowed">
+                  <i data-lucide="clock" class="w-3 h-3 animate-spin"></i> যাচাই চলছে
                 </button>
               ` : completed ? `
-                <button disabled class="px-3.5 py-1.5 bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500 rounded-xl text-xs font-bold flex items-center gap-1 cursor-not-allowed">
-                  <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> সম্পন্ন হয়েছে
+                <button disabled class="w-full py-1.5 bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1 cursor-not-allowed">
+                  <i data-lucide="check" class="w-3 h-3 text-emerald-500"></i> সম্পন্ন
                 </button>
               ` : `
-                <button onclick="openTaskRunModal('${t.id}')" class="px-4 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-black flex items-center gap-1.5 shadow-xs active:scale-95 transition-all">
-                  <span>টাস্ক শুরু করুন</span>
+                <button onclick="openTaskRunModal('${t.id}')" class="w-full py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-[11px] font-black flex items-center justify-center gap-1 shadow-xs active:scale-95 transition-all">
+                  <span>কাজ শুরু</span>
                   <i data-lucide="arrow-right" class="w-3 h-3"></i>
                 </button>
               `}
@@ -3112,6 +3512,13 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (taskTimerInterval) clearInterval(taskTimerInterval);
 
       taskTimerInterval = setInterval(() => {
+        // If user came back to app tab before time finished, pause task timer
+        if (!isTaskWindowFocused) {
+          const pauseAlert = document.getElementById('trun-pause-alert');
+          if (pauseAlert) pauseAlert.classList.remove('hidden');
+          return;
+        }
+
         taskTimeRemaining--;
         if (countdownEl) countdownEl.innerText = `${taskTimeRemaining}s`;
 
@@ -3157,7 +3564,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           if (oldCoins > 0 && newCoins > oldCoins) {
             const diff = newCoins - oldCoins;
             showToast(`🎉 অফার সফল! পোস্টব্যাক থেকে +${diff} কয়েন যোগ হয়েছে!`);
-            confetti({ particleCount: 90, spread: 80 });
+            safeConfetti({ particleCount: 50, spread: 60 });
           }
           appData.user = { ...appData.user, ...snap.val() };
           renderUserHeader();
