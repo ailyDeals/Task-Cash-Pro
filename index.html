@@ -1312,133 +1312,136 @@
   </div>
 
   <!-- TASK EXECUTION & DETAILS MODAL -->
-  <div id="modal-task-run" class="fixed inset-0 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
-    <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 max-w-sm w-full shadow-2xl relative border border-slate-200 dark:border-slate-700 animate-in fade-in zoom-in duration-200 max-h-[90vh] flex flex-col">
-      <button onclick="closeTaskRunModal()" class="absolute top-4 right-4 p-1.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-rose-500">
+  <div id="modal-task-run" class="fixed inset-0 bg-black/85 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 z-50 hidden overflow-y-auto">
+    <div class="bg-white dark:bg-slate-800 rounded-3xl p-4 sm:p-5 max-w-sm w-full shadow-2xl relative border border-slate-200 dark:border-slate-700 animate-in fade-in zoom-in duration-200 max-h-[92vh] flex flex-col my-auto">
+      <!-- Fixed Close Button -->
+      <button onclick="closeTaskRunModal()" class="absolute top-3.5 right-3.5 p-2 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-rose-500 z-10">
         <i data-lucide="x" class="w-4 h-4"></i>
       </button>
 
-      <div class="flex items-center gap-2.5 mb-2.5 pr-8">
-        <div id="trun-platform-icon" class="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center shrink-0 shadow-xs">
-          <i data-lucide="check-square" class="w-5 h-5"></i>
-        </div>
-        <div class="min-w-0">
-          <div class="flex items-center gap-1.5 flex-wrap">
-            <span id="trun-platform-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">YouTube</span>
-            <span id="trun-frequency-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20">📅 প্রতিদিন ১ বার</span>
+      <!-- Scrollable Body Content -->
+      <div id="trun-modal-scrollable-body" class="overflow-y-auto flex-1 pr-1 space-y-2.5 pb-2">
+        <div class="flex items-center gap-2.5 mb-1 pr-8">
+          <div id="trun-platform-icon" class="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center shrink-0 shadow-xs">
+            <i data-lucide="check-square" class="w-5 h-5"></i>
           </div>
-          <h3 id="trun-title" class="text-sm font-black text-slate-800 dark:text-white mt-1 leading-snug truncate">টাস্ক টাইটেল</h3>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2 my-2">
-        <div class="p-2.5 bg-slate-50 dark:bg-slate-900/70 rounded-2xl border border-slate-200 dark:border-slate-700 text-center">
-          <div class="text-[10px] text-slate-400 font-bold uppercase">রিওয়ার্ড</div>
-          <div id="trun-reward-coins" class="text-base font-black text-amber-500 font-mono">+৫০ কয়েন</div>
-          <div id="trun-reward-bdt" class="text-[10px] text-slate-400">≈ ৳০.৫০ টাকা</div>
-        </div>
-        <div class="p-2.5 bg-slate-50 dark:bg-slate-900/70 rounded-2xl border border-slate-200 dark:border-slate-700 text-center">
-          <div class="text-[10px] text-slate-400 font-bold uppercase">সময়কাল</div>
-          <div id="trun-duration" class="text-base font-black text-emerald-600 font-mono">৩০s</div>
-          <div class="text-[10px] text-slate-400">পেজে অবস্থান</div>
-        </div>
-      </div>
-
-      <!-- Instructions Section -->
-      <div class="my-2 bg-slate-50 dark:bg-slate-900/60 p-3 rounded-2xl border border-slate-200 dark:border-slate-700/60 overflow-y-auto max-h-36 text-xs text-slate-700 dark:text-slate-300 space-y-1.5">
-        <div class="text-[11px] font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-          <i data-lucide="file-text" class="w-3.5 h-3.5 text-emerald-600"></i>
-          <span>টাস্কের কাজের নিয়মাবলী ও নির্দেশিকা:</span>
-        </div>
-        <p id="trun-desc" class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line"></p>
-        <div class="pt-1.5 border-t border-slate-200 dark:border-slate-800 text-[10px] text-amber-600 dark:text-amber-400 font-medium">
-          ⚠️ মনে রাখবেন: লিংকে গিয়ে নির্ধারিত পুরো সময় অবস্থান করতে হবে। নির্দিষ্ট সময় সম্পন্ন হলে আপনার ব্যালেন্সে কয়েন স্বয়ংক্রিয়ভাবে যোগ হবে।
-        </div>
-      </div>
-
-      <!-- Tutorial Video Box (Shows when admin adds a video link) -->
-      <div id="trun-video-box" class="hidden my-2 p-3 bg-sky-50 dark:bg-sky-950/40 rounded-2xl border border-sky-200 dark:border-sky-900/50 text-left space-y-2">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-sky-700 dark:text-sky-300 flex items-center gap-1.5">
-            <i data-lucide="play-circle" class="w-4 h-4 text-sky-600"></i>
-            <span>কাজের টিউটোরিয়াল ভিডিও গাইড</span>
-          </span>
-          <span class="text-[9px] px-2 py-0.5 rounded-full bg-sky-200 dark:bg-sky-900 text-sky-800 dark:text-sky-200 font-bold">ভিডিও দেখে শিখুন</span>
-        </div>
-        <p class="text-[10px] text-slate-600 dark:text-slate-300 leading-tight">
-          কাজটি কিভাবে সঠিকভাবে সম্পন্ন করবেন এবং কয়েন নিশ্চিত করবেন তা নিচের ভিডিওতে দেখানো হয়েছে:
-        </p>
-        <button id="trun-video-btn" onclick="openTaskTutorialVideo()" class="w-full py-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all">
-          <i data-lucide="video" class="w-4 h-4"></i>
-          <span>টিউটোরিয়াল ভিডিও দেখুন (Watch Video)</span>
-        </button>
-      </div>
-
-      <!-- Active Timer & Status (when running) -->
-      <div id="trun-timer-box" class="hidden my-2 p-3 bg-emerald-50 dark:bg-slate-900/80 rounded-2xl border border-emerald-300 dark:border-emerald-800/40 text-center">
-        <div class="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold uppercase">ভেরিফিকেশন টাইমার</div>
-        <div id="trun-countdown" class="text-3xl font-black text-emerald-600 font-mono tracking-tight my-1">30s</div>
-        <div id="trun-pause-alert" class="hidden text-[10px] font-bold text-rose-600 bg-rose-50 dark:bg-rose-950/40 py-1 px-2 rounded-lg my-1 animate-pulse">
-          ⚠️ টাইমার পজড! টাস্ক পেজে ফিরে যান
-        </div>
-        <p id="trun-status-text" class="text-[10px] text-slate-500">লিংকে অবস্থান করুন, সময় শেষ হলে অটো কয়েন যোগ হবে...</p>
-      </div>
-
-      <!-- Proof Submission Section (for tasks with proof required) -->
-      <div id="trun-proof-box" class="hidden my-2 p-3.5 bg-gradient-to-br from-amber-500/10 via-slate-900 to-amber-500/5 rounded-2xl border-2 border-amber-500/40 text-left space-y-3">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-1.5 text-amber-500 font-black text-xs">
-            <i data-lucide="shield-check" class="w-4 h-4"></i>
-            <span>কাজের প্রমাণ (Proof Screenshot) আপলোড</span>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span id="trun-platform-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">YouTube</span>
+              <span id="trun-frequency-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20">📅 প্রতিদিন ১ বার</span>
+            </div>
+            <h3 id="trun-title" class="text-sm font-black text-slate-800 dark:text-white mt-1 leading-snug truncate">টাস্ক টাইটেল</h3>
           </div>
-          <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[9px] font-black border border-amber-500/30">
-            ১০০% নিরাপদ
-          </span>
         </div>
 
-        <!-- What to Screenshot Guide Box -->
-        <div class="p-2.5 bg-slate-950/80 rounded-xl border border-slate-800 text-[11px] space-y-1.5 text-slate-300">
-          <div class="font-bold text-amber-400 flex items-center gap-1 text-[11px]">
-            <i data-lucide="info" class="w-3.5 h-3.5"></i> <span>কোন জায়গার স্ক্রিনশট দিতে হবে?</span>
+        <div class="grid grid-cols-2 gap-2 my-1.5">
+          <div class="p-2.5 bg-slate-50 dark:bg-slate-900/70 rounded-2xl border border-slate-200 dark:border-slate-700 text-center">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">রিওয়ার্ড</div>
+            <div id="trun-reward-coins" class="text-base font-black text-amber-500 font-mono">+৫০ কয়েন</div>
+            <div id="trun-reward-bdt" class="text-[10px] text-slate-400">≈ ৳০.৫০ টাকা</div>
           </div>
-          <p class="leading-relaxed text-[10px] text-slate-300">
-            👉 <b>TimeWall-এ কাজ শেষ করে:</b> TimeWall পেজের উপরের <b>কয়েন ব্যালেন্স</b> অথবা <b>"History" / "Tasks"</b> অপশনে কাজটি কমপ্লিট হওয়ার যে টিক চিহ্ন বা হিস্ট্রি আসে, সেটির একটি পরিষ্কার ফুল-স্ক্রিন স্ক্রিনশট তুলুন।<br>
-            👉 নিচে সেই ছবিটি সিলেক্ট করে জমা দিলেই এডমিন যাচাই করে আপনার অ্যাপ ওয়ালেটে সমপরিমাণ কয়েন যোগ করে দিবেন!
+          <div class="p-2.5 bg-slate-50 dark:bg-slate-900/70 rounded-2xl border border-slate-200 dark:border-slate-700 text-center">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">সময়কাল</div>
+            <div id="trun-duration" class="text-base font-black text-emerald-600 font-mono">৩০s</div>
+            <div class="text-[10px] text-slate-400">পেজে অবস্থান</div>
+          </div>
+        </div>
+
+        <!-- Instructions Section -->
+        <div class="bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-2xl border border-slate-200 dark:border-slate-700/60 text-xs text-slate-700 dark:text-slate-300 space-y-1">
+          <div class="text-[11px] font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+            <i data-lucide="file-text" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span>টাস্কের কাজের নিয়মাবলী ও নির্দেশিকা:</span>
+          </div>
+          <p id="trun-desc" class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line"></p>
+          <div class="pt-1 border-t border-slate-200 dark:border-slate-800 text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+            ⚠️ মনে রাখবেন: লিংকে গিয়ে নির্ধারিত পুরো সময় অবস্থান করতে হবে। নির্দিষ্ট সময় সম্পন্ন হলে আপনার ব্যালেন্সে কয়েন স্বয়ংক্রিয়ভাবে যোগ হবে।
+          </div>
+        </div>
+
+        <!-- Tutorial Video Box (Shows when admin adds a video link) -->
+        <div id="trun-video-box" class="hidden p-2.5 bg-sky-50 dark:bg-sky-950/40 rounded-2xl border border-sky-200 dark:border-sky-900/50 text-left space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-sky-700 dark:text-sky-300 flex items-center gap-1.5">
+              <i data-lucide="play-circle" class="w-4 h-4 text-sky-600"></i>
+              <span>কাজের টিউটোরিয়াল ভিডিও গাইড</span>
+            </span>
+            <span class="text-[9px] px-2 py-0.5 rounded-full bg-sky-200 dark:bg-sky-900 text-sky-800 dark:text-sky-200 font-bold">ভিডিও দেখে শিখুন</span>
+          </div>
+          <p class="text-[10px] text-slate-600 dark:text-slate-300 leading-tight">
+            কাজটি কিভাবে সঠিকভাবে সম্পন্ন করবেন এবং কয়েন নিশ্চিত করবেন তা নিচের ভিডিওতে দেখানো হয়েছে:
           </p>
+          <button id="trun-video-btn" onclick="openTaskTutorialVideo()" class="w-full py-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all">
+            <i data-lucide="video" class="w-4 h-4"></i>
+            <span>টিউটোরিয়াল ভিডিও দেখুন (Watch Video)</span>
+          </button>
         </div>
-        
-        <div>
-          <label class="block text-[11px] font-black text-slate-200 mb-1.5 flex items-center gap-1">
-            <i data-lucide="image" class="w-3.5 h-3.5 text-emerald-400"></i>
-            <span>📸 কাজের স্ক্রিনশট ছবি সিলেক্ট করুন:</span>
-          </label>
-          <input type="file" id="trun-proof-file" accept="image/*" onchange="handleTaskScreenshotSelect(event)" class="w-full text-xs text-slate-400 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-gradient-to-r file:from-emerald-600 file:to-teal-600 file:text-white hover:file:opacity-90 cursor-pointer bg-slate-900/60 p-1.5 rounded-xl border border-slate-700" />
-          <div id="trun-screenshot-preview-container" class="hidden mt-2 relative">
-            <img id="trun-screenshot-preview" class="w-full h-40 object-contain bg-slate-950 rounded-xl border-2 border-emerald-500/50 shadow-md" />
-            <button onclick="clearTaskScreenshot()" class="absolute top-2 right-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg px-2.5 py-1 text-[10px] font-bold shadow-md">✕ ছবি মুছুন</button>
-            <div class="text-[10px] text-emerald-400 font-bold mt-1.5 flex items-center gap-1">
-              <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> স্ক্রিনশট প্রস্তুত হয়েছে, এবার নিচে সাবমিট বাটনে চাপ দিন।
+
+        <!-- Active Timer & Status (when running) -->
+        <div id="trun-timer-box" class="hidden p-3 bg-emerald-50 dark:bg-slate-900/80 rounded-2xl border border-emerald-300 dark:border-emerald-800/40 text-center">
+          <div class="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold uppercase">ভেরিফিকেশন টাইমার</div>
+          <div id="trun-countdown" class="text-3xl font-black text-emerald-600 font-mono tracking-tight my-1">30s</div>
+          <div id="trun-pause-alert" class="hidden text-[10px] font-bold text-rose-600 bg-rose-50 dark:bg-rose-950/40 py-1 px-2 rounded-lg my-1 animate-pulse">
+            ⚠️ টাইমার পজড! টাস্ক পেজে ফিরে যান
+          </div>
+          <p id="trun-status-text" class="text-[10px] text-slate-500">লিংকে অবস্থান করুন, সময় শেষ হলে অটো কয়েন যোগ হবে...</p>
+        </div>
+
+        <!-- Proof Submission Section (for tasks with proof required) -->
+        <div id="trun-proof-box" class="hidden p-3 bg-gradient-to-br from-amber-500/10 via-slate-900 to-amber-500/5 rounded-2xl border-2 border-amber-500/40 text-left space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5 text-amber-500 font-black text-xs">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              <span>কাজের প্রমাণ (Proof Screenshot) আপলোড</span>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[9px] font-black border border-amber-500/30">
+              ১০০% নিরাপদ
+            </span>
+          </div>
+
+          <!-- What to Screenshot Guide Box -->
+          <div class="p-2.5 bg-slate-950/80 rounded-xl border border-slate-800 text-[11px] space-y-1 text-slate-300">
+            <div class="font-bold text-amber-400 flex items-center gap-1 text-[10.5px]">
+              <i data-lucide="info" class="w-3.5 h-3.5"></i> <span>কোন জায়গার স্ক্রিনশট দিতে হবে?</span>
+            </div>
+            <p class="leading-relaxed text-[10px] text-slate-300">
+              👉 <b>TimeWall-এ কাজ শেষ করে:</b> TimeWall পেজের উপরের <b>কয়েন ব্যালেন্স</b> অথবা <b>"History" / "Tasks"</b> অপশনে কাজটি কমপ্লিট হওয়ার যে টিক চিহ্ন বা হিস্ট্রি আসে, সেটির স্ক্রিনশট তুলুন এবং নিচে দিন। এডমিন দেখে কয়েন দিয়ে দেবেন।
+            </p>
+          </div>
+          
+          <div>
+            <label class="block text-[11px] font-black text-slate-200 mb-1 flex items-center gap-1">
+              <i data-lucide="image" class="w-3.5 h-3.5 text-emerald-400"></i>
+              <span>📸 কাজের স্ক্রিনশট ছবি সিলেক্ট করুন:</span>
+            </label>
+            <input type="file" id="trun-proof-file" accept="image/*" onchange="handleTaskScreenshotSelect(event)" class="w-full text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-gradient-to-r file:from-emerald-600 file:to-teal-600 file:text-white hover:file:opacity-90 cursor-pointer bg-slate-900/60 p-1.5 rounded-xl border border-slate-700" />
+            <div id="trun-screenshot-preview-container" class="hidden mt-2 relative">
+              <img id="trun-screenshot-preview" class="w-full h-32 object-contain bg-slate-950 rounded-xl border-2 border-emerald-500/50 shadow-md" />
+              <button onclick="clearTaskScreenshot()" class="absolute top-1.5 right-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg px-2 py-0.5 text-[10px] font-bold shadow-md">✕ মুছুন</button>
+              <div class="text-[10px] text-emerald-400 font-bold mt-1 flex items-center gap-1">
+                <i data-lucide="check-circle-2" class="w-3 h-3"></i> স্ক্রিনশট প্রস্তুত! নিচে "প্রুফ জমা দিন" বাটনে চাপ দিন।
+              </div>
             </div>
           </div>
-        </div>
 
-        <div>
-          <label class="block text-[10px] font-bold text-slate-400 mb-1">📝 অতিরিক্ত নোট / টাইমওয়াল ইউজারনেম (যদি থাকে):</label>
-          <input type="text" id="trun-proof-text" placeholder="যেমন: কাজ সম্পন্ন হয়েছে বা ইউজারনেম" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-amber-500" />
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 mb-0.5">📝 অতিরিক্ত নোট / টাইমওয়াল ইউজারনেম (যদি থাকে):</label>
+            <input type="text" id="trun-proof-text" placeholder="যেমন: কাজ সম্পন্ন হয়েছে বা ইউজারনেম" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white focus:outline-none focus:border-amber-500" />
+          </div>
         </div>
       </div>
 
-      <!-- Actions -->
-      <div class="space-y-2 mt-auto pt-2">
-        <button id="trun-action-btn" onclick="startActiveTaskVisit()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
+      <!-- Sticky Action Footer (Always Visible at bottom of modal on every phone screen) -->
+      <div class="pt-2.5 border-t border-slate-200 dark:border-slate-700/80 mt-1 space-y-1.5 shrink-0">
+        <button id="trun-action-btn" onclick="startActiveTaskVisit()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 active:scale-95 transition-all">
           <i data-lucide="external-link" class="w-4 h-4"></i>
           <span id="trun-btn-text">টাস্ক শুরু করুন ও লিংকে যান</span>
         </button>
-        <button id="trun-submit-proof-btn" onclick="submitTaskProof()" class="hidden w-full py-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
+        <button id="trun-submit-proof-btn" onclick="submitTaskProof()" class="hidden w-full py-3.5 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-500 text-white font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xl shadow-amber-500/25 active:scale-95 transition-all animate-pulse">
           <i data-lucide="send" class="w-4 h-4"></i>
           <span>ভেরিফিকেশনের জন্য প্রুফ জমা দিন</span>
         </button>
-        <button onclick="closeTaskRunModal()" class="w-full py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl text-xs">
+        <button onclick="closeTaskRunModal()" class="w-full py-2 bg-slate-100 dark:bg-slate-700/80 text-slate-600 dark:text-slate-300 font-bold rounded-xl text-xs hover:bg-slate-200 transition-colors">
           বাতিল করুন
         </button>
       </div>
