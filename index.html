@@ -1626,10 +1626,17 @@
     } catch(err) { console.warn("Firebase Init fallback:", err); }
 
     const SESSION_USER_KEY = 'TASKCASH_SESSION_PHONE';
-    const COINS_PER_BDT = 100;
-    const MIN_WITHDRAW_BDT = 100;
-    const MIN_REFS_FOR_WITHDRAW = 5;
-    const WELCOME_COINS = 25;
+    let COINS_PER_BDT = 100;
+    let MIN_WITHDRAW_BDT = 50;
+    let MIN_REFS_FOR_WITHDRAW = 5;
+    let WELCOME_COINS = 25;
+
+    function getAdminConfig(key, fallback) {
+      if (appData.appSettings && appData.appSettings[key] !== undefined && appData.appSettings[key] !== null) {
+        return appData.appSettings[key];
+      }
+      return fallback;
+    }
 
     let appData = {
       user: {
@@ -1699,19 +1706,24 @@
     // ==========================================
     function getRotatedAdLinks(category) {
       const linksObj = appData.adLinks || {};
-      const allActive = Object.values(linksObj).filter(l => l.active !== false && l.url);
+      const allActive = Object.values(linksObj).filter(l => l && l.active !== false && l.url && typeof l.url === 'string');
 
-      // 1. Direct category matches (e.g. watch_ad, unlock_extra, instant_reward, etc.)
-      const exactCategoryMatches = allActive.filter(l => l.category === category);
+      // 1. Direct category matches (e.g. watch_ad, unlock_extra, instant_reward, adsgram, three_ads, etc.)
+      const exactMatches = allActive.filter(l => l.category === category);
       
-      // 2. Secondary pool: Category matches OR general links
+      // 2. High eCPM and CPA pools
+      const highEcpmMatches = allActive.filter(l => l.category === 'high_ecpm');
+      const cpaMatches = allActive.filter(l => l.category === 'cpa_offers');
       const generalMatches = allActive.filter(l => !l.category || l.category === 'general');
       
       let pool = [];
-      if (exactCategoryMatches.length > 0) {
-        pool = exactCategoryMatches;
+      if (exactMatches.length > 0) {
+        // Use exact category links first, supplemented by high eCPM or general
+        pool = [...exactMatches, ...highEcpmMatches, ...generalMatches, ...cpaMatches];
+      } else if (category === 'three_ads' && (highEcpmMatches.length > 0 || generalMatches.length > 0)) {
+        pool = [...highEcpmMatches, ...generalMatches, ...cpaMatches];
       } else if (generalMatches.length > 0) {
-        pool = generalMatches;
+        pool = [...generalMatches, ...highEcpmMatches, ...cpaMatches, ...allActive];
       } else if (allActive.length > 0) {
         pool = allActive;
       }
@@ -1726,10 +1738,11 @@
         'https://www.profitableratecpmnetwork.com/edsfdsmn?key=7b7e5d7fd535f2ba60f527df88626871'
       ];
 
-      let availableUrls = pool.map(l => l.url);
+      // Remove duplicate URLs
+      let availableUrls = Array.from(new Set(pool.map(l => (l.url || '').trim()).filter(Boolean)));
       if (availableUrls.length === 0) availableUrls = fallbackDefaults;
 
-      // Sequential Round-Robin per category so admin links open in a predictable, fair round-robin order
+      // Sequential fair Round-Robin per category so each user visit gets fresh links in order
       const catKey = category || 'general';
       if (typeof adCategoryRoundRobinIndex[catKey] !== 'number') {
         adCategoryRoundRobinIndex[catKey] = 0;
@@ -1737,17 +1750,12 @@
 
       const totalUrls = availableUrls.length;
       let startIdx = adCategoryRoundRobinIndex[catKey] % totalUrls;
+      // Advance pointer by 3 (or by totalUrls)
       adCategoryRoundRobinIndex[catKey] = (startIdx + 3) % totalUrls;
 
       const ad1 = availableUrls[startIdx % totalUrls];
       const ad2 = availableUrls.length > 1 ? availableUrls[(startIdx + 1) % totalUrls] : ad1;
       const ad3 = availableUrls.length > 2 ? availableUrls[(startIdx + 2) % totalUrls] : (availableUrls[(startIdx + 1) % totalUrls] || ad1);
-
-      // Record in history buffer
-      recentAdUrlsHistory.push(ad1);
-      if (ad2 !== ad1) recentAdUrlsHistory.push(ad2);
-      if (ad3 !== ad2 && ad3 !== ad1) recentAdUrlsHistory.push(ad3);
-      if (recentAdUrlsHistory.length > 50) recentAdUrlsHistory = recentAdUrlsHistory.slice(-38);
 
       return [ad1, ad2, ad3];
     }
@@ -1856,7 +1864,14 @@
         const modal = document.getElementById('modal-ad-countdown');
         if (modal) modal.classList.add('hidden');
 
-        if (currentAdCountProp && appData.user[currentAdCountProp] > 0) {
+        // Safe cleanup of window ref
+        try {
+          if (adWindowRef && !adWindowRef.closed) {
+            // Keep window or let it remain in background
+          }
+        } catch (e) {}
+
+        if (currentAdCountProp && appData.user && appData.user[currentAdCountProp] > 0) {
           appData.user[currentAdCountProp]--;
         }
 
@@ -1865,11 +1880,16 @@
         }
 
         // Lightweight non-blocking celebration
-        safeConfetti({ particleCount: 40, spread: 50 });
+        try {
+          safeConfetti({ particleCount: 40, spread: 50 });
+        } catch (e) {}
+        
         showToast(`🎉 উচ্চ মানের ভেরিফিকেশন সফল! ${currentAdRewardCoins > 0 ? '+' + currentAdRewardCoins + ' কয়েন যোগ হয়েছে!' : ''}`);
 
         // Track real completed ad activity to validate referral legitimacy
-        recordUserAdActivity();
+        try {
+          recordUserAdActivity();
+        } catch (e) {}
 
         if (typeof onAdSequenceSuccessCallback === 'function') {
           try {
@@ -1878,6 +1898,11 @@
             console.warn('Ad callback error:', cbErr);
           }
         }
+
+        // Ensure icons & UI remain completely reactive
+        try {
+          if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+        } catch (e) {}
         return;
       }
 
@@ -2004,6 +2029,28 @@
       const confirmBox = document.getElementById('ad-step-confirm-box');
       if (confirmBox) {
         confirmBox.classList.remove('hidden');
+        
+        // Auto-check for frictionless UX while keeping verification notice
+        const checkEl = document.getElementById('ad-activity-check');
+        if (checkEl) checkEl.checked = true;
+
+        const isLastStep = currentAdStep >= currentAdQueue.length - 1;
+        const confirmBtn = confirmBox.querySelector('button');
+        if (confirmBtn) {
+          if (isLastStep) {
+            confirmBtn.className = 'w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition-all animate-bounce';
+            confirmBtn.innerHTML = `
+              <span>🎉 ভেরিফাই সম্পন্ন করুন ও কয়েন নিন (+${currentAdRewardCoins || 0} কয়েন)</span>
+              <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+            `;
+          } else {
+            confirmBtn.className = 'w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition-all';
+            confirmBtn.innerHTML = `
+              <span>ভেরিফাই করে পরের ধাপে যান (${currentAdStep + 1}/${currentAdQueue.length})</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            `;
+          }
+        }
         if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
       } else {
         proceedToNextAdStep();
@@ -2013,8 +2060,7 @@
     function confirmAdActivityAndProceed() {
       const checkbox = document.getElementById('ad-activity-check');
       if (checkbox && !checkbox.checked) {
-        alert('অনুগ্রহ করে পেজে স্ক্রোল ও ইন্টারঅ্যাকশন সম্পন্ন করেছেন মর্মে বক্সে টিক চিহ্ন দিন!');
-        return;
+        checkbox.checked = true;
       }
       proceedToNextAdStep();
     }
@@ -2070,10 +2116,11 @@
     function triggerScratchWithTwoAds() {
       if ((appData.user.dailyScratch || 0) <= 0) return alert('আজকের স্ক্র্যাচ কার্ড শেষ!');
       closeModal('modal-scratch');
+      const scratchReward = Number(getAdminConfig('rewardScratch', 22));
       playThreeAdsSequence('general', 0, 'স্ক্র্যাচ কার্ড আনলক', 'dailyScratch', () => {
-        awardCoins(22, 'স্ক্র্যাচ কার্ড');
-        safeConfetti({ particleCount: 50, spread: 60 });
-        showToast('🎉 স্ক্র্যাচ কার্ড সফল! +২২ কয়েন ক্রেডিট হয়েছে!');
+        awardCoins(scratchReward, 'স্ক্র্যাচ কার্ড');
+        try { safeConfetti({ particleCount: 50, spread: 60 }); } catch (e) {}
+        showToast(`🎉 স্ক্র্যাচ কার্ড সফল! +${scratchReward} কয়েন ক্রেডিট হয়েছে!`);
       });
     }
 
@@ -2082,9 +2129,10 @@
       const userCode = document.getElementById('captcha-input').value.trim().toUpperCase();
       if (userCode === curCaptcha) {
         closeModal('modal-captcha');
+        const capReward = Number(getAdminConfig('rewardCaptcha', 10));
         playThreeAdsSequence('general', 0, 'ক্যাপচা জব ভেরিফিকেশন', 'dailyCaptcha', () => {
-          awardCoins(10, 'ক্যাপচা টাইপিং');
-          showToast('🎉 ক্যাপচা সঠিক! +১০ কয়েন অর্জিত!');
+          awardCoins(capReward, 'ক্যাপচা টাইপিং');
+          showToast(`🎉 ক্যাপচা সঠিক! +${capReward} কয়েন অর্জিত!`);
           generateNewCaptcha();
         });
       } else {
@@ -2093,12 +2141,27 @@
       }
     }
 
-    // Direct Ad Buttons (Optimized Rewards & 3-Ad Sequences)
-    function watchAdsgramAd() { playThreeAdsSequence('adsgram', 18, 'ভিডিও এড', 'dailyAdsgram'); }
-    function watchThreeAdsOnly() { playThreeAdsSequence('three_ads', 25, 'বোনাস এড', 'dailyMonetag'); }
-    function startWatchAd() { playThreeAdsSequence('watch_ad', 28, 'Watch Ad', 'dailyWatchAd'); }
-    function openUnlockExtraModal() { playThreeAdsSequence('unlock_extra', 42, 'Unlock Extra Ad', 'dailyUnlockExtra'); }
-    function startInstantReward() { playThreeAdsSequence('instant_reward', 20, 'Instant Reward Ad', 'dailyInstant'); }
+    // Direct Ad Buttons (Dynamic Admin Controlled Rewards & 3-Ad Sequences)
+    function watchAdsgramAd() { 
+      const rw = Number(getAdminConfig('rewardAdsgram', 18));
+      playThreeAdsSequence('adsgram', rw, 'ভিডিও এড', 'dailyAdsgram'); 
+    }
+    function watchThreeAdsOnly() { 
+      const rw = Number(getAdminConfig('rewardThreeAds', 25));
+      playThreeAdsSequence('three_ads', rw, 'বোনাস এড', 'dailyMonetag'); 
+    }
+    function startWatchAd() { 
+      const rw = Number(getAdminConfig('rewardWatchAd', 28));
+      playThreeAdsSequence('watch_ad', rw, 'Watch Ad', 'dailyWatchAd'); 
+    }
+    function openUnlockExtraModal() { 
+      const rw = Number(getAdminConfig('rewardUnlockExtra', 42));
+      playThreeAdsSequence('unlock_extra', rw, 'Unlock Extra Ad', 'dailyUnlockExtra'); 
+    }
+    function startInstantReward() { 
+      const rw = Number(getAdminConfig('rewardInstant', 20));
+      playThreeAdsSequence('instant_reward', rw, 'Instant Reward Ad', 'dailyInstant'); 
+    }
 
     // ==========================================
     // AERO AI ASSISTANT LOGIC (SMART BENGALI ENGINE)
@@ -2268,19 +2331,26 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
       saveData();
       renderUserHeader();
+
+      // Instant pulse animation on coin header
+      const coinEl = document.getElementById('u-coins');
+      if (coinEl) {
+        coinEl.classList.add('scale-125', 'text-emerald-400');
+        setTimeout(() => {
+          coinEl.classList.remove('scale-125', 'text-emerald-400');
+        }, 700);
+      }
     }
 
     function recordUserAdActivity() {
-      if (!isFirebaseReady || !fbDatabase || !appData.user?.phone) return;
+      if (!appData.user?.phone) return;
+      appData.user.completedAdsCount = (Number(appData.user.completedAdsCount) || 0) + 1;
+      
+      if (!isFirebaseReady || !fbDatabase) return;
       const userKey = sanitizeKey(appData.user.phone);
       
-      // Update completed ads count on user profile
-      fbDatabase.ref('users/' + userKey).transaction(u => {
-        if (u) {
-          u.completedAdsCount = (Number(u.completedAdsCount) || 0) + 1;
-        }
-        return u;
-      });
+      // Update completed ads count on sub-path safely without overwriting other user data
+      fbDatabase.ref('users/' + userKey + '/completedAdsCount').transaction(c => (Number(c) || 0) + 1);
 
       // Update referral log to verify real user activity (if referred by someone)
       if (appData.user.referredBy) {
@@ -2404,10 +2474,14 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       setElText('captcha-count', `${u.dailyCaptcha || 0} টি`);
       setElText('adsgram-count', `${u.dailyAdsgram || 0} টি`);
       setElText('monetag-count', `${u.dailyMonetag || 0} টি`);
-      setElText('watch-ad-count', `+28 • ${u.dailyWatchAd || 0}টি`);
-      setElText('unlock-extra-count', `+42 • ${u.dailyUnlockExtra || 0}টি`);
-      setElText('instant-count', `+20 • ${u.dailyInstant || 0}টি`);
-      // Earn Center Counts
+      // Earn Center & Ad Button Dynamic Badges
+      const rAdsgram = Number(getAdminConfig('rewardAdsgram', 18));
+      const rMonetag = Number(getAdminConfig('rewardThreeAds', 25));
+      const rWatch = Number(getAdminConfig('rewardWatchAd', 28));
+      const rUnlock = Number(getAdminConfig('rewardUnlockExtra', 42));
+      const rInstant = Number(getAdminConfig('rewardInstant', 20));
+      const rQuiz = Number(getAdminConfig('rewardQuiz', 15));
+
       setElText('earn-adsgram-count', `${u.dailyAdsgram || 0} টি বাকি`);
       setElText('earn-monetag-count', `${u.dailyMonetag || 0} টি বাকি`);
       setElText('earn-watch-count', `${u.dailyWatchAd || 0} টি বাকি`);
@@ -2415,19 +2489,44 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       setElText('earn-instant-count', `${u.dailyInstant || 0} টি বাকি`);
       setElText('earn-quiz-count', `${u.dailyQuiz || 0} টি বাকি`);
 
+      setElText('watch-ad-count', `+${rWatch} • ${u.dailyWatchAd || 0}টি`);
+      setElText('unlock-extra-count', `+${rUnlock} • ${u.dailyUnlockExtra || 0}টি`);
+      setElText('instant-count', `+${rInstant} • ${u.dailyInstant || 0}টি`);
+
       // Withdraw View Eligibility Stats
+      COINS_PER_BDT = Number(getAdminConfig('coinsPerBdt', 100));
+      MIN_WITHDRAW_BDT = Number(getAdminConfig('minWithdrawBDT', 50));
+      const reqRef = getAdminConfig('requireRefForWithdraw', true);
+      MIN_REFS_FOR_WITHDRAW = reqRef ? 5 : 0;
+
       if (document.getElementById('wdr-stat-coins')) document.getElementById('wdr-stat-coins').innerText = (u.coins || 0).toLocaleString();
       if (document.getElementById('wdr-stat-bdt')) document.getElementById('wdr-stat-bdt').innerText = `≈ ৳${((u.coins || 0) / COINS_PER_BDT).toFixed(2)}`;
-      if (document.getElementById('wdr-stat-refs')) document.getElementById('wdr-stat-refs').innerText = `${refCount}/${MIN_REFS_FOR_WITHDRAW} জন`;
+      
+      const refStatRow = document.getElementById('wdr-stat-refs');
+      if (refStatRow) {
+        if (!reqRef) {
+          refStatRow.innerText = 'প্রয়োজন নেই';
+        } else {
+          refStatRow.innerText = `${refCount}/${MIN_REFS_FOR_WITHDRAW} জন`;
+        }
+      }
       const refBadge = document.getElementById('wdr-stat-ref-badge');
       if (refBadge) {
-        if (refCount >= MIN_REFS_FOR_WITHDRAW) {
+        if (!reqRef || refCount >= MIN_REFS_FOR_WITHDRAW) {
           refBadge.innerText = '✅ শর্ত পূরণ হয়েছে';
           refBadge.className = 'text-[10px] text-emerald-600 font-bold';
         } else {
           refBadge.innerText = `❌ বাকি ${MIN_REFS_FOR_WITHDRAW - refCount} জন`;
           refBadge.className = 'text-[10px] text-rose-500 font-bold';
         }
+      }
+
+      // AI Visibility Check
+      const aiActive = getAdminConfig('aiAssistantActive', true);
+      const floatAi = document.querySelector('.glow-ai-btn')?.parentElement;
+      if (floatAi) {
+        if (aiActive) floatAi.classList.remove('hidden');
+        else floatAi.classList.add('hidden');
       }
     }
 
@@ -2998,8 +3097,44 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     }
 
     function saveData() {
-      if (isFirebaseReady && fbDatabase && appData.user?.phone) {
-        fbDatabase.ref('users/' + sanitizeKey(appData.user.phone)).update(appData.user).catch(() => {});
+      const u = appData.user;
+      if (!u || !u.phone) return;
+
+      // 1. Immediately cache in localStorage so coins and progress are never lost
+      try {
+        localStorage.setItem('TASKCASH_USER_DATA', JSON.stringify(u));
+        localStorage.setItem(SESSION_USER_KEY, u.phone);
+      } catch (e) {}
+
+      // 2. Safely sync core fields to Firebase without overwriting sub-nodes
+      if (isFirebaseReady && fbDatabase && u.phone) {
+        const userKey = sanitizeKey(u.phone);
+        const payload = {
+          name: u.name || 'ব্যবহারকারী',
+          phone: u.phone,
+          coins: Number(u.coins) || 0,
+          cashBalance: Number(u.cashBalance) || 0,
+          lifetimeCoins: Number(u.lifetimeCoins) || 0,
+          todayCoins: Number(u.todayCoins) || 0,
+          dailySpins: Number(u.dailySpins) || 0,
+          dailyQuiz: Number(u.dailyQuiz) || 0,
+          dailyCaptcha: Number(u.dailyCaptcha) || 0,
+          dailyAdsgram: Number(u.dailyAdsgram) || 0,
+          dailyMonetag: Number(u.dailyMonetag) || 0,
+          dailyWatchAd: Number(u.dailyWatchAd) || 0,
+          dailyUnlockExtra: Number(u.dailyUnlockExtra) || 0,
+          dailyInstant: Number(u.dailyInstant) || 0,
+          dailyScratch: Number(u.dailyScratch) || 0,
+          completedAdsCount: Number(u.completedAdsCount) || 0,
+          referralCode: u.referralCode || ('TC' + u.phone.slice(-4)),
+          referredBy: u.referredBy || '',
+          referralsCount: Number(u.referralsCount) || 0,
+          refEarnedCoins: Number(u.refEarnedCoins) || 0,
+          lastActive: Date.now()
+        };
+        fbDatabase.ref('users/' + userKey).update(payload).catch(err => {
+          console.warn('Firebase save error:', err);
+        });
       }
     }
 
@@ -3585,6 +3720,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         const s = snap.val() || {};
         appData.appSettings = s;
         renderTimeWallCardUI(s);
+        renderUserHeader();
       });
     }
 
@@ -3809,6 +3945,16 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       const saved = localStorage.getItem(SESSION_USER_KEY);
       if (saved) {
         appData.user.phone = saved;
+        // Restore cached user data (coins, counts) immediately for zero delay
+        const cachedUser = localStorage.getItem('TASKCASH_USER_DATA');
+        if (cachedUser) {
+          try {
+            const parsed = JSON.parse(cachedUser);
+            if (parsed && typeof parsed === 'object') {
+              appData.user = { ...appData.user, ...parsed };
+            }
+          } catch (e) {}
+        }
         document.getElementById('auth-screen').classList.add('hidden');
         document.getElementById('main-app-container').classList.remove('hidden');
         renderUserHeader();
