@@ -1679,6 +1679,9 @@
     let adCountdownTime = 13;
     let isAdTimerPaused = false;
     let adRemainingSeconds = 13;
+    let lastAdOpenedAt = 0;
+    let adStepActiveStartTime = 0;
+    let adAccumulatedActiveMs = 0;
     let adCategoryRoundRobinIndex = {};
     let currentAdRewardCoins = 20;
     let currentAdName = 'বিজ্ঞাপন';
@@ -1987,46 +1990,86 @@
 
       if (adCountdownInterval) clearInterval(adCountdownInterval);
 
-      // Smooth, reliable countdown for the user
+      // Smooth, reliable countdown with anti-cheat pause/resume
       adRemainingSeconds = adCountdownTime;
       isAdTimerPaused = false;
+      lastAdOpenedAt = Date.now();
+      adStepActiveStartTime = Date.now();
+      adAccumulatedActiveMs = 0;
       if (pauseAlert) pauseAlert.classList.add('hidden');
 
       const tDisplay = document.getElementById('ad-countdown-timer');
-      if (tDisplay) tDisplay.innerText = `${adRemainingSeconds}s`;
+      if (tDisplay) {
+        tDisplay.innerText = `${adRemainingSeconds}s`;
+        tDisplay.classList.remove('text-amber-500');
+        tDisplay.classList.add('text-cyan-600');
+      }
 
       adCountdownInterval = setInterval(() => {
-        adRemainingSeconds--;
+        // Anti-cheat: Pause countdown if user came back early to app tab!
+        if (isAdTimerPaused) {
+          return;
+        }
+
+        // Active elapsed time calculation
+        const now = Date.now();
+        const activeMs = adAccumulatedActiveMs + (now - adStepActiveStartTime);
+        const elapsedSec = Math.floor(activeMs / 1000);
+        adRemainingSeconds = Math.max(0, adCountdownTime - elapsedSec);
+
         const tDisp = document.getElementById('ad-countdown-timer');
+        if (tDisp) tDisp.innerText = `${adRemainingSeconds}s`;
+
         if (adRemainingSeconds <= 0) {
           if (adCountdownInterval) {
             clearInterval(adCountdownInterval);
             adCountdownInterval = null;
           }
+          isAdTimerPaused = false;
           if (tDisp) tDisp.innerText = '0s';
+          const pAlert = document.getElementById('ad-pause-alert');
+          if (pAlert) pAlert.classList.add('hidden');
           promptAdStepVerification(classification);
-        } else {
-          if (tDisp) tDisp.innerText = `${adRemainingSeconds}s`;
         }
-      }, 1000);
+      }, 500);
     }
 
     function pauseAdTimer() {
-      if (!adCountdownInterval || adRemainingSeconds <= 0) return;
+      const modalAd = document.getElementById('modal-ad-countdown');
+      const isVisible = modalAd && !modalAd.classList.contains('hidden');
+      if (!isVisible || !adCountdownInterval || adRemainingSeconds <= 0) return;
+      if (isAdTimerPaused) return;
+
       isAdTimerPaused = true;
+      adAccumulatedActiveMs += (Date.now() - adStepActiveStartTime);
+
       const pauseAlert = document.getElementById('ad-pause-alert');
       if (pauseAlert) pauseAlert.classList.remove('hidden');
       const hint = document.getElementById('ad-countdown-status-hint');
       if (hint) hint.innerText = '⚠️ বিজ্ঞাপনের পাতায় ফিরে গিয়ে সময় শেষ করুন...';
+      const tDisp = document.getElementById('ad-countdown-timer');
+      if (tDisp) {
+        tDisp.classList.remove('text-cyan-600');
+        tDisp.classList.add('text-amber-500');
+      }
     }
 
     function resumeAdTimer() {
-      if (!adCountdownInterval) return;
+      if (!adCountdownInterval || adRemainingSeconds <= 0) return;
+      if (!isAdTimerPaused) return;
+
       isAdTimerPaused = false;
+      adStepActiveStartTime = Date.now();
+
       const pauseAlert = document.getElementById('ad-pause-alert');
       if (pauseAlert) pauseAlert.classList.add('hidden');
       const hint = document.getElementById('ad-countdown-status-hint');
       if (hint) hint.innerText = 'বিজ্ঞাপনে সক্রিয়ভাবে ব্রাউজ করুন...';
+      const tDisp = document.getElementById('ad-countdown-timer');
+      if (tDisp) {
+        tDisp.classList.remove('text-amber-500');
+        tDisp.classList.add('text-cyan-600');
+      }
     }
 
     // Require user confirmation / interaction check after ad visit
@@ -2082,6 +2125,7 @@
 
     function reopenActiveAdUrl() {
       if (currentActiveAdUrl) {
+        lastAdOpenedAt = Date.now();
         resumeAdTimer();
         try {
           if (adWindowRef && !adWindowRef.closed) {
@@ -2101,6 +2145,7 @@
         clearInterval(adCountdownInterval);
         adCountdownInterval = null;
       }
+      isAdTimerPaused = false;
       const modal = document.getElementById('modal-ad-countdown');
       if (modal) modal.classList.add('hidden');
     }
@@ -3276,6 +3321,13 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     });
 
     window.addEventListener('focus', () => {
+      // User switched back to this app tab
+      if (typeof pauseAdTimer === 'function' && adCountdownInterval && adRemainingSeconds > 0) {
+        if (Date.now() - lastAdOpenedAt >= 600) {
+          pauseAdTimer();
+        }
+      }
+
       if (taskTimerInterval && taskTimeRemaining > 0) {
         isTaskWindowFocused = false;
         const taskPauseAlert = document.getElementById('trun-pause-alert');
@@ -3285,10 +3337,22 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
+        // App tab is hidden (user is viewing external ad / task window)
         isTaskWindowFocused = true;
         const taskPauseAlert = document.getElementById('trun-pause-alert');
         if (taskPauseAlert) taskPauseAlert.classList.add('hidden');
+
+        if (typeof resumeAdTimer === 'function') {
+          resumeAdTimer();
+        }
       } else {
+        // App tab became visible again
+        if (typeof pauseAdTimer === 'function' && adCountdownInterval && adRemainingSeconds > 0) {
+          if (Date.now() - lastAdOpenedAt >= 600) {
+            pauseAdTimer();
+          }
+        }
+
         if (taskTimerInterval && taskTimeRemaining > 0) {
           isTaskWindowFocused = false;
           const taskPauseAlert = document.getElementById('trun-pause-alert');
