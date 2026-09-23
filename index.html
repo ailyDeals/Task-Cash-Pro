@@ -280,7 +280,7 @@
                   <span class="text-[10px] font-bold text-amber-300 flex items-center gap-1">
                     <i data-lucide="gift" class="w-3 h-3"></i> ডেইলি বোনাস
                   </span>
-                  <span class="text-[10px] font-black text-amber-400 font-mono">+১২ কয়েন</span>
+                  <span id="daily-bonus-badge" class="text-[10px] font-black text-amber-400 font-mono">+১২ কয়েন</span>
                 </div>
                 <p class="text-[10px] text-slate-300 leading-tight">প্রতিদিন ১ বার ফ্রি বোনাস</p>
               </div>
@@ -404,7 +404,7 @@
               </div>
               <div class="overflow-hidden">
                 <div class="text-xs font-black text-slate-900 dark:text-white truncate">স্ক্র্যাচ কার্ড</div>
-                <div class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">+২২ কয়েন ফিক্সড</div>
+                <div id="scratch-card-sub" class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">+২২ কয়েন ফিক্সড</div>
                 <span id="scratch-count" class="inline-block text-[9px] text-purple-600 dark:text-purple-400 font-black mt-1 bg-purple-50 dark:bg-purple-950/50 px-1.5 py-0.2 rounded">১০ টি বাকি</span>
               </div>
             </button>
@@ -416,7 +416,7 @@
               </div>
               <div class="overflow-hidden">
                 <div class="text-xs font-black text-slate-900 dark:text-white truncate">ম্যাথ কুইজ</div>
-                <div class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">+১৫ কয়েন সহজে</div>
+                <div id="quiz-card-sub" class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">+১৫ কয়েন সহজে</div>
                 <span id="quiz-count" class="inline-block text-[9px] text-rose-600 dark:text-rose-400 font-black mt-1 bg-rose-50 dark:bg-rose-950/50 px-1.5 py-0.2 rounded">১৫ টি বাকি</span>
               </div>
             </button>
@@ -428,7 +428,7 @@
               </div>
               <div class="overflow-hidden">
                 <div class="text-xs font-black text-slate-900 dark:text-white truncate">ক্যাপচা টাইপিং</div>
-                <div class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">+১০ কয়েন প্রতিবার</div>
+                <div id="captcha-card-sub" class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">+১০ কয়েন প্রতিবার</div>
                 <span id="captcha-count" class="inline-block text-[9px] text-cyan-600 dark:text-cyan-400 font-black mt-1 bg-cyan-50 dark:bg-cyan-950/50 px-1.5 py-0.2 rounded">২০ টি বাকি</span>
               </div>
             </button>
@@ -729,6 +729,12 @@
             <div id="wdr-stat-refs" class="text-base font-black text-purple-600 font-mono mt-0.5">০/৫ জন</div>
             <span id="wdr-stat-ref-badge" class="text-[10px] text-rose-500 font-bold">❌ শর্ত অপূর্ণ</span>
           </div>
+        </div>
+
+        <!-- Withdraw Suspended Notice (Admin Controllable) -->
+        <div id="wdr-suspended-alert" class="hidden p-3.5 bg-amber-500/15 border border-amber-500/40 rounded-2xl text-amber-700 dark:text-amber-300 text-xs font-bold text-center flex items-center justify-center gap-2">
+          <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500 shrink-0"></i>
+          <span>অ্যাডমিন কর্তৃক বর্তমানে উত্তোলন সাময়িক স্থগিত রয়েছে।</span>
         </div>
 
         <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-4 shadow-xs">
@@ -1812,13 +1818,16 @@
       const c2 = detectAdClassification(url2);
       const c3 = detectAdClassification(url3);
 
+      // Fast, comfortable 10s duration per step for optimal user retention & completion
+      const stepDuration = 10;
+
       currentAdQueue = [
-        { url: url1, duration: c1.minTime, label: 'ধাপ ১/৩', classification: c1 },
-        { url: url2, duration: c2.minTime, label: 'ধাপ ২/৩', classification: c2 },
-        { url: url3, duration: c3.minTime, label: 'চূড়ান্ত ধাপ', classification: c3 }
+        { url: url1, duration: stepDuration, label: 'ধাপ ১/৩', classification: c1 },
+        { url: url2, duration: stepDuration, label: 'ধাপ ২/৩', classification: c2 },
+        { url: url3, duration: stepDuration, label: 'চূড়ান্ত ধাপ', classification: c3 }
       ];
       currentAdStep = 0;
-      currentAdRewardCoins = rewardCoins;
+      currentAdRewardCoins = Number(rewardCoins) || 0;
       currentAdName = adName;
       currentAdCountProp = countProp;
       onAdSequenceSuccessCallback = onSuccessCallback;
@@ -1875,16 +1884,17 @@
           appData.user[currentAdCountProp]--;
         }
 
-        if (currentAdRewardCoins > 0) {
-          awardCoins(currentAdRewardCoins, currentAdName);
+        const earnedReward = Number(currentAdRewardCoins) || 0;
+        if (earnedReward > 0) {
+          awardCoins(earnedReward, currentAdName || 'বিজ্ঞাপন রিওয়ার্ড');
         }
 
         // Lightweight non-blocking celebration
         try {
-          safeConfetti({ particleCount: 40, spread: 50 });
+          safeConfetti({ particleCount: 50, spread: 65 });
         } catch (e) {}
         
-        showToast(`🎉 উচ্চ মানের ভেরিফিকেশন সফল! ${currentAdRewardCoins > 0 ? '+' + currentAdRewardCoins + ' কয়েন যোগ হয়েছে!' : ''}`);
+        showToast(`🎉 ৩টি বিজ্ঞাপন সফলভাবে দেখা হয়েছে! ${earnedReward > 0 ? '+' + earnedReward + ' কয়েন ব্যালেন্সে যোগ হয়েছে!' : 'ভেরিফিকেশন সম্পন্ন!'}`);
 
         // Track real completed ad activity to validate referral legitimacy
         try {
@@ -1977,7 +1987,7 @@
 
       if (adCountdownInterval) clearInterval(adCountdownInterval);
 
-      // Robust countdown with pause/resume support
+      // Smooth, reliable countdown for the user
       adRemainingSeconds = adCountdownTime;
       isAdTimerPaused = false;
       if (pauseAlert) pauseAlert.classList.add('hidden');
@@ -1986,9 +1996,6 @@
       if (tDisplay) tDisplay.innerText = `${adRemainingSeconds}s`;
 
       adCountdownInterval = setInterval(() => {
-        // If user came back to app tab before time, pause timer and prompt to stay on ad page
-        if (isAdTimerPaused) return;
-
         adRemainingSeconds--;
         const tDisp = document.getElementById('ad-countdown-timer');
         if (adRemainingSeconds <= 0) {
@@ -2039,8 +2046,9 @@
         if (confirmBtn) {
           if (isLastStep) {
             confirmBtn.className = 'w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-lg active:scale-95 transition-all animate-bounce';
+            const rwText = currentAdRewardCoins > 0 ? ` (+${currentAdRewardCoins} কয়েন নিন)` : '';
             confirmBtn.innerHTML = `
-              <span>🎉 ভেরিফাই সম্পন্ন করুন ও কয়েন নিন (+${currentAdRewardCoins || 0} কয়েন)</span>
+              <span>🎉 ভেরিফাই সম্পন্ন করুন${rwText}</span>
               <i data-lucide="check-circle-2" class="w-4 h-4"></i>
             `;
           } else {
@@ -2297,9 +2305,22 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       appData.user.lifetimeCoins = (Number(appData.user.lifetimeCoins) || 0) + safeAmt;
       appData.user.todayCoins = (Number(appData.user.todayCoins) || 0) + safeAmt;
 
-      // Record coin history log for admin transparency
+      // 1. Immediately cache in localStorage for zero-delay offline & fast UI
+      try {
+        localStorage.setItem('TASKCASH_USER_DATA', JSON.stringify(appData.user));
+        if (appData.user.phone) localStorage.setItem(SESSION_USER_KEY, appData.user.phone);
+      } catch (e) {}
+
+      // 2. Direct atomic write to Firebase for balance fields to prevent stale overwrites
       if (isFirebaseReady && fbDatabase && appData.user?.phone) {
         const userKey = sanitizeKey(appData.user.phone);
+        fbDatabase.ref('users/' + userKey).update({
+          coins: Number(appData.user.coins) || 0,
+          lifetimeCoins: Number(appData.user.lifetimeCoins) || 0,
+          todayCoins: Number(appData.user.todayCoins) || 0,
+          lastActive: Date.now()
+        }).catch(err => console.warn('Coin update err:', err));
+
         fbDatabase.ref('users/' + userKey + '/coinHistory').push({
           amount: safeAmt,
           source: source || 'অ্যাপ রিওয়ার্ড',
@@ -2307,7 +2328,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         }).catch(() => {});
       }
 
-      // Distribute 10% Referral Commission to upstream referrer if exists
+      // 3. Distribute 10% Referral Commission to upstream referrer if exists
       if (appData.user.referredBy && isFirebaseReady && fbDatabase) {
         const refCode = appData.user.referredBy;
         const commissionCoins = Math.max(1, Math.floor(safeAmt * 0.10));
@@ -2349,8 +2370,10 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (!isFirebaseReady || !fbDatabase) return;
       const userKey = sanitizeKey(appData.user.phone);
       
-      // Update completed ads count on sub-path safely without overwriting other user data
-      fbDatabase.ref('users/' + userKey + '/completedAdsCount').transaction(c => (Number(c) || 0) + 1);
+      // Update completed ads count directly without child transaction conflict
+      fbDatabase.ref('users/' + userKey).update({
+        completedAdsCount: Number(appData.user.completedAdsCount) || 0
+      }).catch(() => {});
 
       // Update referral log to verify real user activity (if referred by someone)
       if (appData.user.referredBy) {
@@ -2493,6 +2516,15 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       setElText('unlock-extra-count', `+${rUnlock} • ${u.dailyUnlockExtra || 0}টি`);
       setElText('instant-count', `+${rInstant} • ${u.dailyInstant || 0}টি`);
 
+      // Dynamic Task Cards Subtitles (Home screen)
+      const rScratch = Number(getAdminConfig('rewardScratch', 22));
+      const rCaptcha = Number(getAdminConfig('rewardCaptcha', 10));
+      const rDailyBonus = Number(getAdminConfig('dailyCheckinBonusCoins', 12));
+      setElText('daily-bonus-badge', `+${rDailyBonus} কয়েন`);
+      setElText('scratch-card-sub', `+${rScratch} কয়েন ফিক্সড`);
+      setElText('quiz-card-sub', `+${rQuiz} কয়েন সহজে`);
+      setElText('captcha-card-sub', `+${rCaptcha} কয়েন প্রতিবার`);
+
       // Withdraw View Eligibility Stats
       COINS_PER_BDT = Number(getAdminConfig('coinsPerBdt', 100));
       MIN_WITHDRAW_BDT = Number(getAdminConfig('minWithdrawBDT', 50));
@@ -2502,6 +2534,19 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (document.getElementById('wdr-stat-coins')) document.getElementById('wdr-stat-coins').innerText = (u.coins || 0).toLocaleString();
       if (document.getElementById('wdr-stat-bdt')) document.getElementById('wdr-stat-bdt').innerText = `≈ ৳${((u.coins || 0) / COINS_PER_BDT).toFixed(2)}`;
       
+      const wdrInput = document.getElementById('wdr-amount');
+      if (wdrInput) {
+        wdrInput.min = MIN_WITHDRAW_BDT;
+        updateCoinsNeeded(wdrInput.value || MIN_WITHDRAW_BDT);
+      }
+
+      const isWdrActive = getAdminConfig('withdrawActive', true);
+      const wdrAlert = document.getElementById('wdr-suspended-alert');
+      if (wdrAlert) {
+        if (!isWdrActive) wdrAlert.classList.remove('hidden');
+        else wdrAlert.classList.add('hidden');
+      }
+
       const refStatRow = document.getElementById('wdr-stat-refs');
       if (refStatRow) {
         if (!reqRef) {
@@ -2755,13 +2800,14 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       const btn = document.getElementById('btn-checkin');
       if (btn && btn.disabled) return;
       
+      const rw = Number(getAdminConfig('dailyCheckinBonusCoins', 12));
       showToast('🎁 দৈনিক বোনাস আনলক করতে স্পনসর ভেরিফিকেশন সম্পন্ন করুন...');
-      playSingleAdSequence('cpm', 12, 'দৈনিক বোনাস', null, () => {
+      playSingleAdSequence('cpm', rw, 'দৈনিক বোনাস', null, () => {
         if (btn) {
           btn.disabled = true;
           btn.innerText = 'ক্লেইমড';
         }
-        showToast('🎉 দৈনিক বোনাস +১২ কয়েন সফলভাবে জমা হয়েছে!');
+        showToast(`🎉 দৈনিক বোনাস +${rw} কয়েন সফলভাবে জমা হয়েছে!`);
       });
     }
     function handleRedeemPromo(e) {
@@ -2799,10 +2845,18 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     }
     function updateCoinsNeeded(amt) {
       const c = Number(amt) * COINS_PER_BDT;
-      document.getElementById('wdr-coins-text').innerText = `কয়েন কর্তন হবে: ${c.toLocaleString()} কয়েন`;
+      const el = document.getElementById('wdr-coins-text');
+      if (el) el.innerText = `কয়েন কর্তন হবে: ${c.toLocaleString()} কয়েন (${COINS_PER_BDT} কয়েন = ৳১ BDT)`;
     }
     function handleWithdrawSubmit(e) {
       e.preventDefault();
+
+      // 0. Admin Withdrawal Active Check
+      const isWdrActive = getAdminConfig('withdrawActive', true);
+      if (!isWdrActive) {
+        return alert('⚠️ অ্যাডমিন কর্তৃক বর্তমানে উত্তোলন সাময়িক স্থগিত রয়েছে। অনুগ্রহ করে পরবর্তীতে চেষ্টা করুন।');
+      }
+
       const amt = Number(document.getElementById('wdr-amount').value);
       const method = document.getElementById('wdr-method').value;
       const account = document.getElementById('wdr-account').value.trim();
@@ -3026,12 +3080,13 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
               for (const [k, u] of Object.entries(users)) {
                 if (u.referralCode === refCodeEntered || k === sanitizeKey(refCodeEntered)) {
                   // Increment parent referrer count
+                  const refBonus = Number(getAdminConfig('referralBonusCoins', 50));
                   fbDatabase.ref('users/' + k).transaction(parent => {
                     if (parent) {
                       parent.referralsCount = (Number(parent.referralsCount) || 0) + 1;
-                      parent.coins = (Number(parent.coins) || 0) + 22; // 22 coins bonus for referral
-                      parent.refEarnedCoins = (Number(parent.refEarnedCoins) || 0) + 22;
-                      parent.lifetimeCoins = (Number(parent.lifetimeCoins) || 0) + 22;
+                      parent.coins = (Number(parent.coins) || 0) + refBonus;
+                      parent.refEarnedCoins = (Number(parent.refEarnedCoins) || 0) + refBonus;
+                      parent.lifetimeCoins = (Number(parent.lifetimeCoins) || 0) + refBonus;
                     }
                     return parent;
                   });
@@ -3221,12 +3276,6 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     });
 
     window.addEventListener('focus', () => {
-      // User switched back to this app tab
-      // If timer is still running, user left target ad page early -> pause timer!
-      if (typeof pauseAdTimer === 'function' && adCountdownInterval && adRemainingSeconds > 0) {
-        pauseAdTimer();
-      }
-
       if (taskTimerInterval && taskTimeRemaining > 0) {
         isTaskWindowFocused = false;
         const taskPauseAlert = document.getElementById('trun-pause-alert');
@@ -3236,20 +3285,10 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
-        // App tab is hidden (user is viewing external ad / task window)
         isTaskWindowFocused = true;
         const taskPauseAlert = document.getElementById('trun-pause-alert');
         if (taskPauseAlert) taskPauseAlert.classList.add('hidden');
-
-        if (typeof resumeAdTimer === 'function') {
-          resumeAdTimer();
-        }
       } else {
-        // App tab became visible again
-        if (typeof pauseAdTimer === 'function' && adCountdownInterval && adRemainingSeconds > 0) {
-          pauseAdTimer();
-        }
-
         if (taskTimerInterval && taskTimeRemaining > 0) {
           isTaskWindowFocused = false;
           const taskPauseAlert = document.getElementById('trun-pause-alert');
@@ -3696,18 +3735,37 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (!isFirebaseReady || !fbDatabase) return;
       const userKey = sanitizeKey(appData.user.phone);
       fbDatabase.ref('users/' + userKey).on('value', snap => {
-        if (snap.val()) {
-          const oldCoins = Number(appData.user.coins) || 0;
-          const newCoins = Number(snap.val().coins) || 0;
-          if (oldCoins > 0 && newCoins > oldCoins) {
-            const diff = newCoins - oldCoins;
-            showToast(`🎉 অফার সফল! পোস্টব্যাক থেকে +${diff} কয়েন যোগ হয়েছে!`);
-            safeConfetti({ particleCount: 50, spread: 60 });
-          }
-          appData.user = { ...appData.user, ...snap.val() };
-          renderUserHeader();
-          renderTaskList();
+        const val = snap.val();
+        if (!val) return;
+
+        const currentLocalCoins = Number(appData.user?.coins) || 0;
+        const remoteCoins = Number(val.coins) || 0;
+
+        if (currentLocalCoins > 0 && remoteCoins > currentLocalCoins) {
+          const diff = remoteCoins - currentLocalCoins;
+          showToast(`🎉 অফার সফল! পোস্টব্যাক থেকে +${diff} কয়েন যোগ হয়েছে!`);
+          safeConfetti({ particleCount: 50, spread: 60 });
         }
+
+        // CRITICAL PROTECTION: Never downgrade coins if local state has newer earned coins
+        const finalCoins = Math.max(currentLocalCoins, remoteCoins);
+        const finalLifetime = Math.max(Number(appData.user?.lifetimeCoins) || 0, Number(val.lifetimeCoins) || 0);
+        const finalToday = Math.max(Number(appData.user?.todayCoins) || 0, Number(val.todayCoins) || 0);
+
+        appData.user = {
+          ...appData.user,
+          ...val,
+          coins: finalCoins,
+          lifetimeCoins: finalLifetime,
+          todayCoins: finalToday
+        };
+
+        try {
+          localStorage.setItem('TASKCASH_USER_DATA', JSON.stringify(appData.user));
+        } catch (e) {}
+
+        renderUserHeader();
+        renderTaskList();
       });
       fbDatabase.ref('adLinks').on('value', snap => {
         appData.adLinks = snap.val() || {};
@@ -3718,10 +3776,63 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       });
       fbDatabase.ref('appSettings').on('value', snap => {
         const s = snap.val() || {};
-        appData.appSettings = s;
-        renderTimeWallCardUI(s);
-        renderUserHeader();
+        applyAdminAppSettings(s);
       });
+    }
+
+    function applyAdminAppSettings(s) {
+      if (!s) return;
+      appData.appSettings = s;
+
+      // 1. Live Marquee Notice Update
+      const nEl = document.getElementById('notice-text');
+      if (nEl && s.marqueeNotice) {
+        nEl.innerText = s.marqueeNotice;
+      }
+
+      // 2. Realtime Maintenance Mode Screen
+      let maintOverlay = document.getElementById('maintenance-overlay');
+      if (s.maintenanceMode) {
+        if (!maintOverlay) {
+          maintOverlay = document.createElement('div');
+          maintOverlay.id = 'maintenance-overlay';
+          maintOverlay.className = 'fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[9999] flex flex-col items-center justify-center p-6 text-center text-white';
+          maintOverlay.innerHTML = `
+            <div class="w-16 h-16 rounded-3xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mb-4 shadow-xl">
+              <i data-lucide="wrench" class="w-8 h-8 animate-pulse"></i>
+            </div>
+            <h2 class="text-xl font-black mb-2">অ্যাপ রক্ষণাবেক্ষণ চলছে</h2>
+            <p class="text-xs text-slate-400 max-w-xs leading-relaxed mb-6">আমাদের সিস্টেম আপগ্রেড ও নিয়মিত রক্ষণাবেক্ষণের কাজ চলছে। সাময়িক অসুবিধার জন্য আন্তরিকভাবে দুঃখিত। শীঘ্রই অ্যাপ পুনরায় চালু হবে।</p>
+            <a id="maint-tg-link" href="${s.telegramUrl || 'https://t.me/taskcashpro'}" target="_blank" class="px-5 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl flex items-center gap-2 shadow-lg">
+              <i data-lucide="send" class="w-4 h-4"></i> টেলিগ্রাম চ্যানেলে আপডেট জানুন
+            </a>
+          `;
+          document.body.appendChild(maintOverlay);
+          if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+        }
+        maintOverlay.classList.remove('hidden');
+      } else if (maintOverlay) {
+        maintOverlay.classList.add('hidden');
+      }
+
+      // 3. Deposit Numbers Synchronization
+      const depSelect = document.getElementById('dep-method');
+      if (depSelect) {
+        const b = s.bkashNumber || '01700000000 (Personal)';
+        const n = s.nagadNumber || '01800000000 (Personal)';
+        const r = s.rocketNumber || '01900000000 (Personal)';
+        depSelect.innerHTML = `
+          <option value="bKash">bKash (বিকাশ) - ${b}</option>
+          <option value="Nagad">Nagad (নগদ) - ${n}</option>
+          ${s.rocketNumber ? `<option value="Rocket">Rocket (রকেট) - ${r}</option>` : ''}
+        `;
+      }
+
+      // 4. TimeWall UI Sync
+      renderTimeWallCardUI(s);
+
+      // 5. Header, Badges, Rates & Feature Toggles Sync
+      renderUserHeader();
     }
 
     // ==========================================
