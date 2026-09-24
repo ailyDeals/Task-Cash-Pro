@@ -1735,6 +1735,11 @@
       if (countProp && (appData.user[countProp] || 0) <= 0) {
         return alert(`আজকের ${adName} সীমা শেষ! আগামীকাল আবার চেষ্টা করুন।`);
       }
+      // Clear leftover timers from previous ads (prevents white screen)
+      try {
+        if (adCountdownInterval) { clearInterval(adCountdownInterval); adCountdownInterval = null; }
+      } catch (e) {}
+      isAdTimerPaused = false;
 
       const [url1, url2, url3] = getRotatedAdLinks(category);
       const c1 = detectAdClassification(url1);
@@ -1763,6 +1768,11 @@
       if (countProp && (appData.user[countProp] || 0) <= 0) {
         return alert(`আজকের ${adName} সীমা শেষ! আগামীকাল আবার চেষ্টা করুন।`);
       }
+      // Clear leftover timers from previous ads (prevents white screen)
+      try {
+        if (adCountdownInterval) { clearInterval(adCountdownInterval); adCountdownInterval = null; }
+      } catch (e) {}
+      isAdTimerPaused = false;
 
       const [url1] = getRotatedAdLinks(category);
       const c1 = detectAdClassification(url1);
@@ -1788,13 +1798,8 @@
 
     function executeAdStep() {
       if (currentAdStep >= currentAdQueue.length) {
-        // Sequence Complete!
-        if (adCountdownInterval) {
-          clearInterval(adCountdownInterval);
-          adCountdownInterval = null;
-        }
-        const modal = document.getElementById('modal-ad-countdown');
-        if (modal) modal.classList.add('hidden');
+        // Sequence Complete! — force full cleanup to prevent white/blank screen
+        forceCleanupAdState();
 
         // Safe cleanup of window ref
         try {
@@ -1824,18 +1829,27 @@
           recordUserAdActivity();
         } catch (e) {}
 
-        if (typeof onAdSequenceSuccessCallback === 'function') {
+        const cb = onAdSequenceSuccessCallback;
+        onAdSequenceSuccessCallback = null;
+        currentAdQueue = [];
+        currentAdStep = 0;
+        currentActiveAdUrl = '';
+
+        if (typeof cb === 'function') {
           try {
-            onAdSequenceSuccessCallback();
+            cb();
           } catch (cbErr) {
             console.warn('Ad callback error:', cbErr);
           }
         }
 
-        // Ensure icons & UI remain completely reactive
-        try {
-          if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
-        } catch (e) {}
+        // Final safety: ensure UI is painted and interactive again
+        setTimeout(function () {
+          forceCleanupAdState();
+          try {
+            if (typeof renderUserHeader === 'function') renderUserHeader();
+          } catch (e) {}
+        }, 120);
         return;
       }
 
@@ -2060,14 +2074,57 @@
       }
     }
 
-    function closeAdCountdownModal() {
-      if (adCountdownInterval) {
-        clearInterval(adCountdownInterval);
-        adCountdownInterval = null;
-      }
+    // Strong cleanup to prevent white/blank screen after multiple ads
+    function forceCleanupAdState() {
+      try {
+        if (adCountdownInterval) {
+          clearInterval(adCountdownInterval);
+          adCountdownInterval = null;
+        }
+      } catch (e) {}
       isAdTimerPaused = false;
-      const modal = document.getElementById('modal-ad-countdown');
-      if (modal) modal.classList.add('hidden');
+      adRemainingSeconds = 0;
+      adAccumulatedActiveMs = 0;
+      try {
+        const modal = document.getElementById('modal-ad-countdown');
+        if (modal) {
+          modal.classList.add('hidden');
+          modal.style.display = 'none';
+          setTimeout(function () {
+            try { modal.style.display = ''; } catch (e2) {}
+          }, 80);
+        }
+        const timerBox = document.getElementById('ad-timer-box');
+        if (timerBox) timerBox.classList.remove('hidden');
+        const confirmBox = document.getElementById('ad-step-confirm-box');
+        if (confirmBox) confirmBox.classList.add('hidden');
+        const pauseAlert = document.getElementById('ad-pause-alert');
+        if (pauseAlert) pauseAlert.classList.add('hidden');
+        const checkEl = document.getElementById('ad-activity-check');
+        if (checkEl) checkEl.checked = false;
+        // Keep main app visible (prevents white/blank screen on mobile WebView)
+        const mainApp = document.getElementById('main-app-container');
+        if (mainApp) {
+          mainApp.classList.remove('hidden');
+          mainApp.style.visibility = 'visible';
+          mainApp.style.opacity = '1';
+          mainApp.style.display = '';
+        }
+        try { void document.body.offsetHeight; } catch (e3) {}
+      } catch (err) {
+        console.warn('forceCleanupAdState:', err);
+      }
+      try {
+        if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+      } catch (e) {}
+    }
+
+    function closeAdCountdownModal() {
+      forceCleanupAdState();
+      currentAdQueue = [];
+      currentAdStep = 0;
+      onAdSequenceSuccessCallback = null;
+      currentActiveAdUrl = '';
     }
 
     // ==========================================
