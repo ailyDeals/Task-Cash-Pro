@@ -1631,25 +1631,106 @@
     function sanitizeKey(k) { return (k || '').replace(/[.#$[\]]/g, '_'); }
 
     // ==========================================
-    // ANTI-BAN 3-AD ROTATION ENGINE (ADMIN LINK SYNC)
+    // ANTI-BAN 3-AD ROTATION ENGINE + LIVE ADMIN LIMIT SYNC
     // ==========================================
-    function getRotatedAdLinks(category) {
-      const linksObj = appData.adLinks || {};
-      const allActive = Object.values(linksObj).filter(l => l && l.active !== false && l.url && typeof l.url === 'string');
+    try {
+      const savedIdx = localStorage.getItem('TASKCASH_AD_RR_INDEX');
+      if (savedIdx) adCategoryRoundRobinIndex = JSON.parse(savedIdx) || {};
+    } catch (e) {}
 
-      // 1. Direct category matches (e.g. watch_ad, unlock_extra, instant_reward, adsgram, three_ads, etc.)
-      const exactMatches = allActive.filter(l => l.category === category);
-      
-      // 2. High eCPM and CPA pools
-      const highEcpmMatches = allActive.filter(l => l.category === 'high_ecpm');
+    function saveRoundRobinIndex() {
+      try {
+        localStorage.setItem('TASKCASH_AD_RR_INDEX', JSON.stringify(adCategoryRoundRobinIndex));
+      } catch (e) {}
+    }
+
+    // Auto-reset daily limits & instantly sync when Admin increases/changes limits
+    function ensureUserDailyLimits() {
+      if (!appData || !appData.user || !appData.user.phone || appData.user.phone === '017XXXXXXXX') return;
+      const u = appData.user;
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      const spinLim = Number(getAdminConfig('dailySpinsLimit', 50)) || 50;
+      const scratchLim = Number(getAdminConfig('dailyScratchLimit', 50)) || 50;
+      const captchaLim = Number(getAdminConfig('dailyCaptchaLimit', 50)) || 50;
+      const quizLim = Number(getAdminConfig('dailyQuizLimit', 50)) || 50;
+      const adsgramLim = Number(getAdminConfig('dailyAdsgramLimit', 50)) || 50;
+      const monetagLim = Number(getAdminConfig('dailyMonetagLimit', 50)) || 50;
+      const watchLim = Number(getAdminConfig('dailyWatchAdLimit', 50)) || 50;
+      const unlockLim = Number(getAdminConfig('dailyUnlockExtraLimit', 50)) || 50;
+      const instantLim = Number(getAdminConfig('dailyInstantLimit', 50)) || 50;
+
+      // Track if Admin changed any limit in Admin Panel
+      const currentAdminLimitKey = `${spinLim}_${scratchLim}_${captchaLim}_${quizLim}_${adsgramLim}_${monetagLim}_${watchLim}_${unlockLim}_${instantLim}`;
+
+      const allZero =
+        (Number(u.dailyAdsgram) || 0) <= 0 &&
+        (Number(u.dailyMonetag) || 0) <= 0 &&
+        (Number(u.dailyWatchAd) || 0) <= 0 &&
+        (Number(u.dailyUnlockExtra) || 0) <= 0 &&
+        (Number(u.dailyInstant) || 0) <= 0;
+
+      // Update immediately if: (1) New day, (2) Stuck at 0, or (3) Admin changed limits in Admin Panel
+      if (
+        u.lastLimitResetDate !== todayStr ||
+        allZero ||
+        (u.lastAdminLimitKey && u.lastAdminLimitKey !== currentAdminLimitKey)
+      ) {
+        u.dailySpins = spinLim;
+        u.dailyScratch = scratchLim;
+        u.dailyCaptcha = captchaLim;
+        u.dailyQuiz = quizLim;
+        u.dailyAdsgram = adsgramLim;
+        u.dailyMonetag = monetagLim;
+        u.dailyWatchAd = watchLim;
+        u.dailyUnlockExtra = unlockLim;
+        u.dailyInstant = instantLim;
+        u.lastLimitResetDate = todayStr;
+        u.lastAdminLimitKey = currentAdminLimitKey;
+
+        try {
+          localStorage.setItem('TASKCASH_USER_DATA', JSON.stringify(u));
+          if (isFirebaseReady && fbDatabase && u.phone) {
+            fbDatabase.ref('users/' + sanitizeKey(u.phone)).update({
+              dailySpins: u.dailySpins,
+              dailyScratch: u.dailyScratch,
+              dailyCaptcha: u.dailyCaptcha,
+              dailyQuiz: u.dailyQuiz,
+              dailyAdsgram: u.dailyAdsgram,
+              dailyMonetag: u.dailyMonetag,
+              dailyWatchAd: u.dailyWatchAd,
+              dailyUnlockExtra: u.dailyUnlockExtra,
+              dailyInstant: u.dailyInstant,
+              lastLimitResetDate: todayStr,
+              lastAdminLimitKey: currentAdminLimitKey
+            });
+          }
+          if (typeof renderUserHeader === 'function') renderUserHeader();
+        } catch (e) {}
+      } else if (!u.lastAdminLimitKey) {
+        u.lastAdminLimitKey = currentAdminLimitKey;
+      }
+    }
+    setInterval(ensureUserDailyLimits, 2000);
+
+    function getRotatedAdLinks(category, stepCount = 3) {
+      ensureUserDailyLimits();
+      const linksObj = appData.adLinks || {};
+      const allActive = Object.values(linksObj)
+        .filter(l => l && l.active !== false && l.url && typeof l.url === 'string')
+        .sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+      const normalizedCat = category === 'cpm' ? 'high_ecpm' : (category || 'general');
+
+      const exactMatches = allActive.filter(l => l.category === normalizedCat);
+      const highEcpmMatches = allActive.filter(l => l.category === 'high_ecpm' || l.category === 'cpm');
       const cpaMatches = allActive.filter(l => l.category === 'cpa_offers');
       const generalMatches = allActive.filter(l => !l.category || l.category === 'general');
       
       let pool = [];
       if (exactMatches.length > 0) {
-        // Use exact category links first, supplemented by high eCPM or general
         pool = [...exactMatches, ...highEcpmMatches, ...generalMatches, ...cpaMatches];
-      } else if (category === 'three_ads' && (highEcpmMatches.length > 0 || generalMatches.length > 0)) {
+      } else if (normalizedCat === 'three_ads' && (highEcpmMatches.length > 0 || generalMatches.length > 0)) {
         pool = [...highEcpmMatches, ...generalMatches, ...cpaMatches];
       } else if (generalMatches.length > 0) {
         pool = [...generalMatches, ...highEcpmMatches, ...cpaMatches, ...allActive];
@@ -1667,20 +1748,21 @@
         'https://www.profitableratecpmnetwork.com/edsfdsmn?key=7b7e5d7fd535f2ba60f527df88626871'
       ];
 
-      // Remove duplicate URLs
-      let availableUrls = Array.from(new Set(pool.map(l => (l.url || '').trim()).filter(Boolean)));
+      let availableUrls = pool.map(l => (l.url || '').trim()).filter(Boolean);
       if (availableUrls.length === 0) availableUrls = fallbackDefaults;
 
-      // Sequential fair Round-Robin per category so each user visit gets fresh links in order
-      const catKey = category || 'general';
+      const totalUrls = availableUrls.length;
+      const catKey = normalizedCat;
+
       if (typeof adCategoryRoundRobinIndex[catKey] !== 'number') {
-        adCategoryRoundRobinIndex[catKey] = 0;
+        const phoneDigits = String(appData.user?.phone || '').replace(/\D/g, '');
+        const userSeed = phoneDigits ? parseInt(phoneDigits.slice(-4), 10) : Math.floor(Math.random() * totalUrls);
+        adCategoryRoundRobinIndex[catKey] = userSeed % totalUrls;
       }
 
-      const totalUrls = availableUrls.length;
       let startIdx = adCategoryRoundRobinIndex[catKey] % totalUrls;
-      // Advance pointer by 3 (or by totalUrls)
-      adCategoryRoundRobinIndex[catKey] = (startIdx + 3) % totalUrls;
+      adCategoryRoundRobinIndex[catKey] = (startIdx + stepCount) % totalUrls;
+      saveRoundRobinIndex();
 
       const ad1 = availableUrls[startIdx % totalUrls];
       const ad2 = availableUrls.length > 1 ? availableUrls[(startIdx + 1) % totalUrls] : ad1;
