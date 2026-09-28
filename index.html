@@ -31,7 +31,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-  <script src="//libtl.com/sdk.js" data-zone="10335982" data-sdk="show_10335982"></script>
+  <script src="https://libtl.com/sdk.js" data-zone="10335982" data-sdk="show_10335982"></script>
   <style>
     @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
     .animate-marquee { display: inline-block; white-space: nowrap; animation: marquee 22s linear infinite; }
@@ -858,8 +858,32 @@
           <div class="w-12 h-12 rounded-2xl bg-white/20 text-purple-200 flex items-center justify-center mx-auto mb-2">
             <i data-lucide="users" class="w-6 h-6"></i>
           </div>
-          <h3 class="text-base font-black">রেফারেল প্রোগ্রাম</h3>
-          <p class="text-xs text-purple-100 mt-1">প্রতি সফল রেফারে পান ১২০০ কয়েন বোনাস ও ১০% আজীবন কমিশন!</p>
+          <h3 class="text-base font-black">রেফারেল প্রোগ্রাম ও কাজের হিস্ট্রি</h3>
+          <p class="text-xs text-purple-100 mt-1">প্রতি সফল রেফারে পান ১২০০ কয়েন বোনাস ও আজীবন ১০% কাজের কমিশন!</p>
+        </div>
+
+        <!-- 4 Live Summary Cards -->
+        <div class="grid grid-cols-2 gap-2.5">
+          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3.5 shadow-xs">
+            <div class="text-[10px] font-bold text-slate-400 uppercase">মোট রেফার ইউজার</div>
+            <div id="ref-hist-total-users" class="text-xl font-black text-purple-600 dark:text-purple-400 mt-0.5">০ জন</div>
+            <div class="text-[9.5px] text-slate-500">আপনার কোডে জয়েন করেছে</div>
+          </div>
+          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3.5 shadow-xs">
+            <div class="text-[10px] font-bold text-slate-400 uppercase">অ্যাক্টিভ কর্মী</div>
+            <div id="ref-hist-active-users" class="text-xl font-black text-emerald-600 dark:text-emerald-400 mt-0.5">০ জন</div>
+            <div class="text-[9.5px] text-slate-500">নিয়মিত এড ও কাজ করছে</div>
+          </div>
+          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3.5 shadow-xs">
+            <div class="text-[10px] font-bold text-slate-400 uppercase">রেফারদের মোট কাজ</div>
+            <div id="ref-hist-total-works" class="text-xl font-black text-cyan-600 dark:text-cyan-400 mt-0.5">০ টি</div>
+            <div class="text-[9.5px] text-slate-500">রেফারদের সম্পন্ন করা এড</div>
+          </div>
+          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3.5 shadow-xs">
+            <div class="text-[10px] font-bold text-slate-400 uppercase">মোট রেফার ও কমিশন আয়</div>
+            <div id="ref-hist-total-earned" class="text-xl font-black text-amber-500 mt-0.5">০ কয়েন</div>
+            <div class="text-[9.5px] text-slate-500">বোনাস + ১০% কমিশন</div>
+          </div>
         </div>
 
         <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 text-center space-y-4 shadow-xs">
@@ -884,6 +908,36 @@
             </button>
           </div>
         </div>
+
+        <!-- REFERRED USERS & THEIR WORK HISTORY -->
+        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-4 space-y-3 shadow-xs">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-black text-slate-800 dark:text-white flex items-center gap-1.5">
+              <i data-lucide="user-check" class="w-4 h-4 text-purple-500"></i>
+              <span>আপনার রেফারকৃত ইউজার ও তাদের কাজের হিস্ট্রি</span>
+            </h4>
+            <button onclick="loadUserReferralHistory(true)" class="px-2.5 py-1 rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-300 text-[10px] font-black flex items-center gap-1 active:scale-95">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> রিফ্রেশ
+            </button>
+          </div>
+          <div id="referred-users-work-list" class="space-y-2.5 max-h-80 overflow-y-auto pr-0.5">
+            <div class="text-center py-6 text-xs text-slate-400">রেফারেল হিস্ট্রি লোড হচ্ছে...</div>
+          </div>
+        </div>
+
+        <!-- LIVE 10% COMMISSION LOG FROM REFERRALS' WORK -->
+        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-4 space-y-3 shadow-xs">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-black text-slate-800 dark:text-white flex items-center gap-1.5">
+              <i data-lucide="activity" class="w-4 h-4 text-emerald-500"></i>
+              <span>রেফারদের প্রতিদিনের কাজের লাইভ কমিশন হিস্ট্রি</span>
+            </h4>
+            <span class="text-[10px] font-bold text-emerald-500">১০% লাইভ কমিশন</span>
+          </div>
+          <div id="referral-work-activity-log" class="space-y-2 max-h-72 overflow-y-auto pr-0.5">
+            <div class="text-center py-5 text-xs text-slate-400">কোনো কাজের হিস্ট্রি এখনো পাওয়া যায়নি</div>
+          </div>
+        </div>
       </section>
 
       <!-- VIEW: REFERRAL COMMISSION -->
@@ -894,7 +948,7 @@
               <i data-lucide="percent" class="w-6 h-6"></i>
             </div>
             <div>
-              <h3 class="text-base font-black">রেফারেল কমিশন সার্ভিস</h3>
+              <h3 class="text-base font-black">রেফারেল কমিশন ও কাজের হিস্ট্রি</h3>
               <p class="text-xs text-amber-100">আপনার রেফারেল নেটওয়ার্ক থেকে আজীবন ১০% কমিশন আয়</p>
             </div>
           </div>
@@ -914,6 +968,21 @@
         </div>
 
         <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-4 space-y-3 shadow-xs">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-black text-slate-800 dark:text-white flex items-center gap-1.5">
+              <i data-lucide="users" class="w-4 h-4 text-amber-500"></i>
+              <span>রেফারকৃত ইউজারদের কাজের বিস্তারিত তালিকা</span>
+            </h4>
+            <button onclick="loadUserReferralHistory(true)" class="px-2.5 py-1 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-300 text-[10px] font-black flex items-center gap-1 active:scale-95">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> রিফ্রেশ
+            </button>
+          </div>
+          <div id="comm-referred-users-work-list" class="space-y-2.5 max-h-80 overflow-y-auto pr-0.5">
+            <div class="text-center py-6 text-xs text-slate-400">রেফারেল কাজের তালিকা লোড হচ্ছে...</div>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-4 space-y-3 shadow-xs">
           <h4 class="text-xs font-bold text-slate-700 dark:text-slate-200 uppercase flex items-center gap-1.5">
             <i data-lucide="zap" class="w-4 h-4 text-amber-500"></i> কমিশন রেট ও স্তর
           </h4>
@@ -923,7 +992,7 @@
                 <div class="font-bold text-slate-800 dark:text-white">লেভেল ১ (সরাসরি রেফার)</div>
                 <div class="text-[11px] text-slate-500">ইউজারের প্রতি টাস্ক ও জয়েনিংয়ে</div>
               </div>
-              <span class="px-2.5 py-1 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 font-bold rounded-lg text-xs">+৪০ কয়েন + ১০%</span>
+              <span class="px-2.5 py-1 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 font-bold rounded-lg text-xs">+১২০০ কয়েন + ১০%</span>
             </div>
             <div class="p-2.5 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
               <div>
@@ -935,7 +1004,7 @@
           </div>
           <button onclick="switchTab('refer')" class="w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 active:scale-95 shadow-xs">
             <i data-lucide="share-2" class="w-4 h-4"></i>
-            <span>রেফারেল লিংক শেয়ার করুন</span>
+            <span>রেফারেল লিংক ও সম্পূর্ণ হিস্ট্রি দেখুন</span>
           </button>
         </div>
       </section>
@@ -1143,32 +1212,45 @@
       </div>
 
       <div>
-        <span class="px-2.5 py-0.5 rounded-full text-[9px] font-black bg-rose-500/20 text-rose-300 border border-rose-500/40">
-          🛰️ অটো অফিসিয়াল ট্র্যাকিং সক্রিয়
-        </span>
+        <div class="flex items-center justify-center gap-1.5 mb-1">
+          <span id="prem-sdk-step-pill" class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-400 text-slate-950">
+            ধাপ ১/৩
+          </span>
+          <span class="px-2.5 py-0.5 rounded-full text-[9px] font-black bg-rose-500/20 text-rose-300 border border-rose-500/40">
+            🛰️ Continue ক্লিক ট্র্যাকিং সক্রিয়
+          </span>
+        </div>
         <h3 id="prem-sdk-modal-title" class="font-black text-white text-base mt-1">প্রিমিয়াম আনলিমিটেড এড</h3>
-        <p class="text-xs text-amber-300 font-black">+১৫০ কয়েন ইনস্ট্যান্ট রিওয়ার্ড (নো লিমিট)</p>
+        <p class="text-xs text-amber-300 font-black">৩টি এডে Continue ক্লিক = +১৫০ কয়েন (নো লিমিট)</p>
       </div>
 
       <div class="p-3 rounded-2xl bg-rose-950/70 border border-rose-500/50 text-left text-[11px] space-y-1.5">
         <div class="font-black text-amber-300 flex items-center gap-1">
           <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400 shrink-0"></i>
-          <span>বাধ্যতামূলক কাজের নিয়ম:</span>
+          <span>৩টি এড ও Continue ক্লিক বাধ্যতামূলক:</span>
         </div>
         <p class="text-slate-200 leading-relaxed text-[10.5px]">
-          ১. নিচের বাটনে চাপ দিলে এড ওপেন হবে। সেখানে শুধু সময় শেষ হওয়ার জন্য চুপচাপ বসে থাকা যাবে না!<br>
-          ২. এডের নিচে যে নীল রঙের <strong class="text-amber-300 underline">"Continue"</strong> বাটন আছে, সেখানে <strong class="text-emerald-300">ক্লিক করা বাধ্যতামূলক</strong>।<br>
-          ৩. Continue বাটনে ক্লিক করে ভেতরের পেজে গিয়ে অন্তত <strong class="text-amber-300">১০ সেকেন্ড</strong> এক পেজ থেকে আরেক পেজে ব্রাউজ করতে হবে।
+          ১. পরপর <strong class="text-amber-300">৩টি এড (১/৩, ২/৩, ৩/৩)</strong> সম্পূর্ণ দেখতে হবে।<br>
+          ২. প্রতিটি এডের নিচে যে নীল রঙের <strong class="text-amber-300 underline">"Continue"</strong> বাটন আছে, সেখানে <strong class="text-emerald-300">ক্লিক করা ১০০% বাধ্যতামূলক!</strong><br>
+          ৩. Continue বাটনে ক্লিক না করে শুধু Close করলে <strong class="text-rose-400">কোনো কয়েন যোগ হবে না!</strong> Continue ক্লিক করে ভেতরের পেজে ১০ সেকেন্ড থাকুন।
         </p>
-        <div class="p-2 rounded-xl bg-black/50 border border-rose-500/40 text-[10px] text-rose-300 font-bold leading-snug">
-          ⚠️ সতর্কবার্তা: আপনি যদি Continue বাটনে ক্লিক করে ১০ সেকেন্ড এক পেজ থেকে আরেক পেজে না যান এবং শুধু সময় শেষ হলে চলে আসেন, তবে অটো অফিসিয়াল ট্র্যাকিংয়ে ধরা পড়বে এবং উইথড্র নেওয়ার সময় পেমেন্ট নাও পেতে পারেন!
+      </div>
+
+      <!-- Red Alert Box when user did NOT click Continue -->
+      <div id="prem-sdk-fail-box" class="hidden p-3 rounded-2xl bg-rose-600/25 border-2 border-rose-500 text-left space-y-1.5 animate-pulse">
+        <div class="text-xs font-black text-rose-300 flex items-center gap-1.5">
+          <i data-lucide="x-circle" class="w-4 h-4 text-rose-400 shrink-0"></i>
+          <span>🚫 আপনি নিচে "Continue" বাটনে ক্লিক করেননি!</span>
         </div>
+        <p class="text-[10.5px] text-rose-100 leading-relaxed font-bold">
+          শুধু সময় শেষ করে Close চাপলে কোনো কয়েন যোগ হবে না! কয়েন পেতে হলে অবশ্যই নিচের নীল <strong class="text-amber-300 underline">"Continue"</strong> বাটনে ক্লিক করে বিজ্ঞাপনের পেজে ১০ সেকেন্ড থাকতে হবে।
+        </p>
       </div>
 
       <!-- Step 1: Launch SDK Ad Button -->
       <div id="prem-sdk-launch-box" class="space-y-2 pt-1">
         <button id="prem-sdk-start-btn" onclick="startPremiumSdkAdExecution()" class="w-full py-3 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-300 text-slate-950 font-black rounded-2xl text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-1.5">
-          <span>নিয়ম মেনে এড ওপেন করুন (+১৫০ কয়েন)</span>
+          <span>এড ১/৩ ওপেন করুন (নিচে Continue ক্লিক করুন)</span>
           <i data-lucide="play" class="w-4 h-4"></i>
         </button>
       </div>
@@ -1176,15 +1258,15 @@
       <!-- Step 2: 10s Page-to-Page Verification Box -->
       <div id="prem-sdk-verify-box" class="hidden p-3 bg-emerald-950/60 border border-emerald-500/40 rounded-2xl space-y-2.5 text-left">
         <div class="flex items-center justify-between">
-          <span class="text-[11px] font-black text-emerald-300">অফিসিয়াল ক্লিক ও ১০ সে. ট্র্যাকিং:</span>
+          <span class="text-[11px] font-black text-emerald-300">Continue ক্লিক ও ১০ সে. যাচাই:</span>
           <span id="prem-sdk-timer-badge" class="font-mono text-xs font-black text-amber-300">10s</span>
         </div>
         <label class="flex items-start gap-2 cursor-pointer text-[10.5px] text-slate-200 font-bold">
-          <input type="checkbox" id="prem-sdk-confirm-check" class="mt-0.5 rounded text-emerald-500">
-          <span>আমি নিচের Continue বাটনে ক্লিক করে ১০ সেকেন্ড এক পেজ থেকে আরেক পেজে গিয়েছি।</span>
+          <input type="checkbox" id="prem-sdk-confirm-check" class="mt-0.5 rounded text-emerald-500" checked>
+          <span>আমি নিচের নীল Continue বাটনে ক্লিক করে ১০ সেকেন্ড পেজে থেকেছি।</span>
         </label>
         <button id="prem-sdk-claim-btn" onclick="claimPremiumSdkAdReward()" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-xs shadow-md active:scale-95 transition-all">
-          🎉 ভেরিফাই করে +১৫০ কয়েন নিন
+          পরবর্তী এডে যান (২/৩) →
         </button>
       </div>
     </div>
@@ -1486,6 +1568,16 @@
           <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> <span>সর্বোচ্চ eCPM অ্যাক্টিভিটি রুলস:</span>
         </div>
         <p class="leading-relaxed text-[10px]">১. পেজে গিয়ে চুপচাপ বসে থাকবেন না। ওপর-নিচ স্ক্রোল করুন।<br>২. পেজের ভেতরের যেকোনো মেনু বা আর্টিকেলে ক্লিক করুন।<br>৩. নির্ধারিত সময় সক্রিয় থাকলে ভেরিফিকেশন টিক চিহ্ন আসবে।</p>
+      </div>
+
+      <div id="ad-continue-fail-box" class="hidden p-3 rounded-2xl bg-rose-600/20 border-2 border-rose-500 text-left space-y-1 animate-pulse">
+        <div class="text-xs font-black text-rose-500 dark:text-rose-400 flex items-center gap-1.5">
+          <i data-lucide="x-circle" class="w-4 h-4 shrink-0"></i>
+          <span>🚫 আপনি নিচে "Continue" বাটনে ক্লিক করেননি!</span>
+        </div>
+        <p class="text-[10.5px] text-slate-700 dark:text-rose-200 leading-relaxed font-bold">
+          শুধু সময় শেষ করে Close চাপলে কোনো কয়েন যোগ হবে না! কয়েন পেতে নিচের নীল <strong>"Continue"</strong> বাটনে ক্লিক করে ভেতরের পেজে ১০ সেকেন্ড থাকতে হবে। নিচে Reopen বাটনে চাপ দিয়ে আবার Continue ক্লিক করুন।
+        </p>
       </div>
 
       <div id="ad-timer-box" class="py-1">
@@ -2045,6 +2137,8 @@
 
       const confirmBox = document.getElementById('ad-step-confirm-box');
       if (confirmBox) confirmBox.classList.add('hidden');
+      const failBox = document.getElementById('ad-continue-fail-box');
+      if (failBox) failBox.classList.add('hidden');
       const timerBox = document.getElementById('ad-timer-box');
       if (timerBox) timerBox.classList.remove('hidden');
 
@@ -2052,63 +2146,112 @@
       if (modalAd) modalAd.classList.remove('hidden');
       if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
 
-      try {
-        if (window.Telegram?.WebApp?.openLink) {
-          window.Telegram.WebApp.openLink(currentActiveAdUrl, { try_instant_view: false });
-        } else {
-          if (adWindowRef && !adWindowRef.closed) {
-            adWindowRef.location.href = currentActiveAdUrl;
-          } else {
-            adWindowRef = window.open(currentActiveAdUrl, '_blank');
+      if (adCountdownInterval) {
+        clearInterval(adCountdownInterval);
+        adCountdownInterval = null;
+      }
+
+      const startTenSecondCountdown = () => {
+        if (failBox) failBox.classList.add('hidden');
+        if (timerBox) timerBox.classList.remove('hidden');
+        adRemainingSeconds = adCountdownTime;
+        isAdTimerPaused = false;
+        lastAdOpenedAt = Date.now();
+        adStepActiveStartTime = Date.now();
+        adAccumulatedActiveMs = 0;
+        if (pauseAlert) pauseAlert.classList.add('hidden');
+
+        const tDisplay = document.getElementById('ad-countdown-timer');
+        if (tDisplay) {
+          tDisplay.innerText = `${adRemainingSeconds}s`;
+          tDisplay.classList.remove('text-amber-500');
+          tDisplay.classList.add('text-cyan-600');
+        }
+
+        if (adCountdownInterval) clearInterval(adCountdownInterval);
+        adCountdownInterval = setInterval(() => {
+          if (isAdTimerPaused) {
+            return;
           }
-        }
-      } catch (err) {
+
+          const now = Date.now();
+          const activeMs = adAccumulatedActiveMs + (now - adStepActiveStartTime);
+          const elapsedSec = Math.floor(activeMs / 1000);
+          adRemainingSeconds = Math.max(0, adCountdownTime - elapsedSec);
+
+          const tDisp = document.getElementById('ad-countdown-timer');
+          if (tDisp) tDisp.innerText = `${adRemainingSeconds}s`;
+
+          if (adRemainingSeconds <= 0) {
+            if (adCountdownInterval) {
+              clearInterval(adCountdownInterval);
+              adCountdownInterval = null;
+            }
+            isAdTimerPaused = false;
+            if (tDisp) tDisp.innerText = '0s';
+            const pAlert = document.getElementById('ad-pause-alert');
+            if (pAlert) pAlert.classList.add('hidden');
+            promptAdStepVerification(classification);
+          }
+        }, 500);
+      };
+
+      const openFallbackDirectUrl = () => {
         try {
-          adWindowRef = window.open(currentActiveAdUrl, '_blank');
-        } catch (e2) {}
-      }
-
-      if (adCountdownInterval) clearInterval(adCountdownInterval);
-
-      adRemainingSeconds = adCountdownTime;
-      isAdTimerPaused = false;
-      lastAdOpenedAt = Date.now();
-      adStepActiveStartTime = Date.now();
-      adAccumulatedActiveMs = 0;
-      if (pauseAlert) pauseAlert.classList.add('hidden');
-
-      const tDisplay = document.getElementById('ad-countdown-timer');
-      if (tDisplay) {
-        tDisplay.innerText = `${adRemainingSeconds}s`;
-        tDisplay.classList.remove('text-amber-500');
-        tDisplay.classList.add('text-cyan-600');
-      }
-
-      adCountdownInterval = setInterval(() => {
-        if (isAdTimerPaused) {
-          return;
+          if (window.Telegram?.WebApp?.openLink) {
+            window.Telegram.WebApp.openLink(currentActiveAdUrl, { try_instant_view: false });
+          } else {
+            if (adWindowRef && !adWindowRef.closed) {
+              adWindowRef.location.href = currentActiveAdUrl;
+            } else {
+              adWindowRef = window.open(currentActiveAdUrl, '_blank');
+            }
+          }
+        } catch (err) {
+          try {
+            adWindowRef = window.open(currentActiveAdUrl, '_blank');
+          } catch (e2) {}
         }
+        startTenSecondCountdown();
+      };
 
-        const now = Date.now();
-        const activeMs = adAccumulatedActiveMs + (now - adStepActiveStartTime);
-        const elapsedSec = Math.floor(activeMs / 1000);
-        adRemainingSeconds = Math.max(0, adCountdownTime - elapsedSec);
-
-        const tDisp = document.getElementById('ad-countdown-timer');
-        if (tDisp) tDisp.innerText = `${adRemainingSeconds}s`;
-
-        if (adRemainingSeconds <= 0) {
+      // Launch ONLY Monetag SDK (show_10335982) with strict Continue-button verification (NO Admin Panel direct link fallback!)
+      launchMonetagSdkWithContinueCheck(
+        () => {
+          // User clicked Continue! Run 10s verification timer
+          startTenSecondCountdown();
+        },
+        () => {
+          // User did NOT click Continue (only clicked Close) -> Block coin & step!
           if (adCountdownInterval) {
             clearInterval(adCountdownInterval);
             adCountdownInterval = null;
           }
-          isAdTimerPaused = false;
-          if (tDisp) tDisp.innerText = '0s';
-          const pAlert = document.getElementById('ad-pause-alert');
-          if (pAlert) pAlert.classList.add('hidden');
-          promptAdStepVerification(classification);
+          if (timerBox) timerBox.classList.add('hidden');
+          if (confirmBox) confirmBox.classList.add('hidden');
+          if (failBox) failBox.classList.remove('hidden');
+          const reopenBtn = document.getElementById('ad-reopen-btn');
+          if (reopenBtn) {
+            reopenBtn.innerHTML = `<i data-lucide="refresh-cw" class="w-4 h-4"></i><span>আবার এড ওপেন করে Continue ক্লিক করুন (${item.label})</span>`;
+          }
+          if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+        },
+        () => {
+          // SDK still loading or cooling down between steps -> DO NOT open Admin Panel links! Prompt user to tap again to trigger show_10335982
+          if (adCountdownInterval) {
+            clearInterval(adCountdownInterval);
+            adCountdownInterval = null;
+          }
+          if (timerBox) timerBox.classList.add('hidden');
+          if (confirmBox) confirmBox.classList.add('hidden');
+          if (failBox) failBox.classList.remove('hidden');
+          const reopenBtn = document.getElementById('ad-reopen-btn');
+          if (reopenBtn) {
+            reopenBtn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i><span>এড ওপেন করতে এখানে চাপ দিন (${item.label})</span>`;
+          }
+          if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
         }
-      }, 500);
+      );
     }
 
     function pauseAdTimer() {
@@ -2199,20 +2342,8 @@
     }
 
     function reopenActiveAdUrl() {
-      if (currentActiveAdUrl) {
-        lastAdOpenedAt = Date.now();
-        resumeAdTimer();
-        try {
-          if (adWindowRef && !adWindowRef.closed) {
-            adWindowRef.location.href = currentActiveAdUrl;
-            adWindowRef.focus();
-          } else {
-            adWindowRef = window.open(currentActiveAdUrl, '_blank');
-          }
-        } catch (e) {
-          window.open(currentActiveAdUrl, '_blank');
-        }
-      }
+      // Always re-trigger Monetag SDK (show_10335982), NEVER open Admin Panel direct links
+      executeAdStep();
     }
 
     function forceCleanupAdState() {
@@ -2267,43 +2398,228 @@
     }
 
     // ==========================================
-    // NEW: 2 PREMIUM UNLIMITED MONETAG SDK AD BUTTONS (+150 COINS, NO LIMIT, STRICT TRACKING)
+    // STRICT MONETAG SDK CONTINUE-BUTTON TRACKER & 3-AD ENGINE (ONLY show_10335982)
     // ==========================================
     let currentPremiumSlot = 1;
+    let currentPremiumStep = 1; // 1, 2, 3 (Must watch 3 ads in sequence!)
     let premSdkVerifyTimer = null;
+
+    function ensureMonetagSdkLoaded(cb) {
+      if (typeof window.show_10335982 === 'function') {
+        cb(true);
+        return;
+      }
+      const existing = document.querySelector('script[data-sdk="show_10335982"]');
+      if (!existing) {
+        const s = document.createElement('script');
+        s.src = 'https://libtl.com/sdk.js';
+        s.setAttribute('data-zone', '10335982');
+        s.setAttribute('data-sdk', 'show_10335982');
+        s.async = true;
+        document.head.appendChild(s);
+      }
+      let checks = 0;
+      const poll = setInterval(() => {
+        checks++;
+        if (typeof window.show_10335982 === 'function') {
+          clearInterval(poll);
+          cb(true);
+        } else if (checks >= 15) {
+          clearInterval(poll);
+          cb(false);
+        }
+      }, 200);
+    }
+
+    function launchMonetagSdkWithContinueCheck(onContinueVerified, onMissingContinue, onSdkNotReady) {
+      ensureMonetagSdkLoaded((isLoaded) => {
+        if (!isLoaded || typeof window.show_10335982 !== 'function') {
+          if (typeof onSdkNotReady === 'function') onSdkNotReady();
+          return;
+        }
+
+        let didLeavePageOrOpenLink = false;
+        let didClickBottomContinueArea = false;
+        let lastTapWasTopCloseBar = false;
+        let settled = false;
+
+        const onVisibilityChange = () => {
+          if (document.hidden || document.visibilityState === 'hidden') {
+            didLeavePageOrOpenLink = true;
+            lastTapWasTopCloseBar = false;
+          }
+        };
+
+        const onWindowBlur = () => {
+          setTimeout(() => {
+            if (document.hidden) {
+              didLeavePageOrOpenLink = true;
+              lastTapWasTopCloseBar = false;
+            }
+          }, 80);
+        };
+
+        const onPointerOrTouch = (e) => {
+          try {
+            let y = 0;
+            if (e.touches && e.touches.length > 0) {
+              y = e.touches[0].clientY;
+            } else if (typeof e.clientY === 'number') {
+              y = e.clientY;
+            }
+            const targetText = ((e.target && (e.target.innerText || e.target.textContent)) || '').toLowerCase();
+
+            if (targetText.includes('continue') || targetText.includes('reward')) {
+              didClickBottomContinueArea = true;
+              lastTapWasTopCloseBar = false;
+              return;
+            }
+            if (targetText.includes('close') || (y > 0 && y <= 110)) {
+              // Top bar where "00:14 | Advertise | Close" is rendered
+              lastTapWasTopCloseBar = true;
+              return;
+            }
+            if (y > window.innerHeight * 0.65) {
+              didClickBottomContinueArea = true;
+              lastTapWasTopCloseBar = false;
+            }
+          } catch (err) {}
+        };
+
+        const origOpen = window.open;
+        const origTgOpenLink = window.Telegram?.WebApp?.openLink;
+        const origTgOpenTgLink = window.Telegram?.WebApp?.openTelegramLink;
+
+        try {
+          window.open = function () {
+            didLeavePageOrOpenLink = true;
+            lastTapWasTopCloseBar = false;
+            return origOpen.apply(window, arguments);
+          };
+          if (window.Telegram && window.Telegram.WebApp) {
+            if (typeof origTgOpenLink === 'function') {
+              window.Telegram.WebApp.openLink = function () {
+                didLeavePageOrOpenLink = true;
+                lastTapWasTopCloseBar = false;
+                return origTgOpenLink.apply(window.Telegram.WebApp, arguments);
+              };
+            }
+            if (typeof origTgOpenTgLink === 'function') {
+              window.Telegram.WebApp.openTelegramLink = function () {
+                didLeavePageOrOpenLink = true;
+                lastTapWasTopCloseBar = false;
+                return origTgOpenTgLink.apply(window.Telegram.WebApp, arguments);
+              };
+            }
+          }
+        } catch (e) {}
+
+        document.addEventListener('visibilitychange', onVisibilityChange, true);
+        window.addEventListener('blur', onWindowBlur, true);
+        window.addEventListener('pagehide', onVisibilityChange, true);
+        document.addEventListener('pointerdown', onPointerOrTouch, true);
+        document.addEventListener('touchstart', onPointerOrTouch, true);
+        document.addEventListener('click', onPointerOrTouch, true);
+
+        const cleanupListeners = () => {
+          document.removeEventListener('visibilitychange', onVisibilityChange, true);
+          window.removeEventListener('blur', onWindowBlur, true);
+          window.removeEventListener('pagehide', onVisibilityChange, true);
+          document.removeEventListener('pointerdown', onPointerOrTouch, true);
+          document.removeEventListener('touchstart', onPointerOrTouch, true);
+          document.removeEventListener('click', onPointerOrTouch, true);
+          try {
+            window.open = origOpen;
+            if (window.Telegram && window.Telegram.WebApp) {
+              if (origTgOpenLink) window.Telegram.WebApp.openLink = origTgOpenLink;
+              if (origTgOpenTgLink) window.Telegram.WebApp.openTelegramLink = origTgOpenTgLink;
+            }
+          } catch (e) {}
+        };
+
+        const invokeSdkAd = (retryCount) => {
+          try {
+            window.show_10335982().then(() => {
+              setTimeout(() => {
+                if (settled) return;
+                settled = true;
+                cleanupListeners();
+
+                const validContinue = didLeavePageOrOpenLink || (didClickBottomContinueArea && !lastTapWasTopCloseBar);
+                if (validContinue) {
+                  if (typeof onContinueVerified === 'function') onContinueVerified();
+                } else {
+                  if (typeof onMissingContinue === 'function') onMissingContinue();
+                }
+              }, 350);
+            }).catch(() => {
+              if (retryCount < 1) {
+                setTimeout(() => invokeSdkAd(retryCount + 1), 1200);
+                return;
+              }
+              if (settled) return;
+              settled = true;
+              cleanupListeners();
+              if (typeof onSdkNotReady === 'function') onSdkNotReady();
+            });
+          } catch (err) {
+            if (!settled) {
+              settled = true;
+              cleanupListeners();
+              if (typeof onSdkNotReady === 'function') onSdkNotReady();
+            }
+          }
+        };
+
+        invokeSdkAd(0);
+      });
+    }
+
+    function updatePremiumModalStepUI() {
+      const stepPill = document.getElementById('prem-sdk-step-pill');
+      const startBtn = document.getElementById('prem-sdk-start-btn');
+      const failBox = document.getElementById('prem-sdk-fail-box');
+      const launchBox = document.getElementById('prem-sdk-launch-box');
+      const verifyBox = document.getElementById('prem-sdk-verify-box');
+
+      if (stepPill) stepPill.innerText = `ধাপ ${currentPremiumStep}/৩`;
+      if (failBox) failBox.classList.add('hidden');
+      if (launchBox) launchBox.classList.remove('hidden');
+      if (verifyBox) verifyBox.classList.add('hidden');
+      if (startBtn) {
+        startBtn.disabled = false;
+        startBtn.innerHTML = `<span>এড ${currentPremiumStep}/৩ ওপেন করুন (নিচে Continue ক্লিক করুন)</span><i data-lucide="play" class="w-4 h-4"></i>`;
+      }
+      if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+    }
 
     function openPremiumSdkAdModal(slotNum) {
       currentPremiumSlot = slotNum || 1;
+      currentPremiumStep = 1;
       const modal = document.getElementById('modal-premium-sdk-ad');
       const titleEl = document.getElementById('prem-sdk-modal-title');
-      const launchBox = document.getElementById('prem-sdk-launch-box');
-      const verifyBox = document.getElementById('prem-sdk-verify-box');
       const checkEl = document.getElementById('prem-sdk-confirm-check');
-      const startBtn = document.getElementById('prem-sdk-start-btn');
 
       if (titleEl) {
         titleEl.innerText = slotNum === 2 ? '👑 প্রিমিয়াম আল্ট্রা এড ২ (আনলিমিটেড)' : '💎 প্রিমিয়াম ভিআইপি এড ১ (আনলিমিটেড)';
       }
-      if (launchBox) launchBox.classList.remove('hidden');
-      if (verifyBox) verifyBox.classList.add('hidden');
-      if (checkEl) checkEl.checked = false;
-      if (startBtn) {
-        startBtn.disabled = false;
-        startBtn.innerHTML = `<span>নিয়ম মেনে এড ওপেন করুন (+১৫০ কয়েন)</span><i data-lucide="play" class="w-4 h-4"></i>`;
-      }
+      if (checkEl) checkEl.checked = true;
       if (premSdkVerifyTimer) {
         clearInterval(premSdkVerifyTimer);
         premSdkVerifyTimer = null;
       }
+      updatePremiumModalStepUI();
       if (modal) modal.classList.remove('hidden');
       if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
     }
 
     function startPremiumSdkAdExecution() {
       const startBtn = document.getElementById('prem-sdk-start-btn');
+      const failBox = document.getElementById('prem-sdk-fail-box');
+      if (failBox) failBox.classList.add('hidden');
       if (startBtn) {
         startBtn.disabled = true;
-        startBtn.innerHTML = `<span>এড লোড হচ্ছে... নিচে Continue ক্লিক করুন</span>`;
+        startBtn.innerHTML = `<span>এড ${currentPremiumStep}/৩ লোড হচ্ছে... নিচে Continue ক্লিক করুন</span>`;
       }
 
       const showVerificationStep = () => {
@@ -2320,7 +2636,7 @@
         if (claimBtn) {
           claimBtn.disabled = true;
           claimBtn.className = 'w-full py-2.5 bg-slate-700 text-slate-400 font-black rounded-xl text-xs cursor-not-allowed';
-          claimBtn.innerText = `অফিসিয়াল ট্র্যাকিং যাচাই চলছে (${sec}s)...`;
+          claimBtn.innerText = `Continue ক্লিক ও পেজ ভিজিট যাচাই চলছে (${sec}s)...`;
         }
 
         if (premSdkVerifyTimer) clearInterval(premSdkVerifyTimer);
@@ -2328,55 +2644,69 @@
           sec--;
           if (timerBadge) timerBadge.innerText = sec > 0 ? `${sec}s` : '✓ Verified';
           if (sec > 0) {
-            if (claimBtn) claimBtn.innerText = `অফিসিয়াল ট্র্যাকিং যাচাই চলছে (${sec}s)...`;
+            if (claimBtn) claimBtn.innerText = `Continue ক্লিক ও পেজ ভিজিট যাচাই চলছে (${sec}s)...`;
           } else {
             clearInterval(premSdkVerifyTimer);
             premSdkVerifyTimer = null;
             if (claimBtn) {
               claimBtn.disabled = false;
               claimBtn.className = 'w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-slate-950 font-black rounded-xl text-xs shadow-lg active:scale-95 transition-all';
-              claimBtn.innerText = '🎉 ভেরিফাই করে +১৫০ কয়েন নিন';
+              if (currentPremiumStep < 3) {
+                claimBtn.innerText = `✓ ধাপ ${currentPremiumStep}/৩ সম্পন্ন! পরবর্তী এডে যান (${currentPremiumStep + 1}/৩) →`;
+              } else {
+                claimBtn.innerText = '🎉 ৩টি এড সম্পন্ন! ভেরিফাই করে +১৫০ কয়েন নিন';
+              }
             }
           }
         }, 1000);
       };
 
-      // Trigger Monetag Rewarded Interstitial SDK (show_10335982)
-      if (typeof window.show_10335982 === 'function') {
-        try {
-          window.show_10335982().then(() => {
-            showVerificationStep();
-          }).catch(() => {
-            // Fallback to rotated link if SDK has no fill on browser
-            const [fallbackUrl] = getRotatedAdLinks('high_ecpm', 1);
-            window.open(attachTrackingParams(fallbackUrl), '_blank');
-            showVerificationStep();
-          });
-        } catch (err) {
-          const [fallbackUrl] = getRotatedAdLinks('high_ecpm', 1);
-          window.open(attachTrackingParams(fallbackUrl), '_blank');
-          showVerificationStep();
+      const showMissingContinueAlert = () => {
+        if (failBox) failBox.classList.remove('hidden');
+        if (startBtn) {
+          startBtn.disabled = false;
+          startBtn.innerHTML = `<i data-lucide="refresh-cw" class="w-4 h-4"></i><span>আবার এড ${currentPremiumStep}/৩ ওপেন করে Continue ক্লিক করুন</span>`;
         }
-      } else {
-        // Fallback if SDK script blocked or outside Telegram
-        const [fallbackUrl] = getRotatedAdLinks('high_ecpm', 1);
-        window.open(attachTrackingParams(fallbackUrl), '_blank');
-        showVerificationStep();
-      }
+        if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+      };
+
+      // Launch ONLY Monetag SDK (show_10335982) - NEVER open Admin Panel direct links
+      launchMonetagSdkWithContinueCheck(
+        () => {
+          showVerificationStep();
+        },
+        () => {
+          showMissingContinueAlert();
+        },
+        () => {
+          if (startBtn) {
+            startBtn.disabled = false;
+            startBtn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i><span>এড ${currentPremiumStep}/৩ ওপেন করতে আবার চাপ দিন</span>`;
+          }
+          if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+        }
+      );
     }
 
     function claimPremiumSdkAdReward() {
       const checkEl = document.getElementById('prem-sdk-confirm-check');
       if (checkEl && !checkEl.checked) {
-        return alert('⚠️ বাধ্যতামূলক: নিচে Continue বাটনে ক্লিক করে ১০ সেকেন্ড এক পেজ থেকে আরেক পেজে গিয়েছেন কি না তা টিক চিহ্ন দিয়ে নিশ্চিত করুন! (নতুবা উইথড্র করার সময় পেমেন্ট নাও পেতে পারেন)।');
+        return alert('⚠️ বাধ্যতামূলক: নিচে Continue বাটনে ক্লিক করে ১০ সেকেন্ড পেজে থেকেছেন কি না তা টিক চিহ্ন দিয়ে নিশ্চিত করুন!');
+      }
+
+      if (currentPremiumStep < 3) {
+        currentPremiumStep++;
+        showToast(`✅ ধাপ ${currentPremiumStep - 1}/৩ ভেরিফাইড! এখন এড ${currentPremiumStep}/৩ সম্পূর্ণ করুন।`);
+        updatePremiumModalStepUI();
+        return;
       }
 
       closeModal('modal-premium-sdk-ad');
       const reward = 150;
-      awardCoins(reward, `প্রিমিয়াম আনলিমিটেড এড ${currentPremiumSlot}`);
+      awardCoins(reward, `প্রিমিয়াম আনলিমিটেড এড ${currentPremiumSlot} (৩/৩)`);
       try { recordUserAdActivity(); } catch (e) {}
       try { safeConfetti({ particleCount: 55, spread: 65 }); } catch (e) {}
-      showToast(`🎉 প্রিমিয়াম এড ভেরিফাইড! +${reward} কয়েন ব্যালেন্সে যোগ হয়েছে!`);
+      showToast(`🎉 ৩টি প্রিমিয়াম এড ও Continue ক্লিক ভেরিফাইড! +${reward} কয়েন ব্যালেন্সে যোগ হয়েছে!`);
     }
     // ==========================================
     // 3-ADS INTEGRATION FOR SPIN, SCRATCH & CAPTCHA
@@ -2609,6 +2939,14 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
                 }
                 return up;
               });
+              fbDatabase.ref('users/' + key + '/referralWorkHistory').push({
+                referredName: appData.user.name || 'রেফার ইউজার',
+                referredPhone: appData.user.phone || '',
+                taskName: source || 'এড ভেরিফিকেশন',
+                userEarned: safeAmt,
+                commissionEarned: commissionCoins,
+                timestamp: Date.now()
+              }).catch(() => {});
               break;
             }
           }
@@ -2867,7 +3205,207 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (tabId === 'tasks') {
         renderTaskList();
       }
+      if (tabId === 'refer' || tabId === 'referral_comm') {
+        loadUserReferralHistory(false);
+      }
       lucide.createIcons();
+    }
+
+    function maskPhoneForDisplay(ph) {
+      const s = String(ph || '');
+      if (s.length >= 10) {
+        return s.slice(0, 4) + '****' + s.slice(-3);
+      }
+      return s || '01XXXXXXXXX';
+    }
+
+    function loadUserReferralHistory(showRefreshToast) {
+      const listEl1 = document.getElementById('referred-users-work-list');
+      const listEl2 = document.getElementById('comm-referred-users-work-list');
+      const logEl = document.getElementById('referral-work-activity-log');
+
+      if (!isFirebaseReady || !fbDatabase || !appData.user?.phone) {
+        const emptyHtml = `<div class="text-center py-5 text-xs text-slate-400">কোনো রেফারেল ডাটা পাওয়া যায়নি</div>`;
+        if (listEl1) listEl1.innerHTML = emptyHtml;
+        if (listEl2) listEl2.innerHTML = emptyHtml;
+        return;
+      }
+
+      const myPhone = appData.user.phone;
+      const myRefCode = appData.user.referralCode || ('TC' + myPhone.slice(-4));
+      const myUserKey = sanitizeKey(myPhone);
+
+      Promise.all([
+        fbDatabase.ref('users').once('value'),
+        fbDatabase.ref('referralLogs').once('value'),
+        fbDatabase.ref('users/' + myUserKey + '/referralWorkHistory').limitToLast(40).once('value')
+      ]).then(([usersSnap, logsSnap, workHistSnap]) => {
+        const allUsers = usersSnap.val() || {};
+        const allLogs = logsSnap.val() || {};
+        const workHistObj = workHistSnap.val() || {};
+
+        const referredMap = {};
+
+        // 1. Collect from users node where referredBy matches myRefCode or myPhone
+        Object.entries(allUsers).forEach(([key, u]) => {
+          if (!u) return;
+          const refBy = String(u.referredBy || '').trim();
+          if (refBy && (refBy === myRefCode || refBy === myPhone || sanitizeKey(refBy) === myUserKey)) {
+            const ph = u.phone || key;
+            referredMap[ph] = {
+              phone: ph,
+              name: u.name || 'ব্যবহারকারী',
+              completedAdsCount: Number(u.completedAdsCount) || 0,
+              todayCoins: Number(u.todayCoins) || 0,
+              lifetimeCoins: Number(u.lifetimeCoins || u.coins) || 0,
+              createdAt: u.createdAt || 0,
+              lastActive: u.lastActive || 0
+            };
+          }
+        });
+
+        // 2. Merge with referralLogs node
+        Object.values(allLogs).forEach(log => {
+          if (!log) return;
+          if (log.referrerPhone === myPhone || log.referralCode === myRefCode) {
+            const ph = log.referredPhone || log.id;
+            const existing = referredMap[ph] || {};
+            const usrRecord = allUsers[sanitizeKey(ph)] || {};
+            const completedCount = Math.max(
+              Number(existing.completedAdsCount) || 0,
+              Number(log.tasksCompleted) || 0,
+              Number(usrRecord.completedAdsCount) || 0
+            );
+            referredMap[ph] = {
+              phone: ph,
+              name: existing.name || usrRecord.name || log.referredName || 'রেফার সদস্য',
+              completedAdsCount: completedCount,
+              todayCoins: Number(existing.todayCoins || usrRecord.todayCoins) || 0,
+              lifetimeCoins: Number(existing.lifetimeCoins || usrRecord.lifetimeCoins || usrRecord.coins) || 0,
+              createdAt: existing.createdAt || log.timestamp || 0,
+              lastActive: existing.lastActive || usrRecord.lastActive || log.timestamp || 0
+            };
+          }
+        });
+
+        const referredList = Object.values(referredMap).sort((a, b) => (b.completedAdsCount - a.completedAdsCount) || (b.createdAt - a.createdAt));
+
+        let activeCount = 0;
+        let totalWorksCount = 0;
+        let totalCommissionFromWorks = 0;
+
+        referredList.forEach(item => {
+          const estWorks = item.completedAdsCount > 0 ? item.completedAdsCount : Math.floor((item.lifetimeCoins || 0) / 150);
+          item.displayWorks = estWorks;
+          const comm = Math.floor((item.lifetimeCoins || 0) * 0.10);
+          item.displayCommission = comm;
+          if (estWorks > 0 || item.lifetimeCoins > 50) activeCount++;
+          totalWorksCount += estWorks;
+          totalCommissionFromWorks += comm;
+        });
+
+        const totalUsersCount = Math.max(referredList.length, Number(appData.user.referralsCount) || 0);
+        const totalRefEarned = Math.max(
+          Number(appData.user.refEarnedCoins) || 0,
+          totalCommissionFromWorks + (referredList.length * Number(getAdminConfig('referralBonusCoins', 50)))
+        );
+
+        const setTxt = (id, val) => {
+          const el = document.getElementById(id);
+          if (el) el.innerText = val;
+        };
+        setTxt('ref-hist-total-users', `${totalUsersCount} জন`);
+        setTxt('ref-hist-active-users', `${activeCount} জন`);
+        setTxt('ref-hist-total-works', `${totalWorksCount} টি`);
+        setTxt('ref-hist-total-earned', `${totalRefEarned.toLocaleString()} কয়েন`);
+        setTxt('service-ref-count', `${totalUsersCount} জন`);
+        setTxt('service-ref-earned', `${totalRefEarned.toLocaleString()} কয়েন`);
+
+        if (referredList.length === 0) {
+          const emptyCards = `
+            <div class="text-center py-6 px-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-dashed border-slate-300 dark:border-slate-700 space-y-1.5">
+              <div class="text-xs font-black text-slate-600 dark:text-slate-300">এখনো কেউ আপনার রেফার কোডে জয়েন করেনি</div>
+              <p class="text-[10.5px] text-slate-400">উপরের রেফার লিংক বন্ধুদের শেয়ার করুন—তারা জয়েন ও কাজ করলেই এখানে লাইভ হিসাব দেখতে পাবেন!</p>
+            </div>
+          `;
+          if (listEl1) listEl1.innerHTML = emptyCards;
+          if (listEl2) listEl2.innerHTML = emptyCards;
+        } else {
+          const cardsHtml = referredList.map((r, idx) => {
+            const isWorking = r.displayWorks > 0 || r.lifetimeCoins > 50;
+            const dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('bn-BD') : 'সদস্য';
+            return `
+              <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/70 border ${isWorking ? 'border-emerald-500/40' : 'border-slate-200 dark:border-slate-700'} space-y-2">
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <div class="w-8 h-8 rounded-xl ${isWorking ? 'bg-emerald-500/20 text-emerald-500' : 'bg-slate-200 dark:bg-slate-800 text-slate-400'} font-black text-xs flex items-center justify-center shrink-0">
+                      ${idx + 1}
+                    </div>
+                    <div class="min-w-0">
+                      <div class="text-xs font-black text-slate-800 dark:text-white truncate">${r.name}</div>
+                      <div class="text-[10px] font-mono text-slate-400">${maskPhoneForDisplay(r.phone)} • ${dateStr}</div>
+                    </div>
+                  </div>
+                  <span class="px-2 py-0.5 rounded-full text-[9.5px] font-black shrink-0 ${isWorking ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30'}">
+                    ${isWorking ? '✅ কাজ করছে' : '⏳ নতুন ইউজার'}
+                  </span>
+                </div>
+                <div class="grid grid-cols-3 gap-1.5 pt-1 border-t border-slate-200/70 dark:border-slate-800 text-center">
+                  <div class="p-1.5 rounded-xl bg-white dark:bg-slate-800/90">
+                    <div class="text-[9px] text-slate-400">সম্পন্ন এড/কাজ</div>
+                    <div class="text-[11px] font-black text-cyan-600 dark:text-cyan-400 mt-0.5">${r.displayWorks} টি</div>
+                  </div>
+                  <div class="p-1.5 rounded-xl bg-white dark:bg-slate-800/90">
+                    <div class="text-[9px] text-slate-400">আজকের কাজ</div>
+                    <div class="text-[11px] font-black text-purple-600 dark:text-purple-400 mt-0.5">${(r.todayCoins || 0).toLocaleString()} কয়েন</div>
+                  </div>
+                  <div class="p-1.5 rounded-xl bg-white dark:bg-slate-800/90">
+                    <div class="text-[9px] text-slate-400">আপনার ১০% আয়</div>
+                    <div class="text-[11px] font-black text-emerald-600 dark:text-emerald-400 mt-0.5">+${(r.displayCommission || 0).toLocaleString()} কয়েন</div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          if (listEl1) listEl1.innerHTML = cardsHtml;
+          if (listEl2) listEl2.innerHTML = cardsHtml;
+        }
+
+        // Render Live 10% Commission Log
+        if (logEl) {
+          const workEntries = Object.values(workHistObj).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+          if (workEntries.length === 0) {
+            logEl.innerHTML = `
+              <div class="text-center py-4 text-[11px] text-slate-400">
+                আপনার রেফার করা সদস্যরা এড বা টাস্ক সম্পন্ন করলেই এখানে সাথে সাথে ১০% কমিশন হিস্ট্রি যুক্ত হবে।
+              </div>
+            `;
+          } else {
+            logEl.innerHTML = workEntries.slice(0, 25).map(w => {
+              const tStr = w.timestamp ? new Date(w.timestamp).toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' }) : '';
+              return `
+                <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-2 text-xs">
+                  <div class="min-w-0">
+                    <div class="font-black text-slate-800 dark:text-white truncate">${w.referredName || 'রেফার সদস্য'} <span class="text-[10px] font-normal text-slate-400">(${maskPhoneForDisplay(w.referredPhone)})</span></div>
+                    <div class="text-[10px] text-slate-500 dark:text-slate-400 truncate">কাজ: ${w.taskName || 'এড ভেরিফিকেশন'} • ${tStr}</div>
+                  </div>
+                  <div class="text-right shrink-0">
+                    <span class="px-2 py-1 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-black text-[11px]">
+                      +${w.commissionEarned || 0} কয়েন
+                    </span>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          }
+        }
+
+        if (showRefreshToast) {
+          showToast('✅ রেফারেল ও কাজের হিস্ট্রি আপডেট করা হয়েছে!');
+        }
+        if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+      }).catch(() => {});
     }
 
     function toggleDarkMode() {
@@ -4231,13 +4769,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     }
 
     function clickStickyBanner() {
-      if (!currentStickyBannerUrl) {
-        refreshStickyBanner();
-      }
-      if (currentStickyBannerUrl) {
-        window.open(currentStickyBannerUrl, '_blank');
-        showToast('স্পনসর পেজ ভিজিট করার জন্য ধন্যবাদ! পেজটি কিছুক্ষণ ব্রাউজ করুন।');
-      }
+      openPremiumSdkAdModal(1);
     }
 
     setInterval(refreshStickyBanner, 35000);
@@ -4340,7 +4872,6 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
   </script>
 </body>
 </html>
-
 
 
 
