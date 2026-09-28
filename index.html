@@ -106,7 +106,7 @@
           <input type="text" id="reg-refer" placeholder="যেমন: TC9901" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-xs text-amber-300 uppercase font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500">
         </div>
         <button type="submit" id="reg-submit-btn" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold rounded-xl text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
-          <span>রেজিস্ট্রেশন করুন (+১২০০ কয়েন বোনাস)</span>
+          <span>রেজিস্ট্রেশন করুন (+২৫০ কয়েন বোনাস)</span>
           <i data-lucide="check-circle" class="w-4 h-4"></i>
         </button>
       </form>
@@ -443,32 +443,32 @@
                 <div class="w-8 h-8 rounded-xl bg-sky-600 text-white flex items-center justify-center"><i data-lucide="play-circle" class="w-4 h-4"></i></div>
                 <span class="text-xs font-black text-slate-800 dark:text-white">ভিডিও এড</span>
               </div>
-              <div class="text-[10px] text-sky-600 font-bold" id="earn-adsgram-count">১৫ টি বাকি</div>
-              <div class="text-[10px] text-slate-400">+১৮ কয়েন · Rewarded</div>
+              <div class="text-[10px] text-sky-600 font-bold" id="earn-adsgram-count">৫০ টি বাকি</div>
+              <div class="text-[10px] text-slate-400" id="earn-adsgram-reward">+২০০ কয়েন · Rewarded</div>
             </button>
             <button onclick="watchThreeAdsOnly()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl text-left active:scale-95 transition-all">
               <div class="flex items-center gap-2 mb-1">
                 <div class="w-8 h-8 rounded-xl bg-rose-600 text-white flex items-center justify-center"><i data-lucide="clapperboard" class="w-4 h-4"></i></div>
                 <span class="text-xs font-black text-slate-800 dark:text-white">বোনাস এড</span>
               </div>
-              <div class="text-[10px] text-rose-600 font-bold" id="earn-monetag-count">৪০ টি বাকি</div>
-              <div class="text-[10px] text-slate-400">+২৫ কয়েন</div>
+              <div class="text-[10px] text-rose-600 font-bold" id="earn-monetag-count">৫০ টি বাকি</div>
+              <div class="text-[10px] text-slate-400" id="earn-monetag-reward">+২০০ কয়েন</div>
             </button>
             <button onclick="startWatchAd()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl text-left active:scale-95 transition-all">
               <div class="flex items-center gap-2 mb-1">
                 <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-sm">🎬</div>
                 <span class="text-xs font-black text-slate-800 dark:text-white">Watch Ad</span>
               </div>
-              <div class="text-[10px] text-indigo-600 font-bold" id="earn-watch-count">২৫ টি বাকি</div>
-              <div class="text-[10px] text-slate-400">+২৮ কয়েন</div>
+              <div class="text-[10px] text-indigo-600 font-bold" id="earn-watch-count">৫০ টি বাকি</div>
+              <div class="text-[10px] text-slate-400" id="earn-watch-reward">+২০০ কয়েন</div>
             </button>
             <button onclick="openUnlockExtraModal()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl text-left active:scale-95 transition-all">
               <div class="flex items-center gap-2 mb-1">
                 <div class="w-8 h-8 rounded-xl bg-orange-500 text-white flex items-center justify-center"><i data-lucide="unlock" class="w-4 h-4"></i></div>
                 <span class="text-xs font-black text-slate-800 dark:text-white">Unlock Extra</span>
               </div>
-              <div class="text-[10px] text-orange-600 font-bold" id="earn-unlock-count">১২ টি বাকি</div>
-              <div class="text-[10px] text-slate-400">+৪২ কয়েন</div>
+              <div class="text-[10px] text-orange-600 font-bold" id="earn-unlock-count">৫০ টি বাকি</div>
+              <div class="text-[10px] text-slate-400" id="earn-unlock-reward">+২০০ কয়েন</div>
             </button>
             <button onclick="startInstantReward()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl text-left active:scale-95 transition-all">
               <div class="flex items-center gap-2 mb-1">
@@ -476,7 +476,7 @@
                 <span class="text-xs font-black text-slate-800 dark:text-white">Instant Bonus</span>
               </div>
               <div class="text-[10px] text-pink-600 font-bold" id="earn-instant-count">৫০ টি বাকি</div>
-              <div class="text-[10px] text-slate-400">+২০০ কয়েন</div>
+              <div class="text-[10px] text-slate-400" id="earn-instant-reward">+২০০ কয়েন</div>
             </button>
             <button onclick="openQuizModal()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl text-left active:scale-95 transition-all">
               <div class="flex items-center gap-2 mb-1">
@@ -484,7 +484,7 @@
                 <span class="text-xs font-black text-slate-800 dark:text-white">ম্যাথ কুইজ</span>
               </div>
               <div class="text-[10px] text-emerald-600 font-bold" id="earn-quiz-count">৫০ টি বাকি</div>
-              <div class="text-[10px] text-slate-400">+২০০ কয়েন</div>
+              <div class="text-[10px] text-slate-400" id="earn-quiz-reward">+২০০ কয়েন</div>
             </button>
           </div>
         </div>
@@ -1237,7 +1237,7 @@
             <i data-lucide="users" class="w-4 h-4"></i>
           </div>
           <div class="font-bold text-xs text-slate-800 dark:text-white mt-1">রেফারেল কোড</div>
-          <div class="text-[10px] text-purple-700 dark:text-purple-400 font-semibold">প্রতি রেফারে ২২ কয়েন</div>
+          <div id="service-menu-ref-bonus" class="text-[10px] text-purple-700 dark:text-purple-400 font-semibold">প্রতি রেফারে ১২০০ কয়েন</div>
         </button>
 
         <button onclick="closeModal('modal-services-menu'); switchTab('deposit');" class="p-3 rounded-2xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-all flex flex-col items-start gap-1 text-left active:scale-95">
@@ -1558,7 +1558,7 @@
         <span>ইনস্ট্যান্ট স্পনসর রিওয়ার্ড</span>
       </div>
       <h3 class="font-black text-slate-800 dark:text-white text-base mb-0.5 text-emerald-600">ম্যাথ কুইজ</h3>
-      <p class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">সঠিক উত্তর নির্বাচন করে স্পনসর ভেরিফিকেশনে +১৫ কয়েন সংগ্রহ করুন</p>
+      <p id="quiz-modal-reward-desc" class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">সঠিক উত্তর নির্বাচন করে স্পনসর ভেরিফিকেশনে +২০০ কয়েন সংগ্রহ করুন</p>
       <div id="quiz-question-box" class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-white text-xl font-black font-mono py-3 rounded-2xl mb-3 border border-slate-200 dark:border-slate-700 shadow-inner">12 + 8 = ?</div>
       <div id="quiz-options-grid" class="grid grid-cols-2 gap-2"></div>
     </div>
@@ -1574,7 +1574,7 @@
       <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">কার্ডটি আনলক করতে টাস্কটি সম্পন্ন করুন</p>
       
       <div class="relative w-48 h-32 mx-auto rounded-2xl overflow-hidden border border-slate-300 dark:border-slate-600 bg-amber-100 flex items-center justify-center shadow-inner">
-        <div class="text-2xl font-black text-amber-700 font-mono">+২২ কয়েন 🎉</div>
+        <div id="scratch-modal-reward-text" class="text-2xl font-black text-amber-700 font-mono">+২০০ কয়েন 🎉</div>
         <canvas id="scratch-canvas" width="192" height="128" class="absolute inset-0 cursor-pointer"></canvas>
       </div>
 
@@ -2396,7 +2396,7 @@
     function triggerScratchWithTwoAds() {
       if ((appData.user.dailyScratch || 0) <= 0) return alert('আজকের স্ক্র্যাচ কার্ড শেষ!');
       closeModal('modal-scratch');
-      const scratchReward = Number(getAdminConfig('rewardScratch', 22));
+      const scratchReward = Number(getAdminConfig('rewardScratch', 200));
       playThreeAdsSequence('general', 0, 'স্ক্র্যাচ কার্ড আনলক', 'dailyScratch', () => {
         awardCoins(scratchReward, 'স্ক্র্যাচ কার্ড');
         try { safeConfetti({ particleCount: 50, spread: 60 }); } catch (e) {}
@@ -2409,7 +2409,7 @@
       const userCode = document.getElementById('captcha-input').value.trim().toUpperCase();
       if (userCode === curCaptcha) {
         closeModal('modal-captcha');
-        const capReward = Number(getAdminConfig('rewardCaptcha', 10));
+        const capReward = Number(getAdminConfig('rewardCaptcha', 200));
         playThreeAdsSequence('general', 0, 'ক্যাপচা জব ভেরিফিকেশন', 'dailyCaptcha', () => {
           awardCoins(capReward, 'ক্যাপচা টাইপিং');
           showToast(`🎉 ক্যাপচা সঠিক! +${capReward} কয়েন অর্জিত!`);
@@ -2754,12 +2754,12 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       setElText('adsgram-count', `${u.dailyAdsgram || 0} টি`);
       setElText('monetag-count', `${u.dailyMonetag || 0} টি`);
 
-      const rAdsgram = Number(getAdminConfig('rewardAdsgram', 18));
-      const rMonetag = Number(getAdminConfig('rewardThreeAds', 25));
-      const rWatch = Number(getAdminConfig('rewardWatchAd', 28));
-      const rUnlock = Number(getAdminConfig('rewardUnlockExtra', 42));
-      const rInstant = Number(getAdminConfig('rewardInstant', 20));
-      const rQuiz = Number(getAdminConfig('rewardQuiz', 15));
+      const rAdsgram = Number(getAdminConfig('rewardAdsgram', 200));
+      const rMonetag = Number(getAdminConfig('rewardThreeAds', 200));
+      const rWatch = Number(getAdminConfig('rewardWatchAd', 200));
+      const rUnlock = Number(getAdminConfig('rewardUnlockExtra', 200));
+      const rInstant = Number(getAdminConfig('rewardInstant', 200));
+      const rQuiz = Number(getAdminConfig('rewardQuiz', 200));
 
       setElText('earn-adsgram-count', `${u.dailyAdsgram || 0} টি বাকি`);
       setElText('earn-monetag-count', `${u.dailyMonetag || 0} টি বাকি`);
@@ -2768,17 +2768,28 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       setElText('earn-instant-count', `${u.dailyInstant || 0} টি বাকি`);
       setElText('earn-quiz-count', `${u.dailyQuiz || 0} টি বাকি`);
 
+      setElText('earn-adsgram-reward', `+${rAdsgram} কয়েন · Rewarded`);
+      setElText('earn-monetag-reward', `+${rMonetag} কয়েন`);
+      setElText('earn-watch-reward', `+${rWatch} কয়েন`);
+      setElText('earn-unlock-reward', `+${rUnlock} কয়েন`);
+      setElText('earn-instant-reward', `+${rInstant} কয়েন`);
+      setElText('earn-quiz-reward', `+${rQuiz} কয়েন`);
+
       setElText('watch-ad-count', `+${rWatch} • ${u.dailyWatchAd || 0}টি`);
       setElText('unlock-extra-count', `+${rUnlock} • ${u.dailyUnlockExtra || 0}টি`);
       setElText('instant-count', `+${rInstant} • ${u.dailyInstant || 0}টি`);
 
-      const rScratch = Number(getAdminConfig('rewardScratch', 22));
+      const rScratch = Number(getAdminConfig('rewardScratch', 200));
       const rCaptcha = Number(getAdminConfig('rewardCaptcha', 10));
       const rDailyBonus = Number(getAdminConfig('dailyCheckinBonusCoins', 12));
+      const rRefBonus = Number(getAdminConfig('referralBonusCoins', 1200));
       setElText('daily-bonus-badge', `+${rDailyBonus} কয়েন`);
       setElText('scratch-card-sub', `+${rScratch} কয়েন ফিক্সড`);
+      setElText('scratch-modal-reward-text', `+${rScratch} কয়েন 🎉`);
       setElText('quiz-card-sub', `+${rQuiz} কয়েন সহজে`);
+      setElText('quiz-modal-reward-desc', `সঠিক উত্তর নির্বাচন করে স্পনসর ভেরিফিকেশনে +${rQuiz} কয়েন সংগ্রহ করুন`);
       setElText('captcha-card-sub', `+${rCaptcha} কয়েন প্রতিবার`);
+      setElText('service-menu-ref-bonus', `প্রতি রেফারে ${rRefBonus} কয়েন`);
 
       COINS_PER_BDT = Number(getAdminConfig('coinsPerBdt', 100));
       MIN_WITHDRAW_BDT = Number(getAdminConfig('minWithdrawBDT', 50));
@@ -3004,6 +3015,9 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     }
     function openScratchModal() {
       if ((appData.user.dailyScratch || 0) <= 0) return alert('আজকের স্ক্র্যাচ কার্ড শেষ!');
+      const rScratch = Number(getAdminConfig('rewardScratch', 200));
+      const scratchTxt = document.getElementById('scratch-modal-reward-text');
+      if (scratchTxt) scratchTxt.innerText = `+${rScratch} কয়েন 🎉`;
       document.getElementById('modal-scratch').classList.remove('hidden');
       const canvas = document.getElementById('scratch-canvas');
       const ctx = canvas.getContext('2d');
@@ -3011,6 +3025,10 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       ctx.fillRect(0, 0, 192, 128);
     }
     function openQuizModal() {
+      if ((appData.user.dailyQuiz || 0) <= 0) return alert('আজকের ম্যাথ কুইজ শেষ!');
+      const rwQuiz = Number(getAdminConfig('rewardQuiz', 200));
+      const qDesc = document.getElementById('quiz-modal-reward-desc');
+      if (qDesc) qDesc.innerText = `সঠিক উত্তর নির্বাচন করে স্পনসর ভেরিফিকেশনে +${rwQuiz} কয়েন সংগ্রহ করুন`;
       document.getElementById('modal-quiz').classList.remove('hidden');
       const n1 = Math.floor(Math.random() * 10) + 5;
       const n2 = Math.floor(Math.random() * 10) + 2;
@@ -3025,9 +3043,10 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         b.onclick = () => {
           if (opt === ans) {
             closeModal('modal-quiz');
-            showToast('🎉 সঠিক উত্তর! স্পনসর বিজ্ঞাপন ভেরিফিকেশনের পর +১৫ কয়েন যোগ হবে...');
-            playSingleAdSequence('cpm', 15, 'ম্যাথ কুইজ', null, () => {
-              showToast('🎉 ম্যাথ কুইজ রিওয়ার্ড সফল! +১৫ কয়েন যোগ হয়েছে!');
+            const currentQuizRw = Number(getAdminConfig('rewardQuiz', 200));
+            showToast(`🎉 সঠিক উত্তর! স্পনসর বিজ্ঞাপন ভেরিফিকেশনের পর +${currentQuizRw} কয়েন যোগ হবে...`);
+            playSingleAdSequence('cpm', currentQuizRw, 'ম্যাথ কুইজ', 'dailyQuiz', () => {
+              showToast(`🎉 ম্যাথ কুইজ রিওয়ার্ড সফল! +${currentQuizRw} কয়েন যোগ হয়েছে!`);
             });
           } else {
             showToast('❌ ভুল উত্তর! আবার চেষ্টা করুন');
@@ -4282,7 +4301,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           `;
           lucide.createIcons();
         }
-        showToast('🎉 টাইম চেস্ট থেকে +২৫ কয়েন অ্যাকাউন্টে যোগ হয়েছে!');
+        showToast('🎉 টাইম চেস্ট থেকে +২০০ কয়েন অ্যাকাউন্টে যোগ হয়েছে!');
       });
     }
 
