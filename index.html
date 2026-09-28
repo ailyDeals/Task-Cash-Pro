@@ -52,7 +52,7 @@
   <div id="toast-container" class="fixed top-4 right-4 z-50 pointer-events-none space-y-2 max-w-[90vw]"></div>
 
   <!-- AUTH SCREEN -->
-  <div id="auth-screen" class="w-full max-w-md bg-slate-900 min-h-screen flex flex-col justify-center p-5 relative z-40 text-white">
+  <div id="auth-screen" class="w-full max-w-xl bg-slate-900 min-h-screen flex flex-col justify-center p-5 relative z-40 text-white">
     <div class="bg-slate-800/90 border border-slate-700 rounded-3xl p-6 shadow-2xl backdrop-blur-md">
       <div class="text-center mb-6">
         <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center text-3xl font-black mx-auto mb-3 shadow-lg shadow-emerald-500/20">৳</div>
@@ -113,486 +113,458 @@
     </div>
   </div>
 
-  <!-- MAIN APP CONTAINER -->
-  <div id="main-app-container" class="w-full max-w-md bg-slate-50 dark:bg-slate-900 min-h-screen shadow-2xl relative flex flex-col pb-24 border-x border-slate-200 dark:border-slate-800 hidden">
+  <!-- MAIN APP CONTAINER (Spacious Native Super-App Layout) -->
+  <div id="main-app-container" class="w-full max-w-xl bg-[#F4F7FB] dark:bg-[#0B1120] min-h-screen shadow-2xl relative flex flex-col pb-24 border-x border-slate-200/80 dark:border-slate-800/80 hidden">
     
-    <!-- HEADER -->
-    <header class="bg-gradient-to-br from-slate-900 via-slate-850 to-emerald-950 text-white p-4.5 rounded-b-[2rem] shadow-2xl relative overflow-hidden border-b border-emerald-500/20">
-      <div class="absolute -top-10 -right-10 w-40 h-40 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
-      <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-      <div class="flex items-center justify-between mb-3.5 relative z-10">
-        <div class="flex items-center gap-3 cursor-pointer group" onclick="switchTab('profile')">
-          <div class="relative">
-            <div id="u-avatar" class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-black text-xl shadow-lg shadow-emerald-500/25 border border-emerald-300/40">র</div>
-            <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-400 border-2 border-slate-900 flex items-center justify-center text-[8px] font-black text-slate-950">✓</span>
+    <!-- COMPACT STICKY NATIVE TOP APP BAR -->
+    <header class="sticky top-0 z-30 bg-slate-900/95 backdrop-blur-xl text-white px-4 py-3 shadow-md border-b border-slate-800/80">
+      <div class="flex items-center justify-between gap-2">
+        <!-- Left: User Profile Quick Tap -->
+        <div class="flex items-center gap-2.5 cursor-pointer group min-w-0" onclick="switchTab('profile')">
+          <div class="relative shrink-0">
+            <div id="u-avatar" class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center font-black text-base shadow-md border border-emerald-300/40">র</div>
+            <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-900 flex items-center justify-center text-[7px] font-black text-slate-950">✓</span>
           </div>
-          <div>
+          <div class="min-w-0">
             <div class="flex items-center gap-1.5">
-              <h2 id="u-name" class="font-black text-sm leading-tight text-white group-hover:text-emerald-300 transition-colors">রাকিবুল হাসান</h2>
-              <span id="u-rank-badge" class="px-2 py-0.5 rounded-full text-[9px] bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 font-black shadow-xs tracking-wider uppercase">ব্রোঞ্জ</span>
+              <h2 id="u-name" class="font-black text-xs sm:text-sm leading-tight text-white truncate group-hover:text-emerald-300 transition-colors">রাকিবুল হাসান</h2>
+              <span id="u-rank-badge" class="px-1.5 py-0.5 rounded-md text-[8.5px] bg-amber-400/20 text-amber-300 border border-amber-400/30 font-black shrink-0">ব্রোঞ্জ</span>
             </div>
-            <p id="u-phone" class="text-[11px] text-emerald-300/80 font-mono tracking-tight">017XXXXXXXX</p>
+            <p id="u-phone" class="text-[10px] text-slate-400 font-mono tracking-tight truncate">017XXXXXXXX</p>
           </div>
         </div>
 
-        <div class="flex items-center gap-1.5 relative z-10">
-          <button onclick="openAeroAiModal()" class="p-2 bg-cyan-500/15 hover:bg-cyan-500/25 rounded-xl border border-cyan-400/30 text-cyan-300 transition-all active:scale-95 shadow-xs" title="Aero AI গাইড">
+        <!-- Right: Live Coin Pill + Clean App Actions -->
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button onclick="switchTab('wallet')" class="flex items-center gap-1.5 bg-slate-800/90 hover:bg-slate-800 border border-amber-500/30 px-2.5 py-1.5 rounded-xl active:scale-95 transition-all">
+            <span class="w-4 h-4 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 text-slate-950 flex items-center justify-center font-black text-[9px]">৳</span>
+            <span id="top-bar-coins" class="text-xs font-black text-amber-300 font-mono">0</span>
+          </button>
+          <button onclick="openAeroAiModal()" class="glow-ai-btn p-2 bg-cyan-500/15 hover:bg-cyan-500/25 rounded-xl border border-cyan-400/30 text-cyan-300 transition-all active:scale-95" title="Aero AI গাইড">
             <i data-lucide="bot" class="w-4 h-4 text-cyan-300"></i>
           </button>
-          <button onclick="openServicesMenu()" class="p-2 bg-slate-800/80 hover:bg-slate-700/80 rounded-xl border border-slate-700/80 text-white transition-all active:scale-95" title="সার্ভিস সমূহ">
-            <i data-lucide="grid" class="w-4 h-4"></i>
+          <button onclick="openServicesMenu()" class="p-2 bg-slate-800/80 hover:bg-slate-700/80 rounded-xl border border-slate-700/80 text-white transition-all active:scale-95" title="সব সার্ভিস">
+            <i data-lucide="layout-grid" class="w-4 h-4"></i>
           </button>
           <button onclick="openNotificationCenter()" class="relative p-2 bg-slate-800/80 hover:bg-slate-700/80 rounded-xl border border-slate-700/80 text-white transition-all active:scale-95" title="নোটিফিকেশন">
             <i data-lucide="bell" class="w-4 h-4"></i>
             <span id="notif-badge" class="w-2 h-2 rounded-full bg-amber-400 absolute top-1.5 right-1.5 animate-ping hidden"></span>
           </button>
-          <button onclick="toggleDarkMode()" class="p-2 bg-slate-800/80 hover:bg-slate-700/80 rounded-xl border border-slate-700/80 text-white transition-all active:scale-95" title="থিম পরিবর্তন">
+          <button onclick="toggleDarkMode()" class="p-2 bg-slate-800/80 hover:bg-slate-700/80 rounded-xl border border-slate-700/80 text-white transition-all active:scale-95" title="থিম">
             <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
-          </button>
-          <button onclick="handleUserLogout()" title="লগআউট" class="p-2 bg-rose-500/15 hover:bg-rose-500/25 rounded-xl border border-rose-500/30 text-rose-300 transition-all active:scale-95">
-            <i data-lucide="log-out" class="w-4 h-4"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- Level Progress Bar -->
-      <div class="bg-slate-950/60 rounded-2xl p-2.5 mb-3.5 border border-slate-800/80 backdrop-blur-sm relative z-10">
-        <div class="flex justify-between items-center text-[11px] font-bold text-slate-300 mb-1.5">
-          <span id="rank-level-label" class="flex items-center gap-1.5 text-amber-300">
-            <i data-lucide="crown" class="w-3.5 h-3.5"></i> লেভেল: ব্রোঞ্জ মেম্বার
-          </span>
-          <span id="rank-progress-text" class="font-mono text-emerald-400 font-black">০ / ৫০০ কয়েন</span>
-        </div>
-        <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
-          <div id="rank-progress-bar" class="h-full bg-gradient-to-r from-amber-400 via-yellow-300 to-emerald-400 rounded-full transition-all duration-700 shadow-sm" style="width: 10%;"></div>
-        </div>
-      </div>
-
-      <!-- Modern Futuristic Balances Grid -->
-      <div class="grid grid-cols-2 gap-3 relative z-10">
-        <div class="bg-gradient-to-b from-slate-800/90 to-slate-900/95 border border-amber-500/30 rounded-2xl p-3.5 shadow-xl shadow-black/40 relative overflow-hidden group">
-          <div class="absolute -right-2 -bottom-2 opacity-15 pointer-events-none">
-            <div class="w-16 h-16 rounded-full bg-amber-400 blur-xl"></div>
-          </div>
-          
-          <div class="flex items-center justify-between text-xs mb-1">
-            <span class="text-slate-400 font-bold flex items-center gap-1 text-[11px]">
-              <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> মোট কয়েন
-            </span>
-            <div class="coin-float w-5 h-5 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 text-slate-950 flex items-center justify-center font-black text-[10px] shadow-sm">
-              ৳
-            </div>
-          </div>
-          
-          <div class="flex items-baseline gap-1 my-0.5">
-            <span id="u-coins" class="text-2xl font-black text-amber-300 font-mono tracking-tight drop-shadow-xs">0</span>
-            <span class="text-[10px] font-bold text-amber-500/80">কয়েন</span>
-          </div>
-          
-          <div id="u-coins-bdt" class="text-[11px] font-bold font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-lg inline-block my-1">
-            ≈ ৳০.০০ BDT
-          </div>
-
-          <button onclick="switchTab('withdraw')" class="mt-2 w-full py-2 bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 rounded-xl text-xs font-black text-center shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
-            <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
-            <span>টাকা তুলুন (Withdraw)</span>
-          </button>
-        </div>
-
-        <div class="bg-gradient-to-b from-slate-800/90 to-slate-900/95 border border-emerald-500/30 rounded-2xl p-3.5 shadow-xl shadow-black/40 relative overflow-hidden group">
-          <div class="flex items-center justify-between text-xs mb-1">
-            <span class="text-slate-400 font-bold flex items-center gap-1 text-[11px]">
-              <span class="w-2 h-2 rounded-full bg-emerald-400"></span> ক্যাম্পেইন ফান্ড
-            </span>
-            <div class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-[10px]">
-              <i data-lucide="credit-card" class="w-3 h-3"></i>
-            </div>
-          </div>
-          
-          <div class="flex items-baseline gap-1 my-0.5">
-            <span id="u-cash" class="text-2xl font-black text-white font-mono tracking-tight drop-shadow-xs">৳০.০০</span>
-          </div>
-          
-          <div class="text-[10px] font-bold text-emerald-300/80 bg-slate-800/60 border border-slate-700/60 px-2 py-0.5 rounded-lg inline-block my-1">
-            ডিপোজিট ব্যালেন্স
-          </div>
-
-          <button onclick="switchTab('deposit')" class="mt-2 w-full py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-black text-center shadow-md active:scale-95 transition-all flex items-center justify-center gap-1">
-            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
-            <span>+ ডিপোজিট করুন</span>
           </button>
         </div>
       </div>
     </header>
 
-    <!-- MARQUEE NOTICE -->
-    <div class="bg-amber-50 dark:bg-amber-950/40 border-y border-amber-200 dark:border-amber-800/40 px-3 py-1.5 flex items-center gap-2 overflow-hidden text-xs text-amber-900 dark:text-amber-200 font-medium">
-      <span class="font-bold text-amber-800 dark:text-amber-300 bg-amber-200 dark:bg-amber-900/60 px-1.5 py-0.5 rounded text-[10px] shrink-0 flex items-center gap-1">
-        <i data-lucide="megaphone" class="w-3 h-3"></i> নোটিশ:
-      </span>
-      <div class="overflow-hidden whitespace-nowrap w-full">
-        <div id="notice-text" class="animate-marquee">
-          📢 স্বাগতম Task Cash Pro-তে! ছোট ছোট মাইক্রো-টাস্ক সম্পন্ন করুন, লাকি স্পিন ও স্ক্র্যাচ কার্ডে নিয়মিত কাজ করে কয়েন জমান। বিকাশ/নগদে ১০০ টাকা হলেই উত্তোলন করুন।
-        </div>
-      </div>
-    </div>
-
-    <!-- MAIN SCROLLABLE BODY -->
-    <main class="flex-1 p-4 pb-28 overflow-y-auto space-y-4">
+    <!-- MAIN SCROLLABLE BODY (Generous Padding & Breathing Room) -->
+    <main class="flex-1 p-4 sm:p-5 pb-28 overflow-y-auto space-y-5">
       
-      <!-- VIEW: HOME -->
-      <section id="view-home" class="space-y-3.5">
+      <!-- VIEW: HOME (Clean Native Super-App Dashboard) -->
+      <section id="view-home" class="space-y-5">
 
-        <!-- Compact Daily Progress + Check-in + Time Chest -->
-        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3.5 shadow-sm space-y-3">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                <i data-lucide="target" class="w-4.5 h-4.5"></i>
+        <!-- 1. Compact Notice Ticker -->
+        <div class="bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 rounded-2xl px-3 py-2 flex items-center gap-2 overflow-hidden text-xs text-slate-700 dark:text-slate-200 shadow-xs">
+          <span class="font-black text-amber-600 dark:text-amber-400 bg-amber-500/15 px-2 py-0.5 rounded-lg text-[10px] shrink-0 flex items-center gap-1">
+            <i data-lucide="megaphone" class="w-3 h-3"></i> নোটিশ
+          </span>
+          <div class="overflow-hidden whitespace-nowrap w-full">
+            <div id="notice-text" class="animate-marquee text-[11px] font-medium">
+              📢 স্বাগতম Task Cash Pro-তে! ছোট ছোট মাইক্রো-টাস্ক সম্পন্ন করুন, লাকি স্পিন ও স্ক্র্যাচ কার্ডে নিয়মিত কাজ করে কয়েন জমান। বিকাশ/নগদে ১০০ টাকা হলেই উত্তোলন করুন।
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Super-App Unified Wallet Hero Card (Only on Home Tab!) -->
+        <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950 text-white rounded-3xl p-5 shadow-xl border border-emerald-500/25 relative overflow-hidden">
+          <div class="absolute -top-12 -right-12 w-44 h-44 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="absolute -bottom-12 -left-12 w-44 h-44 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div class="grid grid-cols-2 gap-4 relative z-10 pb-4 border-b border-slate-800/80">
+            <!-- Total Coins -->
+            <div>
+              <div class="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> মোট কয়েন ব্যালেন্স
               </div>
+              <div class="flex items-baseline gap-1.5 mt-1">
+                <span id="u-coins" class="text-2xl sm:text-3xl font-black text-amber-300 font-mono tracking-tight">0</span>
+                <span class="text-[11px] font-bold text-amber-400/80">কয়েন</span>
+              </div>
+              <div id="u-coins-bdt" class="text-[11px] font-bold font-mono text-emerald-400 bg-emerald-500/15 border border-emerald-500/25 px-2.5 py-0.5 rounded-lg inline-block mt-1.5">
+                ≈ ৳০.০০ BDT
+              </div>
+            </div>
+
+            <!-- Campaign / Deposit Balance -->
+            <div class="border-l border-slate-800/80 pl-4 flex flex-col justify-between">
               <div>
-                <h3 class="text-sm font-black text-slate-800 dark:text-white">আজকের টার্গেট</h3>
-                <p id="daily-goal-text" class="text-[11px] text-slate-500 dark:text-slate-400">০ / ১৫০ কয়েন অর্জিত</p>
-              </div>
-            </div>
-            <div class="relative w-12 h-12 flex items-center justify-center shrink-0">
-              <svg class="w-12 h-12 -rotate-90" viewBox="0 0 36 36">
-                <path class="text-slate-200 dark:text-slate-700" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                <path id="goal-ring-path" class="text-emerald-500 transition-all duration-700" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-              </svg>
-              <span id="goal-percent-text" class="absolute text-[10px] font-black font-mono text-slate-700 dark:text-white">0%</span>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 gap-2.5">
-            <div class="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 rounded-xl p-2.5 flex flex-col justify-between">
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-[11px] font-bold text-amber-700 dark:text-amber-300 flex items-center gap-1">
-                  <i data-lucide="gift" class="w-3.5 h-3.5"></i> ডেইলি বোনাস
-                </span>
-                <span id="daily-bonus-badge" class="text-[11px] font-black text-amber-600 dark:text-amber-400 font-mono">+১২</span>
-              </div>
-              <button id="btn-checkin" onclick="claimDailyBonus()" class="mt-1.5 w-full py-2 bg-amber-500 hover:bg-amber-400 text-white font-black text-[11px] rounded-lg active:scale-95 transition-all">
-                ক্লেইম করুন
-              </button>
-            </div>
-            <div class="bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-200 dark:border-cyan-800/40 rounded-xl p-2.5 flex flex-col justify-between">
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-[11px] font-bold text-cyan-700 dark:text-cyan-300 flex items-center gap-1">
-                  <i data-lucide="clock" class="w-3.5 h-3.5"></i> টাইম চেস্ট
-                </span>
-                <span id="idle-bonus-badge" class="text-[11px] font-black text-emerald-600 dark:text-emerald-400 font-mono">+২০০</span>
-              </div>
-              <div class="flex items-center gap-1.5 mt-1">
-                <div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
-                  <div id="idle-progress-bar" class="bg-gradient-to-r from-cyan-400 to-emerald-400 h-full w-0 transition-all duration-500"></div>
+                <div class="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span> ডিপোজিট ব্যালেন্স
                 </div>
-                <span id="idle-timer-text" class="text-[10px] font-mono font-bold text-cyan-600 dark:text-cyan-300">০৩:০০</span>
+                <div class="mt-1">
+                  <span id="u-cash" class="text-xl sm:text-2xl font-black text-white font-mono tracking-tight">৳০.০০</span>
+                </div>
               </div>
-              <button id="btn-idle-claim" onclick="claimIdleReward()" disabled class="mt-1.5 w-full py-2 bg-slate-200 dark:bg-slate-700 text-slate-500 font-black text-[11px] rounded-lg transition-all flex items-center justify-center gap-1">
-                <i data-lucide="lock" class="w-3 h-3"></i> লকড
-              </button>
+              <!-- Level Progress inside card -->
+              <div class="mt-2">
+                <div class="flex justify-between items-center text-[10px] font-bold text-slate-300 mb-1">
+                  <span id="rank-level-label" class="text-amber-300 truncate">লেভেল: ব্রোঞ্জ</span>
+                  <span id="rank-progress-text" class="font-mono text-emerald-400 hidden">০/৫০০</span>
+                </div>
+                <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                  <div id="rank-progress-bar" class="h-full bg-gradient-to-r from-amber-400 to-emerald-400 rounded-full transition-all duration-700" style="width: 10%;"></div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- TimeWall Promo Banner -->
-        <div id="home-timewall-banner" class="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 rounded-2xl p-4 text-white shadow-md">
-          <div class="flex items-start justify-between gap-3 relative z-10">
-            <div class="space-y-1 flex-1">
-              <div class="flex items-center gap-1.5 flex-wrap">
-                <span class="px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-black">🔥 মেগা অফারওয়াল</span>
-                <span class="px-2 py-0.5 rounded-full bg-amber-400/90 text-slate-900 text-[10px] font-bold">হাই পেয়িং</span>
-              </div>
-              <h3 class="text-sm font-black leading-snug">TimeWall গেম ও অ্যাপ টাস্ক</h3>
-              <p class="text-[11px] text-blue-100 leading-relaxed">গেম ডাউনলোড, লেভেল ও সার্ভে করে বড় কয়েন আয় করুন। স্ক্রিনশট দিলেই রিওয়ার্ড!</p>
-            </div>
-            <div class="shrink-0 text-center bg-white/15 backdrop-blur px-2.5 py-2 rounded-xl border border-white/20">
-              <span class="text-[9px] text-cyan-100 font-bold block">সর্বোচ্চ</span>
-              <span class="text-base font-black text-amber-300 font-mono">+৬০০০</span>
-            </div>
-          </div>
-          <div class="flex gap-2 mt-3 relative z-10">
-            <button onclick="openTimeWallOfferwall()" class="flex-1 py-2.5 bg-white text-indigo-700 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-sm">
-              <i data-lucide="external-link" class="w-3.5 h-3.5"></i> কাজ শুরু
+          <!-- Quick Action Buttons inside Hero Card -->
+          <div class="grid grid-cols-2 gap-3 pt-3.5 relative z-10">
+            <button onclick="switchTab('withdraw')" class="py-2.5 px-3 bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 rounded-2xl text-xs font-black shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5">
+              <i data-lucide="wallet" class="w-4 h-4"></i>
+              <span>টাকা তুলুন (Withdraw)</span>
             </button>
-            <button onclick="openTimeWallProofModal()" class="flex-1 py-2.5 bg-amber-400 text-slate-900 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-sm">
-              <i data-lucide="camera" class="w-3.5 h-3.5"></i> প্রুফ জমা
+            <button onclick="switchTab('deposit')" class="py-2.5 px-3 bg-slate-800/90 hover:bg-slate-800 border border-emerald-500/40 text-emerald-300 rounded-2xl text-xs font-black active:scale-95 transition-all flex items-center justify-center gap-1.5">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>+ ফান্ড ডিপোজিট</span>
             </button>
           </div>
         </div>
 
-        <!-- Easy Earning Grid -->
-        <div class="space-y-2">
-          <div class="flex items-center justify-between px-0.5">
-            <h3 class="text-xs font-black text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-              <span class="w-1 h-4 bg-emerald-500 rounded-full"></span> Easy Earning
+        <!-- Hidden target progress compatibility elements -->
+        <div class="hidden">
+          <span id="daily-goal-text"></span>
+          <svg><path id="goal-ring-path" /></svg>
+          <span id="goal-percent-text"></span>
+        </div>
+
+        <!-- 3. Daily Free Bonus & Time Chest (Clean Side-by-Side Cards) -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-slate-800 dark:text-white flex items-center gap-1.5">
+                <span class="w-7 h-7 rounded-xl bg-amber-500/15 text-amber-500 flex items-center justify-center"><i data-lucide="gift" class="w-4 h-4"></i></span>
+                ডেইলি বোনাস
+              </span>
+              <span id="daily-bonus-badge" class="text-xs font-black text-amber-600 dark:text-amber-400 font-mono">+১২</span>
+            </div>
+            <p class="text-[10px] text-slate-500 dark:text-slate-400 my-2">প্রতিদিন এক ক্লিকে ফ্রি কয়েন নিন</p>
+            <button id="btn-checkin" onclick="claimDailyBonus()" class="w-full py-2 bg-amber-500 hover:bg-amber-400 text-white font-black text-xs rounded-xl active:scale-95 transition-all shadow-xs">
+              ক্লেইম করুন
+            </button>
+          </div>
+
+          <div class="bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-slate-800 dark:text-white flex items-center gap-1.5">
+                <span class="w-7 h-7 rounded-xl bg-cyan-500/15 text-cyan-500 flex items-center justify-center"><i data-lucide="clock" class="w-4 h-4"></i></span>
+                টাইম চেস্ট
+              </span>
+              <span id="idle-bonus-badge" class="text-xs font-black text-emerald-600 dark:text-emerald-400 font-mono">+২০০</span>
+            </div>
+            <div class="flex items-center gap-2 my-2">
+              <div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                <div id="idle-progress-bar" class="bg-gradient-to-r from-cyan-400 to-emerald-400 h-full w-0 transition-all duration-500"></div>
+              </div>
+              <span id="idle-timer-text" class="text-[10px] font-mono font-bold text-cyan-600 dark:text-cyan-400">০৩:০০</span>
+            </div>
+            <button id="btn-idle-claim" onclick="claimIdleReward()" disabled class="w-full py-2 bg-slate-200 dark:bg-slate-700 text-slate-500 font-black text-xs rounded-xl transition-all flex items-center justify-center gap-1">
+              <i data-lucide="lock" class="w-3.5 h-3.5"></i> লকড
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. Quick Games & Easy Earning (Clean 4-Icon App Grid) -->
+        <div class="bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 rounded-3xl p-4 shadow-xs space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs sm:text-sm font-black text-slate-800 dark:text-white flex items-center gap-2">
+              <span class="w-1.5 h-4 bg-emerald-500 rounded-full"></span> কুইক গেমস ও ইজি আর্নিং
             </h3>
-            <button onclick="switchTab('earn')" class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5">
-              সব দেখুন <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            <button onclick="switchTab('earn')" class="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5 hover:underline">
+              আর্ন সেন্টার <i data-lucide="chevron-right" class="w-4 h-4"></i>
             </button>
           </div>
-          <div class="grid grid-cols-4 gap-2">
-            <button onclick="openSpinModal()" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-2.5 flex flex-col items-center gap-1.5 shadow-sm hover:border-amber-400/60 transition-all">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center shadow-sm">
-                <i data-lucide="sparkles" class="w-5 h-5"></i>
+          <div class="grid grid-cols-4 gap-2.5 pt-1">
+            <button onclick="openSpinModal()" class="card-touch-feedback flex flex-col items-center gap-1.5 p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all">
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center shadow-md shadow-amber-500/20">
+                <i data-lucide="sparkles" class="w-6 h-6"></i>
               </div>
-              <span class="text-[10px] font-black text-slate-800 dark:text-white text-center leading-tight">লাকি স্পিন</span>
-              <span id="spin-count" class="text-[9px] text-amber-600 dark:text-amber-400 font-bold">৫০ টি</span>
+              <span class="text-[11px] font-black text-slate-800 dark:text-white text-center leading-tight">লাকি স্পিন</span>
+              <span id="spin-count" class="text-[10px] text-amber-600 dark:text-amber-400 font-bold">৫০ টি</span>
             </button>
-            <button onclick="openScratchModal()" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-2.5 flex flex-col items-center gap-1.5 shadow-sm hover:border-purple-400/60 transition-all">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 text-white flex items-center justify-center shadow-sm">
-                <i data-lucide="gift" class="w-5 h-5"></i>
+            <button onclick="openScratchModal()" class="card-touch-feedback flex flex-col items-center gap-1.5 p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all">
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-purple-500/20">
+                <i data-lucide="gift" class="w-6 h-6"></i>
               </div>
-              <span class="text-[10px] font-black text-slate-800 dark:text-white text-center leading-tight">স্ক্র্যাচ</span>
-              <span id="scratch-count" class="text-[9px] text-purple-600 dark:text-purple-400 font-bold">৫০ টি</span>
+              <span class="text-[11px] font-black text-slate-800 dark:text-white text-center leading-tight">স্ক্র্যাচ</span>
+              <span id="scratch-count" class="text-[10px] text-purple-600 dark:text-purple-400 font-bold">৫০ টি</span>
             </button>
-            <button onclick="openQuizModal()" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-2.5 flex flex-col items-center gap-1.5 shadow-sm hover:border-rose-400/60 transition-all">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-orange-500 text-white flex items-center justify-center shadow-sm">
-                <i data-lucide="brain" class="w-5 h-5"></i>
+            <button onclick="openQuizModal()" class="card-touch-feedback flex flex-col items-center gap-1.5 p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all">
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-500 to-orange-500 text-white flex items-center justify-center shadow-md shadow-rose-500/20">
+                <i data-lucide="brain" class="w-6 h-6"></i>
               </div>
-              <span class="text-[10px] font-black text-slate-800 dark:text-white text-center leading-tight">ম্যাথ কুইজ</span>
-              <span id="quiz-count" class="text-[9px] text-rose-600 dark:text-rose-400 font-bold">১৫ টি</span>
+              <span class="text-[11px] font-black text-slate-800 dark:text-white text-center leading-tight">ম্যাথ কুইজ</span>
+              <span id="quiz-count" class="text-[10px] text-rose-600 dark:text-rose-400 font-bold">১৫ টি</span>
             </button>
-            <button onclick="openCaptchaModal()" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-2.5 flex flex-col items-center gap-1.5 shadow-sm hover:border-cyan-400/60 transition-all">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-teal-500 text-white flex items-center justify-center shadow-sm">
-                <i data-lucide="keyboard" class="w-5 h-5"></i>
+            <button onclick="openCaptchaModal()" class="card-touch-feedback flex flex-col items-center gap-1.5 p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all">
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-teal-500 text-white flex items-center justify-center shadow-md shadow-cyan-500/20">
+                <i data-lucide="keyboard" class="w-6 h-6"></i>
               </div>
-              <span class="text-[10px] font-black text-slate-800 dark:text-white text-center leading-tight">ক্যাপচা</span>
-              <span id="captcha-count" class="text-[9px] text-cyan-600 dark:text-cyan-400 font-bold">২০ টি</span>
+              <span class="text-[11px] font-black text-slate-800 dark:text-white text-center leading-tight">ক্যাপচা</span>
+              <span id="captcha-count" class="text-[10px] text-cyan-600 dark:text-cyan-400 font-bold">২০ টি</span>
             </button>
           </div>
         </div>
 
-        <!-- Special / More Features Grid -->
-        <div class="space-y-2">
-          <h3 class="text-xs font-black text-slate-800 dark:text-slate-200 flex items-center gap-1.5 px-0.5">
-            <span class="w-1 h-4 bg-indigo-500 rounded-full"></span> Special Earnings
+        <!-- 5. Main Services & Features (Spacious 2x2 Grid) -->
+        <div class="space-y-2.5">
+          <h3 class="text-xs sm:text-sm font-black text-slate-800 dark:text-white flex items-center gap-2 px-1">
+            <span class="w-1.5 h-4 bg-indigo-500 rounded-full"></span> মূল আর্নিং ও সার্ভিস সমূহ
           </h3>
-          <div class="grid grid-cols-2 gap-2.5">
-            <button onclick="switchTab('tasks')" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 flex items-center gap-3 text-left shadow-sm hover:border-emerald-400/50 transition-all">
-              <div class="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                <i data-lucide="check-square" class="w-5 h-5"></i>
+          <div class="grid grid-cols-2 gap-3">
+            <button onclick="switchTab('earn')" class="card-touch-feedback bg-white dark:bg-slate-800/90 border border-amber-400/50 dark:border-amber-500/40 rounded-2xl p-3.5 flex items-center gap-3 text-left shadow-xs hover:border-amber-400 transition-all">
+              <div class="w-11 h-11 rounded-2xl bg-amber-500/15 text-amber-500 flex items-center justify-center shrink-0">
+                <i data-lucide="play-circle" class="w-6 h-6"></i>
               </div>
               <div class="min-w-0">
-                <div class="text-xs font-black text-slate-800 dark:text-white truncate">মাইক্রো-টাস্ক</div>
-                <div class="text-[10px] text-slate-500 dark:text-slate-400">ভিজিট ও চ্যানেল সাব</div>
+                <div class="text-xs sm:text-sm font-black text-slate-800 dark:text-white truncate">ভিআইপি ও ভিডিও এড</div>
+                <div class="text-[11px] text-amber-600 dark:text-amber-400 font-bold">আনলিমিটেড কয়েন</div>
               </div>
             </button>
-            <button onclick="switchTab('refer')" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 flex items-center gap-3 text-left shadow-sm hover:border-purple-400/50 transition-all">
-              <div class="w-10 h-10 rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
-                <i data-lucide="users" class="w-5 h-5"></i>
+            <button onclick="switchTab('tasks')" class="card-touch-feedback bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 rounded-2xl p-3.5 flex items-center gap-3 text-left shadow-xs hover:border-emerald-400/50 transition-all">
+              <div class="w-11 h-11 rounded-2xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <i data-lucide="check-square" class="w-6 h-6"></i>
               </div>
               <div class="min-w-0">
-                <div class="text-xs font-black text-slate-800 dark:text-white truncate">রেফারেল</div>
-                <div id="home-ref-bonus-sub" class="text-[10px] text-slate-500 dark:text-slate-400">+১২০০ কয়েন + ১০%</div>
+                <div class="text-xs sm:text-sm font-black text-slate-800 dark:text-white truncate">মাইক্রো-টাস্ক</div>
+                <div class="text-[11px] text-slate-500 dark:text-slate-400">ভিজিট ও সাবস্ক্রাইব</div>
               </div>
             </button>
-            <button onclick="switchTab('monthly_salary')" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 flex items-center gap-3 text-left shadow-sm hover:border-amber-400/50 transition-all">
-              <div class="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                <i data-lucide="award" class="w-5 h-5"></i>
+            <button onclick="switchTab('refer')" class="card-touch-feedback bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 rounded-2xl p-3.5 flex items-center gap-3 text-left shadow-xs hover:border-purple-400/50 transition-all">
+              <div class="w-11 h-11 rounded-2xl bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+                <i data-lucide="users" class="w-6 h-6"></i>
               </div>
               <div class="min-w-0">
-                <div class="text-xs font-black text-slate-800 dark:text-white truncate">মাসিক স্যালারি</div>
-                <div class="text-[10px] text-slate-500 dark:text-slate-400">৳৫০০ - ৩,০০০</div>
+                <div class="text-xs sm:text-sm font-black text-slate-800 dark:text-white truncate">রেফারেল বোনাস</div>
+                <div id="home-ref-bonus-sub" class="text-[11px] text-purple-600 dark:text-purple-400 font-bold">+১২০০ কয়েন + ১০%</div>
               </div>
             </button>
-            <button onclick="switchTab('deposit')" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 flex items-center gap-3 text-left shadow-sm hover:border-sky-400/50 transition-all">
-              <div class="w-10 h-10 rounded-xl bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
-                <i data-lucide="credit-card" class="w-5 h-5"></i>
+            <button onclick="switchTab('monthly_salary')" class="card-touch-feedback bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 rounded-2xl p-3.5 flex items-center gap-3 text-left shadow-xs hover:border-cyan-400/50 transition-all">
+              <div class="w-11 h-11 rounded-2xl bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 flex items-center justify-center shrink-0">
+                <i data-lucide="award" class="w-6 h-6"></i>
               </div>
               <div class="min-w-0">
-                <div class="text-xs font-black text-slate-800 dark:text-white truncate">ডিপোজিট</div>
-                <div class="text-[10px] text-slate-500 dark:text-slate-400">ক্যাম্পেইন ফান্ড</div>
+                <div class="text-xs sm:text-sm font-black text-slate-800 dark:text-white truncate">মাসিক স্যালারি</div>
+                <div class="text-[11px] text-slate-500 dark:text-slate-400">৳৫০০ - ৩,০০০/মাস</div>
               </div>
             </button>
           </div>
         </div>
 
-        <!-- Promo Code (compact) -->
-        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 flex items-center gap-2.5 shadow-sm">
-          <div class="w-9 h-9 rounded-xl bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
-            <i data-lucide="tag" class="w-4 h-4"></i>
+        <!-- 6. TimeWall Offerwall Banner -->
+        <div id="home-timewall-banner" class="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 rounded-3xl p-4.5 text-white shadow-md">
+          <div class="flex items-center justify-between gap-3 relative z-10">
+            <div class="space-y-1 flex-1">
+              <div class="flex items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-black">🔥 গ্লোবাল অফারওয়াল</span>
+                <span class="px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black">সর্বোচ্চ +৬০০০ কয়েন</span>
+              </div>
+              <h3 class="text-sm sm:text-base font-black leading-snug pt-0.5">TimeWall গেম ও সার্ভে টাস্ক</h3>
+              <p class="text-[11px] text-blue-100">গেম ডাউনলোড ও সার্ভে সম্পন্ন করে স্ক্রিনশট জমা দিন।</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2.5 mt-3.5 relative z-10">
+            <button onclick="openTimeWallOfferwall()" class="py-2.5 bg-white text-indigo-700 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-xs">
+              <i data-lucide="external-link" class="w-3.5 h-3.5"></i> কাজ শুরু করুন
+            </button>
+            <button onclick="openTimeWallProofModal()" class="py-2.5 bg-amber-400 text-slate-950 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-xs">
+              <i data-lucide="camera" class="w-3.5 h-3.5"></i> প্রুফ জমা দিন
+            </button>
+          </div>
+        </div>
+
+        <!-- 7. Promo Code & Inline Sponsor Card (No more overlapping at the bottom!) -->
+        <div class="bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 rounded-2xl p-3.5 flex items-center gap-3 shadow-xs">
+          <div class="w-10 h-10 rounded-xl bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
+            <i data-lucide="tag" class="w-5 h-5"></i>
           </div>
           <div class="flex-1 min-w-0">
-            <span class="text-[11px] font-black text-slate-800 dark:text-white block">প্রমো কোড</span>
-            <span class="text-[10px] text-slate-500">+৫০ কয়েন ইনস্ট্যান্ট</span>
+            <span class="text-xs font-black text-slate-800 dark:text-white block">গিফট প্রমো কোড</span>
+            <span class="text-[11px] text-slate-500">কোড বসিয়ে বোনাস কয়েন নিন</span>
           </div>
           <form onsubmit="handleRedeemPromo(event)" class="flex items-center gap-1.5">
-            <input type="text" id="promo-input" placeholder="কোড" class="w-20 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1.5 text-xs font-mono uppercase text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-sky-500" required>
-            <button type="submit" class="px-2.5 py-1.5 bg-sky-600 hover:bg-sky-500 text-white font-black text-[10px] rounded-lg active:scale-95 transition-all">রিডিম</button>
+            <input type="text" id="promo-input" placeholder="CODE" class="w-24 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-2 text-xs font-mono uppercase text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-sky-500" required>
+            <button type="submit" class="px-3 py-2 bg-sky-600 hover:bg-sky-500 text-white font-black text-xs rounded-xl active:scale-95 transition-all">রিডিম</button>
           </form>
+        </div>
+
+        <!-- Inline Sponsor Banner (Moved from fixed bottom so it never blocks screen space) -->
+        <div id="sticky-banner-container" class="w-full">
+          <div onclick="clickStickyBanner()" class="cursor-pointer bg-slate-900 dark:bg-slate-800/95 border border-amber-500/30 hover:border-amber-400 rounded-2xl p-3.5 shadow-sm flex items-center justify-between gap-3 transition-all group">
+            <div class="flex items-center gap-3 overflow-hidden">
+              <div id="sticky-banner-icon-box" class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0 text-amber-400">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+              </div>
+              <div class="overflow-hidden">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[9px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded">Sponsored</span>
+                  <span id="sticky-banner-badge" class="text-[10px] text-emerald-400 font-bold flex items-center gap-0.5">
+                    <i data-lucide="flame" class="w-3 h-3"></i> +৮ কয়েন
+                  </span>
+                </div>
+                <h4 id="sticky-banner-title" class="text-xs font-black text-white truncate mt-0.5 group-hover:text-amber-300 transition-colors">
+                  স্পনসর অফার চেক করুন এবং বোনাস নিশ্চিত করুন
+                </h4>
+                <p id="sticky-banner-desc" class="text-[10px] text-slate-400 truncate">
+                  সরাসরি পার্টনার লিংকে ভিজিট করে অ্যাক্টিভ রিওয়ার্ড পান
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0 text-amber-400 font-bold text-xs bg-amber-500/10 px-2.5 py-1.5 rounded-xl group-hover:bg-amber-500 group-hover:text-slate-950 transition-all">
+              <span>ভিজিট</span>
+              <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </div>
+          </div>
         </div>
 
       </section>
 
-      <!-- VIEW: EARN CENTER -->
-      <section id="view-earn" class="space-y-4 hidden">
-        <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white rounded-3xl p-4 shadow-md">
-          <div class="flex items-center justify-between gap-2">
-            <h3 class="text-base font-black flex items-center gap-1.5">
+      <!-- VIEW: EARN CENTER (Clean, Uncluttered, Spacious App Layout) -->
+      <section id="view-earn" class="space-y-5 hidden">
+        <!-- Clean Compact Top Banner -->
+        <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white rounded-3xl p-4.5 shadow-md flex items-center justify-between gap-3">
+          <div>
+            <h3 class="text-base sm:text-lg font-black flex items-center gap-2">
               <i data-lucide="coins" class="w-5 h-5 text-amber-300"></i> আর্ন সেন্টার
             </h3>
-            <span class="px-2.5 py-0.5 rounded-full bg-emerald-950/60 border border-emerald-300/40 text-emerald-200 text-[10px] font-black flex items-center gap-1">
-              <i data-lucide="shield-check" class="w-3 h-3 text-emerald-300"></i> Anti-Ban Shield সক্রিয়
-            </span>
+            <p class="text-xs text-emerald-100 mt-0.5">নিয়ম মেনে এড ও টাস্ক সম্পন্ন করে আনলিমিটেড কয়েন আয় করুন</p>
           </div>
-          <p class="text-xs text-emerald-100 mt-0.5">সব আর্নিং অপশন এক জায়গায়। ১০০% অর্গানিক নিয়মে কাজ করুন ও নিরাপদে আয় করুন।</p>
+          <span class="px-2.5 py-1 rounded-full bg-emerald-950/50 border border-emerald-300/30 text-emerald-200 text-[10px] font-black shrink-0 flex items-center gap-1">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-300"></i> Verified
+          </span>
         </div>
 
-        <!-- 100% SAFE AD NETWORK RULES & ANTI-FAKE TRAFFIC SHIELD -->
-        <div class="p-3.5 rounded-3xl bg-gradient-to-br from-slate-900 via-emerald-950/90 to-slate-900 border border-emerald-500/40 text-white space-y-2 shadow-md">
-          <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-1.5 text-emerald-300 font-black text-xs">
-              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-              <span>🛡️ ১০০% নিরাপদ ও অর্গানিক ব্রাউজিং নিয়মাবলী:</span>
-            </div>
-            <span class="px-2 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 text-[9px] font-black border border-emerald-500/30">Human Verified</span>
-          </div>
-          <div class="grid grid-cols-1 gap-1.5 text-[10.5px] text-slate-200 leading-relaxed">
-            <div class="flex items-start gap-1.5">
-              <span class="text-emerald-400 font-black">✔</span>
-              <span><strong>ন্যাচারাল স্ক্রোল ও রিডিং:</strong> বিজ্ঞাপনের পেজে গিয়ে চুপচাপ বসে থাকবেন না—স্বাভাবিক ভিজিটরের মতো ওপর-নিচ স্ক্রোল করে কনটেন্ট পড়ুন (১২-১৬ সেকেন্ড)।</span>
-            </div>
-            <div class="flex items-start gap-1.5">
-              <span class="text-emerald-400 font-black">✔</span>
-              <span><strong>অর্গানিক ইন্টারঅ্যাকশন:</strong> সব অ্যাডে অন্ধভাবে ক্লিক না করে যে অফার, বট বা ওয়েবসাইটটি আপনার ভালো লাগে সেটিতে স্বাভাবিকভাবে <strong class="text-amber-300">Sign Up / Start / Visit</strong> করুন।</span>
-            </div>
-            <div class="flex items-start gap-1.5">
-              <span class="text-rose-400 font-black">✖</span>
-              <span><strong class="text-rose-300">কড়া নিষেধাজ্ঞা:</strong> VPN, Proxy, Tor ব্রাউজার বা Auto-Clicker ব্যবহার করা এবং একটানা রোবটের মতো দ্রুত ক্লিক করা সম্পূর্ণ নিষিদ্ধ। সিস্টেমে অটো বট-গার্ড চালু আছে।</span>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h4 class="text-xs font-bold text-slate-500 uppercase mb-2 flex items-center gap-1.5"><i data-lucide="play-circle" class="w-3.5 h-3.5"></i> স্পন্সর ভিডিও ও এড অফার</h4>
-          <div class="grid grid-cols-2 gap-2.5">
-            <button onclick="watchAdsgramAd()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl text-left active:scale-95 transition-all">
-              <div class="flex items-center gap-2 mb-1">
-                <div class="w-8 h-8 rounded-xl bg-sky-600 text-white flex items-center justify-center"><i data-lucide="play-circle" class="w-4 h-4"></i></div>
-                <span class="text-xs font-black text-slate-800 dark:text-white">ভিডিও এড</span>
-              </div>
-              <div class="text-[10px] text-sky-600 font-bold" id="earn-adsgram-count">৫০ টি বাকি</div>
-              <div class="text-[10px] text-slate-400" id="earn-adsgram-reward">+২০০ কয়েন · Rewarded</div>
-            </button>
-            <button onclick="watchThreeAdsOnly()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl text-left active:scale-95 transition-all">
-              <div class="flex items-center gap-2 mb-1">
-                <div class="w-8 h-8 rounded-xl bg-rose-600 text-white flex items-center justify-center"><i data-lucide="clapperboard" class="w-4 h-4"></i></div>
-                <span class="text-xs font-black text-slate-800 dark:text-white">বোনাস এড</span>
-              </div>
-              <div class="text-[10px] text-rose-600 font-bold" id="earn-monetag-count">৫০ টি বাকি</div>
-              <div class="text-[10px] text-slate-400" id="earn-monetag-reward">+২০০ কয়েন</div>
-            </button>
-            <button onclick="startWatchAd()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl text-left active:scale-95 transition-all">
-              <div class="flex items-center gap-2 mb-1">
-                <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-sm">🎬</div>
-                <span class="text-xs font-black text-slate-800 dark:text-white">Watch Ad</span>
-              </div>
-              <div class="text-[10px] text-indigo-600 font-bold" id="earn-watch-count">৫০ টি বাকি</div>
-              <div class="text-[10px] text-slate-400" id="earn-watch-reward">+২০০ কয়েন</div>
-            </button>
-            <button onclick="openUnlockExtraModal()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl text-left active:scale-95 transition-all">
-              <div class="flex items-center gap-2 mb-1">
-                <div class="w-8 h-8 rounded-xl bg-orange-500 text-white flex items-center justify-center"><i data-lucide="unlock" class="w-4 h-4"></i></div>
-                <span class="text-xs font-black text-slate-800 dark:text-white">Unlock Extra</span>
-              </div>
-              <div class="text-[10px] text-orange-600 font-bold" id="earn-unlock-count">৫০ টি বাকি</div>
-              <div class="text-[10px] text-slate-400" id="earn-unlock-reward">+২০০ কয়েন</div>
-            </button>
-            <button onclick="startInstantReward()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl text-left active:scale-95 transition-all">
-              <div class="flex items-center gap-2 mb-1">
-                <div class="w-8 h-8 rounded-xl bg-pink-600 text-white flex items-center justify-center text-sm">🎁</div>
-                <span class="text-xs font-black text-slate-800 dark:text-white">Instant Bonus</span>
-              </div>
-              <div class="text-[10px] text-pink-600 font-bold" id="earn-instant-count">৫০ টি বাকি</div>
-              <div class="text-[10px] text-slate-400" id="earn-instant-reward">+২০০ কয়েন</div>
-            </button>
-            <button onclick="openQuizModal()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl text-left active:scale-95 transition-all">
-              <div class="flex items-center gap-2 mb-1">
-                <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center"><i data-lucide="brain" class="w-4 h-4"></i></div>
-                <span class="text-xs font-black text-slate-800 dark:text-white">ম্যাথ কুইজ</span>
-              </div>
-              <div class="text-[10px] text-emerald-600 font-bold" id="earn-quiz-count">৫০ টি বাকি</div>
-              <div class="text-[10px] text-slate-400" id="earn-quiz-reward">+২০০ কয়েন</div>
-            </button>
-          </div>
-        </div>
-
-        <!-- NEW: 2 PREMIUM UNLIMITED MONETAG SDK AD BUTTONS (+150 COINS EACH, NO LIMIT, STRICT CONTINUE CLICK WARNING) -->
-        <div class="pt-2 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <h4 class="text-xs font-black text-amber-500 uppercase flex items-center gap-1.5">
-              <i data-lucide="crown" class="w-4 h-4 text-amber-500"></i> প্রিমিয়াম আনলিমিটেড এড (লিমিট ছাড়া)
+        <!-- 1. PREMIUM UNLIMITED ADS (Placed right at top for instant access!) -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between px-1">
+            <h4 class="text-xs sm:text-sm font-black text-slate-800 dark:text-white flex items-center gap-1.5">
+              <i data-lucide="crown" class="w-4 h-4 text-amber-500"></i> প্রিমিয়াম আনলিমিটেড এড (নো লিমিট)
             </h4>
-            <span class="px-2 py-0.5 rounded-full bg-rose-500/15 border border-rose-500/40 text-rose-500 text-[9px] font-black animate-pulse">
-              🛰️ অটো অফিসিয়াল ট্র্যাকিং চালু
+            <span class="px-2 py-0.5 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-[10px] font-black">
+              🛰️ অটো ট্র্যাকিং চালু
             </span>
           </div>
 
-          <!-- Strict Mandatory Rule Banner -->
-          <div class="p-3 rounded-2xl bg-gradient-to-br from-rose-950/90 via-slate-900 to-amber-950/80 border-2 border-rose-500/50 text-white space-y-1.5 shadow-lg">
-            <div class="flex items-center gap-1.5 text-amber-300 font-black text-xs">
-              <i data-lucide="shield-alert" class="w-4 h-4 text-rose-400 shrink-0"></i>
-              <span>⚠️ কড়া সতর্ক সংকেত ও বাধ্যতামূলক নিয়ম:</span>
-            </div>
-            <p class="text-[11px] text-slate-200 leading-relaxed font-medium">
-              এড ওপেন হলে নিচে যে নীল রঙের <strong class="text-amber-300 underline">"Continue"</strong> বাটন আছে সেখানে <strong class="text-emerald-300">ক্লিক করা ১০০% বাধ্যতামূলক!</strong> Continue বাটনে ক্লিক করে ভেতরের পেজে গিয়ে কমপক্ষে <strong class="text-amber-300">১০ সেকেন্ড</strong> এক পেজ থেকে আরেক পেজে ব্রাউজ করতে হবে।
-            </p>
-            <div class="p-2 rounded-xl bg-rose-500/20 border border-rose-500/40 text-[10px] text-rose-200 font-bold leading-snug">
-              🚫 যদি শুধু সময় শেষ হওয়ার জন্য বসে থাকেন এবং Continue বাটনে ক্লিক করে ১০ সেকেন্ড এক পেজ থেকে আরেক পেজে না যান, তবে অটো অফিসিয়াল ট্র্যাকিংয়ে সেটি ধরা পড়বে এবং উইথড্র নেওয়ার সময় পেমেন্ট নাও পেতে পারেন!
+          <!-- Single Concise Rule Box (Replaces the 2 giant cluttered walls of text) -->
+          <div class="p-3.5 rounded-2xl bg-rose-950/90 border border-rose-500/40 text-white flex items-start gap-2.5 shadow-sm">
+            <i data-lucide="shield-alert" class="w-5 h-5 text-amber-400 shrink-0 mt-0.5"></i>
+            <div class="text-[11px] leading-relaxed text-slate-200">
+              <strong class="text-amber-300">বাধ্যতামূলক নিয়ম:</strong> এড ওপেন হলে নিচে নীল <strong class="text-white underline">"Continue"</strong> বাটনে ক্লিক করে ভেতরের পেজে কমপক্ষে <strong class="text-emerald-300">১০ সেকেন্ড</strong> এক পেজ থেকে আরেক পেজে ব্রাউজ করতে হবে (VPN সম্পূর্ণ নিষিদ্ধ)।
             </div>
           </div>
 
-          <div class="grid grid-cols-1 gap-2.5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <!-- Premium Ad Button 1 -->
-            <button onclick="openPremiumSdkAdModal(1)" class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 border-2 border-amber-400/60 hover:border-amber-400 p-3.5 rounded-2xl text-left active:scale-95 transition-all shadow-lg group">
+            <button onclick="openPremiumSdkAdModal(1)" class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 border-2 border-amber-400/60 hover:border-amber-400 p-4 rounded-2xl text-left active:scale-95 transition-all shadow-md group">
               <div class="flex items-start justify-between gap-2">
-                <div class="flex items-center gap-2.5">
-                  <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 text-slate-950 flex items-center justify-center font-black text-lg shadow-md shrink-0">
+                <div class="flex items-center gap-3">
+                  <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 text-slate-950 flex items-center justify-center font-black text-xl shadow-md shrink-0">
                     💎
                   </div>
                   <div>
-                    <div class="flex items-center gap-1.5 flex-wrap">
-                      <span class="text-xs font-black text-white">প্রিমিয়াম ভিআইপি এড ১</span>
-                      <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[9px] font-black">♾️ আনলিমিটেড (যত খুশি)</span>
-                    </div>
-                    <div id="prem-ad1-sub" class="text-[11px] font-black text-amber-300 mt-0.5">প্রতি এডে +১৫০ কয়েন · নো লিমিট</div>
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[9px] font-black inline-block mb-1">♾️ আনলিমিটেড</span>
+                    <div class="text-sm font-black text-white">প্রিমিয়াম ভিআইপি এড ১</div>
+                    <div id="prem-ad1-sub" class="text-[11px] font-bold text-amber-300 mt-0.5">প্রতি এডে +১৫০ কয়েন · নো লিমিট</div>
                   </div>
                 </div>
                 <span id="prem-ad1-badge" class="px-2.5 py-1 rounded-xl bg-amber-400 text-slate-950 font-black text-xs shrink-0 shadow-sm">
                   +১৫০ কয়েন
                 </span>
               </div>
-              <div class="mt-2 pt-2 border-t border-slate-700/80 text-[10px] text-amber-200 font-bold flex items-center justify-between gap-1">
-                <span>👇 নিচে Continue বাটনে ক্লিক ও ১০ সেকেন্ড পেজ ভিজিট বাধ্যতামূলক</span>
-                <span class="text-emerald-400 font-black shrink-0">শুরু করুন →</span>
+              <div class="mt-3 pt-2.5 border-t border-slate-800 text-[11px] text-amber-200 font-bold flex items-center justify-between">
+                <span>Continue ক্লিক + ১০ সেকেন্ড ভিজিট</span>
+                <span class="text-emerald-400 font-black">শুরু করুন →</span>
               </div>
             </button>
 
             <!-- Premium Ad Button 2 -->
-            <button onclick="openPremiumSdkAdModal(2)" class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 border-2 border-cyan-400/60 hover:border-cyan-400 p-3.5 rounded-2xl text-left active:scale-95 transition-all shadow-lg group">
+            <button onclick="openPremiumSdkAdModal(2)" class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 border-2 border-cyan-400/60 hover:border-cyan-400 p-4 rounded-2xl text-left active:scale-95 transition-all shadow-md group">
               <div class="flex items-start justify-between gap-2">
-                <div class="flex items-center gap-2.5">
-                  <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-400 to-emerald-400 text-slate-950 flex items-center justify-center font-black text-lg shadow-md shrink-0">
+                <div class="flex items-center gap-3">
+                  <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-400 to-emerald-400 text-slate-950 flex items-center justify-center font-black text-xl shadow-md shrink-0">
                     👑
                   </div>
                   <div>
-                    <div class="flex items-center gap-1.5 flex-wrap">
-                      <span class="text-xs font-black text-white">প্রিমিয়াম আল্ট্রা এড ২</span>
-                      <span class="px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-[9px] font-black">♾️ আনলিমিটেড (যত খুশি)</span>
-                    </div>
-                    <div id="prem-ad2-sub" class="text-[11px] font-black text-cyan-300 mt-0.5">প্রতি এডে +১৫০ কয়েন · নো লিমিট</div>
+                    <span class="px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-[9px] font-black inline-block mb-1">♾️ আনলিমিটেড</span>
+                    <div class="text-sm font-black text-white">প্রিমিয়াম আল্ট্রা এড ২</div>
+                    <div id="prem-ad2-sub" class="text-[11px] font-bold text-cyan-300 mt-0.5">প্রতি এডে +১৫০ কয়েন · নো লিমিট</div>
                   </div>
                 </div>
                 <span id="prem-ad2-badge" class="px-2.5 py-1 rounded-xl bg-cyan-400 text-slate-950 font-black text-xs shrink-0 shadow-sm">
                   +১৫০ কয়েন
                 </span>
               </div>
-              <div class="mt-2 pt-2 border-t border-slate-700/80 text-[10px] text-cyan-200 font-bold flex items-center justify-between gap-1">
-                <span>👇 নিচে Continue বাটনে ক্লিক ও ১০ সেকেন্ড পেজ ভিজিট বাধ্যতামূলক</span>
-                <span class="text-amber-300 font-black shrink-0">শুরু করুন →</span>
+              <div class="mt-3 pt-2.5 border-t border-slate-800 text-[11px] text-cyan-200 font-bold flex items-center justify-between">
+                <span>Continue ক্লিক + ১০ সেকেন্ড ভিজিট</span>
+                <span class="text-amber-300 font-black">শুরু করুন →</span>
               </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. DAILY VIDEO & BONUS ADS (Spacious 2-Column Grid) -->
+        <div class="space-y-3">
+          <h4 class="text-xs sm:text-sm font-black text-slate-800 dark:text-white flex items-center gap-1.5 px-1">
+            <i data-lucide="play-circle" class="w-4 h-4 text-emerald-500"></i> ডেইলি স্পন্সর ভিডিও ও এড টাস্ক
+          </h4>
+          <div class="grid grid-cols-2 gap-3">
+            <button onclick="watchAdsgramAd()" class="bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 p-3.5 rounded-2xl text-left active:scale-95 transition-all shadow-xs hover:border-sky-400">
+              <div class="flex items-center gap-2.5 mb-2">
+                <div class="w-9 h-9 rounded-xl bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0"><i data-lucide="play-circle" class="w-5 h-5"></i></div>
+                <span class="text-xs sm:text-sm font-black text-slate-800 dark:text-white">ভিডিও এড</span>
+              </div>
+              <div class="text-[11px] text-sky-600 dark:text-sky-400 font-black" id="earn-adsgram-count">৫০ টি বাকি</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-bold" id="earn-adsgram-reward">+২০০ কয়েন · Rewarded</div>
+            </button>
+            <button onclick="watchThreeAdsOnly()" class="bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 p-3.5 rounded-2xl text-left active:scale-95 transition-all shadow-xs hover:border-rose-400">
+              <div class="flex items-center gap-2.5 mb-2">
+                <div class="w-9 h-9 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0"><i data-lucide="clapperboard" class="w-5 h-5"></i></div>
+                <span class="text-xs sm:text-sm font-black text-slate-800 dark:text-white">বোনাস এড</span>
+              </div>
+              <div class="text-[11px] text-rose-600 dark:text-rose-400 font-black" id="earn-monetag-count">৫০ টি বাকি</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-bold" id="earn-monetag-reward">+২০০ কয়েন</div>
+            </button>
+            <button onclick="startWatchAd()" class="bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 p-3.5 rounded-2xl text-left active:scale-95 transition-all shadow-xs hover:border-indigo-400">
+              <div class="flex items-center gap-2.5 mb-2">
+                <div class="w-9 h-9 rounded-xl bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-base shrink-0">🎬</div>
+                <span class="text-xs sm:text-sm font-black text-slate-800 dark:text-white">Watch Ad</span>
+              </div>
+              <div class="text-[11px] text-indigo-600 dark:text-indigo-400 font-black" id="earn-watch-count">৫০ টি বাকি</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-bold" id="earn-watch-reward">+২০০ কয়েন</div>
+            </button>
+            <button onclick="openUnlockExtraModal()" class="bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 p-3.5 rounded-2xl text-left active:scale-95 transition-all shadow-xs hover:border-orange-400">
+              <div class="flex items-center gap-2.5 mb-2">
+                <div class="w-9 h-9 rounded-xl bg-orange-500/15 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0"><i data-lucide="unlock" class="w-5 h-5"></i></div>
+                <span class="text-xs sm:text-sm font-black text-slate-800 dark:text-white">Unlock Extra</span>
+              </div>
+              <div class="text-[11px] text-orange-600 dark:text-orange-400 font-black" id="earn-unlock-count">৫০ টি বাকি</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-bold" id="earn-unlock-reward">+২০০ কয়েন</div>
+            </button>
+            <button onclick="startInstantReward()" class="bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 p-3.5 rounded-2xl text-left active:scale-95 transition-all shadow-xs hover:border-pink-400">
+              <div class="flex items-center gap-2.5 mb-2">
+                <div class="w-9 h-9 rounded-xl bg-pink-500/15 text-pink-600 dark:text-pink-400 flex items-center justify-center text-base shrink-0">🎁</div>
+                <span class="text-xs sm:text-sm font-black text-slate-800 dark:text-white">Instant Bonus</span>
+              </div>
+              <div class="text-[11px] text-pink-600 dark:text-pink-400 font-black" id="earn-instant-count">৫০ টি বাকি</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-bold" id="earn-instant-reward">+২০০ কয়েন</div>
+            </button>
+            <button onclick="openQuizModal()" class="bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 p-3.5 rounded-2xl text-left active:scale-95 transition-all shadow-xs hover:border-emerald-400">
+              <div class="flex items-center gap-2.5 mb-2">
+                <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0"><i data-lucide="brain" class="w-5 h-5"></i></div>
+                <span class="text-xs sm:text-sm font-black text-slate-800 dark:text-white">ম্যাথ কুইজ</span>
+              </div>
+              <div class="text-[11px] text-emerald-600 dark:text-emerald-400 font-black" id="earn-quiz-count">৫০ টি বাকি</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-bold" id="earn-quiz-reward">+২০০ কয়েন</div>
             </button>
           </div>
         </div>
@@ -1226,73 +1198,33 @@
 
     </main>
 
-    <!-- STICKY BOTTOM SPONSOR BANNER -->
-    <div id="sticky-banner-container" class="fixed bottom-[60px] max-w-md w-full px-3 z-30 pointer-events-auto">
-      <div onclick="clickStickyBanner()" class="cursor-pointer bg-slate-900/95 dark:bg-slate-950/95 backdrop-blur-md border border-amber-500/40 hover:border-amber-400 rounded-2xl p-2.5 shadow-xl flex items-center justify-between gap-2.5 transition-all duration-300 group">
-        <div class="flex items-center gap-2.5 overflow-hidden">
-          <div id="sticky-banner-icon-box" class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0 text-amber-400">
-            <i data-lucide="sparkles" class="w-5 h-5"></i>
-          </div>
-          <div class="overflow-hidden">
-            <div class="flex items-center gap-1.5">
-              <span class="text-[9px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 px-1.5 py-0.2 rounded">Sponsored</span>
-              <span id="sticky-banner-badge" class="text-[9px] text-emerald-400 font-bold flex items-center gap-0.5">
-                <i data-lucide="flame" class="w-2.5 h-2.5"></i> +৮ কয়েন
-              </span>
-            </div>
-            <h4 id="sticky-banner-title" class="text-xs font-black text-white truncate mt-0.5 group-hover:text-amber-300 transition-colors">
-              স্পনসর অফার চেক করুন এবং বোনাস নিশ্চিত করুন
-            </h4>
-            <p id="sticky-banner-desc" class="text-[10px] text-slate-400 truncate">
-              সরাসরি পার্টনার লিংকে ভিজিট করে অ্যাক্টিভ রিওয়ার্ড পান
-            </p>
-          </div>
-        </div>
-        <div class="flex items-center gap-1 shrink-0 text-amber-400 font-bold text-[11px] bg-amber-500/10 px-2 py-1 rounded-xl group-hover:bg-amber-500 group-hover:text-slate-950 transition-all">
-          <span>যান</span>
-          <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-        </div>
-      </div>
-    </div>
-
-    <!-- FLOATING AERO AI BUTTON -->
-    <div class="fixed bottom-20 right-4 z-30 max-w-md pointer-events-auto">
-      <button onclick="openAeroAiModal()" class="glow-ai-btn flex items-center gap-2 px-3.5 py-2.5 bg-gradient-to-r from-cyan-600 via-teal-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white rounded-full shadow-2xl active:scale-95 transition-transform text-xs font-black border border-cyan-300/40">
-        <div class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-cyan-200">
-          <i data-lucide="bot" class="w-3.5 h-3.5"></i>
-        </div>
-        <span>Aero AI গাইড</span>
-        <span class="w-2 h-2 rounded-full bg-emerald-300"></span>
-      </button>
-    </div>
-
-    <!-- BOTTOM NAVIGATION -->
-    <nav class="fixed bottom-0 max-w-md w-full bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-around py-2 px-1 z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
-      <button onclick="switchTab('home')" class="nav-btn active flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400 transition-all active:scale-95 min-w-[56px]" data-target="home">
+    <!-- BOTTOM NAVIGATION (Clean Native App Dock) -->
+    <nav class="fixed bottom-0 max-w-xl w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-around py-2 px-2 z-40 shadow-[0_-4px_24px_rgba(0,0,0,0.08)]">
+      <button onclick="switchTab('home')" class="nav-btn active flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400 transition-all active:scale-95 min-w-[60px]" data-target="home">
         <div class="p-1.5 rounded-xl bg-emerald-500/15">
           <i data-lucide="home" class="w-5 h-5"></i>
         </div>
         <span class="text-[10px] font-black">হোম</span>
       </button>
-      <button onclick="switchTab('earn')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all active:scale-95 min-w-[56px]" data-target="earn">
+      <button onclick="switchTab('earn')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all active:scale-95 min-w-[60px]" data-target="earn">
         <div class="p-1.5 rounded-xl">
           <i data-lucide="coins" class="w-5 h-5"></i>
         </div>
         <span class="text-[10px] font-bold">আর্ন</span>
       </button>
-      <button onclick="switchTab('tasks')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all active:scale-95 min-w-[56px]" data-target="tasks">
+      <button onclick="switchTab('tasks')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all active:scale-95 min-w-[60px]" data-target="tasks">
         <div class="p-1.5 rounded-xl">
           <i data-lucide="check-square" class="w-5 h-5"></i>
         </div>
         <span class="text-[10px] font-bold">টাস্ক</span>
       </button>
-      <button onclick="switchTab('wallet')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all active:scale-95 min-w-[56px]" data-target="wallet">
+      <button onclick="switchTab('wallet')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all active:scale-95 min-w-[60px]" data-target="wallet">
         <div class="p-1.5 rounded-xl">
           <i data-lucide="wallet" class="w-5 h-5"></i>
         </div>
         <span class="text-[10px] font-bold">ওয়ালেট</span>
       </button>
-      <button onclick="switchTab('profile')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all active:scale-95 min-w-[56px]" data-target="profile">
+      <button onclick="switchTab('profile')" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all active:scale-95 min-w-[60px]" data-target="profile">
         <div class="p-1.5 rounded-xl">
           <i data-lucide="user" class="w-5 h-5"></i>
         </div>
@@ -3233,6 +3165,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       document.getElementById('u-name').innerText = u.name || 'ব্যবহারকারী';
       document.getElementById('u-phone').innerText = u.phone || '01XXXXXXXXX';
       document.getElementById('u-coins').innerText = (u.coins || 0).toLocaleString();
+      if (document.getElementById('top-bar-coins')) document.getElementById('top-bar-coins').innerText = (u.coins || 0).toLocaleString();
       document.getElementById('u-coins-bdt').innerText = `≈ ৳${((u.coins || 0) / COINS_PER_BDT).toFixed(2)}`;
       document.getElementById('u-cash').innerText = `৳${(u.cashBalance || 0).toFixed(2)}`;
 
@@ -3422,7 +3355,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       }
 
       const aiActive = getAdminConfig('aiAssistantActive', true);
-      const floatAi = document.querySelector('.glow-ai-btn')?.parentElement;
+      const floatAi = document.querySelector('.glow-ai-btn');
       if (floatAi) {
         if (aiActive) floatAi.classList.remove('hidden');
         else floatAi.classList.add('hidden');
@@ -3437,6 +3370,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       });
       const activeEl = document.getElementById(`view-${tabId}`);
       if (activeEl) activeEl.classList.remove('hidden');
+      try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {}
 
       document.querySelectorAll('.nav-btn').forEach(btn => {
         const isTarget = btn.getAttribute('data-target') === tabId;
@@ -5372,6 +5306,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
   </script>
 </body>
 </html>
+
 
 
 
