@@ -281,7 +281,7 @@
                 <span class="text-[11px] font-bold text-cyan-700 dark:text-cyan-300 flex items-center gap-1">
                   <i data-lucide="clock" class="w-3.5 h-3.5"></i> টাইম চেস্ট
                 </span>
-                <span class="text-[11px] font-black text-emerald-600 dark:text-emerald-400 font-mono">+২০০</span>
+                <span id="idle-bonus-badge" class="text-[11px] font-black text-emerald-600 dark:text-emerald-400 font-mono">+২০০</span>
               </div>
               <div class="flex items-center gap-1.5 mt-1">
                 <div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
@@ -385,7 +385,7 @@
               </div>
               <div class="min-w-0">
                 <div class="text-xs font-black text-slate-800 dark:text-white truncate">রেফারেল</div>
-                <div class="text-[10px] text-slate-500 dark:text-slate-400">+১২০০ কয়েন + ১০%</div>
+                <div id="home-ref-bonus-sub" class="text-[10px] text-slate-500 dark:text-slate-400">+১২০০ কয়েন + ১০%</div>
               </div>
             </button>
             <button onclick="switchTab('monthly_salary')" class="card-touch-feedback bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 flex items-center gap-3 text-left shadow-sm hover:border-amber-400/50 transition-all">
@@ -429,10 +429,40 @@
       <!-- VIEW: EARN CENTER -->
       <section id="view-earn" class="space-y-4 hidden">
         <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white rounded-3xl p-4 shadow-md">
-          <h3 class="text-base font-black flex items-center gap-1.5">
-            <i data-lucide="coins" class="w-5 h-5 text-amber-300"></i> আর্ন সেন্টার
-          </h3>
-          <p class="text-xs text-emerald-100 mt-0.5">সব আর্নিং অপশন এক জায়গায়। লিমিট শেষ হলে আগামীকাল আবার চেষ্টা করুন।</p>
+          <div class="flex items-center justify-between gap-2">
+            <h3 class="text-base font-black flex items-center gap-1.5">
+              <i data-lucide="coins" class="w-5 h-5 text-amber-300"></i> আর্ন সেন্টার
+            </h3>
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-950/60 border border-emerald-300/40 text-emerald-200 text-[10px] font-black flex items-center gap-1">
+              <i data-lucide="shield-check" class="w-3 h-3 text-emerald-300"></i> Anti-Ban Shield সক্রিয়
+            </span>
+          </div>
+          <p class="text-xs text-emerald-100 mt-0.5">সব আর্নিং অপশন এক জায়গায়। ১০০% অর্গানিক নিয়মে কাজ করুন ও নিরাপদে আয় করুন।</p>
+        </div>
+
+        <!-- 100% SAFE AD NETWORK RULES & ANTI-FAKE TRAFFIC SHIELD -->
+        <div class="p-3.5 rounded-3xl bg-gradient-to-br from-slate-900 via-emerald-950/90 to-slate-900 border border-emerald-500/40 text-white space-y-2 shadow-md">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-1.5 text-emerald-300 font-black text-xs">
+              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+              <span>🛡️ ১০০% নিরাপদ ও অর্গানিক ব্রাউজিং নিয়মাবলী:</span>
+            </div>
+            <span class="px-2 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 text-[9px] font-black border border-emerald-500/30">Human Verified</span>
+          </div>
+          <div class="grid grid-cols-1 gap-1.5 text-[10.5px] text-slate-200 leading-relaxed">
+            <div class="flex items-start gap-1.5">
+              <span class="text-emerald-400 font-black">✔</span>
+              <span><strong>ন্যাচারাল স্ক্রোল ও রিডিং:</strong> বিজ্ঞাপনের পেজে গিয়ে চুপচাপ বসে থাকবেন না—স্বাভাবিক ভিজিটরের মতো ওপর-নিচ স্ক্রোল করে কনটেন্ট পড়ুন (১২-১৬ সেকেন্ড)।</span>
+            </div>
+            <div class="flex items-start gap-1.5">
+              <span class="text-emerald-400 font-black">✔</span>
+              <span><strong>অর্গানিক ইন্টারঅ্যাকশন:</strong> সব অ্যাডে অন্ধভাবে ক্লিক না করে যে অফার, বট বা ওয়েবসাইটটি আপনার ভালো লাগে সেটিতে স্বাভাবিকভাবে <strong class="text-amber-300">Sign Up / Start / Visit</strong> করুন।</span>
+            </div>
+            <div class="flex items-start gap-1.5">
+              <span class="text-rose-400 font-black">✖</span>
+              <span><strong class="text-rose-300">কড়া নিষেধাজ্ঞা:</strong> VPN, Proxy, Tor ব্রাউজার বা Auto-Clicker ব্যবহার করা এবং একটানা রোবটের মতো দ্রুত ক্লিক করা সম্পূর্ণ নিষিদ্ধ। সিস্টেমে অটো বট-গার্ড চালু আছে।</span>
+            </div>
+          </div>
         </div>
 
         <div>
@@ -527,10 +557,10 @@
                       <span class="text-xs font-black text-white">প্রিমিয়াম ভিআইপি এড ১</span>
                       <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[9px] font-black">♾️ আনলিমিটেড (যত খুশি)</span>
                     </div>
-                    <div class="text-[11px] font-black text-amber-300 mt-0.5">প্রতি এডে +১৫০ কয়েন · নো লিমিট</div>
+                    <div id="prem-ad1-sub" class="text-[11px] font-black text-amber-300 mt-0.5">প্রতি এডে +১৫০ কয়েন · নো লিমিট</div>
                   </div>
                 </div>
-                <span class="px-2.5 py-1 rounded-xl bg-amber-400 text-slate-950 font-black text-xs shrink-0 shadow-sm">
+                <span id="prem-ad1-badge" class="px-2.5 py-1 rounded-xl bg-amber-400 text-slate-950 font-black text-xs shrink-0 shadow-sm">
                   +১৫০ কয়েন
                 </span>
               </div>
@@ -552,10 +582,10 @@
                       <span class="text-xs font-black text-white">প্রিমিয়াম আল্ট্রা এড ২</span>
                       <span class="px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-[9px] font-black">♾️ আনলিমিটেড (যত খুশি)</span>
                     </div>
-                    <div class="text-[11px] font-black text-cyan-300 mt-0.5">প্রতি এডে +১৫০ কয়েন · নো লিমিট</div>
+                    <div id="prem-ad2-sub" class="text-[11px] font-black text-cyan-300 mt-0.5">প্রতি এডে +১৫০ কয়েন · নো লিমিট</div>
                   </div>
                 </div>
-                <span class="px-2.5 py-1 rounded-xl bg-cyan-400 text-slate-950 font-black text-xs shrink-0 shadow-sm">
+                <span id="prem-ad2-badge" class="px-2.5 py-1 rounded-xl bg-cyan-400 text-slate-950 font-black text-xs shrink-0 shadow-sm">
                   +১৫০ কয়েন
                 </span>
               </div>
@@ -626,6 +656,22 @@
               <div class="text-[10px] text-slate-400">২০,০০০ কয়েন</div>
               <div class="font-black text-emerald-600 font-mono mt-0.5">৳১০০.০০</div>
             </div>
+          </div>
+        </div>
+
+        <!-- WALLET WITHDRAWAL HISTORY -->
+        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-4 space-y-3 shadow-xs">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-black text-slate-800 dark:text-white flex items-center gap-1.5">
+              <i data-lucide="history" class="w-4 h-4 text-emerald-500"></i>
+              <span>আমার উইথড্র (টাকা উত্তোলন) হিস্ট্রি</span>
+            </h4>
+            <button onclick="loadUserWithdrawHistory(true)" class="px-2.5 py-1 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 text-[10px] font-black flex items-center gap-1 active:scale-95">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> রিফ্রেশ
+            </button>
+          </div>
+          <div id="wallet-withdraw-history-list" class="space-y-2.5 max-h-80 overflow-y-auto pr-0.5">
+            <div class="text-center py-5 text-xs text-slate-400">উইথড্র হিস্ট্রি লোড হচ্ছে...</div>
           </div>
         </div>
       </section>
@@ -699,7 +745,7 @@
           <h3 class="text-base font-black flex items-center gap-1.5">
             <i data-lucide="wallet" class="w-5 h-5"></i> টাকা উত্তোলন (Withdraw)
           </h3>
-          <p class="text-xs text-emerald-100 mt-0.5">১০০ কয়েন = ৳১ টাকা। সর্বনিম্ন ৳১০০ ও ৫টি সফল রেফারেল প্রয়োজন।</p>
+          <p class="text-xs text-emerald-100 mt-0.5">১০০ কয়েন = ৳১ টাকা। সর্বনিম্ন ৳১০০ ও ৫টি কমপ্লিট রেফারেল (প্রতি রেফারে ৫,০০০ কয়েন আয়) প্রয়োজন।</p>
         </div>
 
         <div class="grid grid-cols-2 gap-2.5">
@@ -708,10 +754,18 @@
             <div id="wdr-stat-coins" class="text-base font-black text-amber-500 font-mono mt-0.5">০</div>
             <span id="wdr-stat-bdt" class="text-[10px] text-emerald-600 font-bold">≈ ৳০.০০</span>
           </div>
-          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 text-center">
-            <span class="text-[10px] text-slate-400 font-bold uppercase">রেফারেল যোগ্যতা</span>
+          <div onclick="switchTab('refer')" class="cursor-pointer bg-white dark:bg-slate-800 border border-purple-300 dark:border-purple-800/70 rounded-2xl p-3 text-center hover:border-purple-500 transition-all">
+            <span class="text-[10px] text-slate-400 font-bold uppercase">কমপ্লিট রেফার (৫,০০০+ কয়েন)</span>
             <div id="wdr-stat-refs" class="text-base font-black text-purple-600 font-mono mt-0.5">০/৫ জন</div>
-            <span id="wdr-stat-ref-badge" class="text-[10px] text-rose-500 font-bold">❌ শর্ত অপূর্ণ</span>
+            <span id="wdr-stat-ref-badge" class="text-[10px] text-rose-500 font-bold">❌ শর্ত অপূর্ণ (ট্যাপ করে দেখুন)</span>
+          </div>
+        </div>
+
+        <!-- 5,000 Coins Referral Rule Notice on Withdraw Page -->
+        <div class="p-3 rounded-2xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/60 text-[11px] text-purple-900 dark:text-purple-200 flex items-start gap-2">
+          <i data-lucide="info" class="w-4 h-4 text-purple-600 dark:text-purple-400 shrink-0 mt-0.5"></i>
+          <div class="leading-relaxed">
+            <strong>রেফার কমপ্লিট নিয়ম:</strong> আপনার রেফার করা প্রতিটি ইউজার যখন কমপক্ষে <strong>৫,০০০ কয়েন</strong> ইনকাম করবে, তখন সেই রেফারটি <strong>কমপ্লিট</strong> হিসেবে গণ্য হবে। <button onclick="switchTab('refer')" class="underline font-black text-purple-600 dark:text-purple-300">কোন রেফার কত কয়েন ইনকাম করেছে দেখুন →</button>
           </div>
         </div>
 
@@ -744,6 +798,39 @@
               টাকা তোলার আবেদন জমা দিন
             </button>
           </form>
+        </div>
+
+        <!-- USER WITHDRAWAL HISTORY & LIVE STATUS (APPROVED / PENDING / REJECTED) -->
+        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-4 space-y-3 shadow-xs">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-black text-slate-800 dark:text-white flex items-center gap-1.5">
+              <i data-lucide="clipboard-list" class="w-4 h-4 text-emerald-500"></i>
+              <span>আপনার উইথড্র হিস্ট্রি (Approved / Pending / Rejected)</span>
+            </h4>
+            <button onclick="loadUserWithdrawHistory(true)" class="px-2.5 py-1 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 text-[10px] font-black flex items-center gap-1 active:scale-95">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> রিফ্রেশ
+            </button>
+          </div>
+
+          <!-- 3 Status Summary Pills -->
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="p-2 rounded-xl bg-amber-500/10 border border-amber-500/30">
+              <div class="text-[9.5px] font-bold text-amber-600 dark:text-amber-400">⏳ পেন্ডিং</div>
+              <div id="wdr-hist-pending-count" class="text-sm font-black text-amber-600 dark:text-amber-400 mt-0.5">০ টি</div>
+            </div>
+            <div class="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
+              <div class="text-[9.5px] font-bold text-emerald-600 dark:text-emerald-400">✅ অ্যাপ্রুভড</div>
+              <div id="wdr-hist-approved-count" class="text-sm font-black text-emerald-600 dark:text-emerald-400 mt-0.5">০ টি</div>
+            </div>
+            <div class="p-2 rounded-xl bg-rose-500/10 border border-rose-500/30">
+              <div class="text-[9.5px] font-bold text-rose-600 dark:text-rose-400">❌ রিজেক্টেড</div>
+              <div id="wdr-hist-rejected-count" class="text-sm font-black text-rose-600 dark:text-rose-400 mt-0.5">০ টি</div>
+            </div>
+          </div>
+
+          <div id="user-withdraw-history-list" class="space-y-2.5 max-h-96 overflow-y-auto pr-0.5">
+            <div class="text-center py-6 text-xs text-slate-400">উইথড্র হিস্ট্রি লোড হচ্ছে...</div>
+          </div>
         </div>
       </section>
 
@@ -859,30 +946,44 @@
             <i data-lucide="users" class="w-6 h-6"></i>
           </div>
           <h3 class="text-base font-black">রেফারেল প্রোগ্রাম ও কাজের হিস্ট্রি</h3>
-          <p class="text-xs text-purple-100 mt-1">প্রতি সফল রেফারে পান ১২০০ কয়েন বোনাস ও আজীবন ১০% কাজের কমিশন!</p>
+          <p class="text-xs text-purple-100 mt-1">প্রতি কমপ্লিট রেফারে (৫,০০০ কয়েন ইনকাম পূর্ণ হলে) পান ১২০০ কয়েন বোনাস ও আজীবন ১০% কমিশন!</p>
+        </div>
+
+        <!-- 5,000 Coins Mandatory Referral Completion Rule Banner -->
+        <div class="p-3.5 rounded-3xl bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950 border-2 border-purple-500/50 text-white space-y-1.5 shadow-md">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-1.5 text-amber-300 font-black text-xs">
+              <i data-lucide="target" class="w-4 h-4 text-amber-400 shrink-0"></i>
+              <span>🎯 রেফার কমপ্লিট হওয়ার বাধ্যতামূলক শর্ত:</span>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[9.5px] font-black">৫,০০০ কয়েন টার্গেট</span>
+          </div>
+          <p class="text-[11px] text-slate-200 leading-relaxed">
+            আপনার রেফার কোডে কেউ একাউন্ট খুললে সেই ইউজার যখন কাজ করে নিজে কমপক্ষে <strong class="text-amber-300 underline">৫,০০০ কয়েন</strong> ইনকাম করবে, তখনই সেই রেফারটি <strong class="text-emerald-300">✅ কমপ্লিট (Completed)</strong> হিসেবে গণ্য হবে এবং উইথড্রর শর্ত ও রেফার বোনাসে যুক্ত হবে! নিচে কোন ইউজার কত কয়েন ইনকাম করেছে তা লাইভ দেখতে পারবেন।
+          </p>
         </div>
 
         <!-- 4 Live Summary Cards -->
         <div class="grid grid-cols-2 gap-2.5">
           <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3.5 shadow-xs">
-            <div class="text-[10px] font-bold text-slate-400 uppercase">মোট রেফার ইউজার</div>
+            <div class="text-[10px] font-bold text-slate-400 uppercase">মোট জয়েনকৃত রেফার</div>
             <div id="ref-hist-total-users" class="text-xl font-black text-purple-600 dark:text-purple-400 mt-0.5">০ জন</div>
             <div class="text-[9.5px] text-slate-500">আপনার কোডে জয়েন করেছে</div>
           </div>
-          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3.5 shadow-xs">
-            <div class="text-[10px] font-bold text-slate-400 uppercase">অ্যাক্টিভ কর্মী</div>
+          <div class="bg-white dark:bg-slate-800 border border-emerald-500/40 rounded-2xl p-3.5 shadow-xs">
+            <div class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase">✅ কমপ্লিট রেফার (৫,০০০+)</div>
             <div id="ref-hist-active-users" class="text-xl font-black text-emerald-600 dark:text-emerald-400 mt-0.5">০ জন</div>
-            <div class="text-[9.5px] text-slate-500">নিয়মিত এড ও কাজ করছে</div>
+            <div class="text-[9.5px] text-slate-500">৫,০০০+ কয়েন ইনকাম করেছে</div>
           </div>
-          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3.5 shadow-xs">
-            <div class="text-[10px] font-bold text-slate-400 uppercase">রেফারদের মোট কাজ</div>
-            <div id="ref-hist-total-works" class="text-xl font-black text-cyan-600 dark:text-cyan-400 mt-0.5">০ টি</div>
-            <div class="text-[9.5px] text-slate-500">রেফারদের সম্পন্ন করা এড</div>
+          <div class="bg-white dark:bg-slate-800 border border-amber-500/30 rounded-2xl p-3.5 shadow-xs">
+            <div class="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase">⏳ পেন্ডিং রেফার (&lt;৫,০০০)</div>
+            <div id="ref-hist-total-works" class="text-xl font-black text-amber-500 mt-0.5">০ জন</div>
+            <div class="text-[9.5px] text-slate-500">৫,০০০ কয়েন এখনো পূর্ণ হয়নি</div>
           </div>
           <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3.5 shadow-xs">
             <div class="text-[10px] font-bold text-slate-400 uppercase">মোট রেফার ও কমিশন আয়</div>
-            <div id="ref-hist-total-earned" class="text-xl font-black text-amber-500 mt-0.5">০ কয়েন</div>
-            <div class="text-[9.5px] text-slate-500">বোনাস + ১০% কমিশন</div>
+            <div id="ref-hist-total-earned" class="text-xl font-black text-cyan-600 dark:text-cyan-400 mt-0.5">০ কয়েন</div>
+            <div class="text-[9.5px] text-slate-500">কমপ্লিট বোনাস + ১০% কমিশন</div>
           </div>
         </div>
 
@@ -909,18 +1010,18 @@
           </div>
         </div>
 
-        <!-- REFERRED USERS & THEIR WORK HISTORY -->
+        <!-- REFERRED USERS & THEIR 5,000 COINS PROGRESS HISTORY -->
         <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-4 space-y-3 shadow-xs">
           <div class="flex items-center justify-between">
             <h4 class="text-xs font-black text-slate-800 dark:text-white flex items-center gap-1.5">
               <i data-lucide="user-check" class="w-4 h-4 text-purple-500"></i>
-              <span>আপনার রেফারকৃত ইউজার ও তাদের কাজের হিস্ট্রি</span>
+              <span>কোন রেফার ইউজার কত কয়েন ইনকাম করেছে (৫,০০০ টার্গেট)</span>
             </h4>
             <button onclick="loadUserReferralHistory(true)" class="px-2.5 py-1 rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-300 text-[10px] font-black flex items-center gap-1 active:scale-95">
               <i data-lucide="refresh-cw" class="w-3 h-3"></i> রিফ্রেশ
             </button>
           </div>
-          <div id="referred-users-work-list" class="space-y-2.5 max-h-80 overflow-y-auto pr-0.5">
+          <div id="referred-users-work-list" class="space-y-2.5 max-h-96 overflow-y-auto pr-0.5">
             <div class="text-center py-6 text-xs text-slate-400">রেফারেল হিস্ট্রি লোড হচ্ছে...</div>
           </div>
         </div>
@@ -1221,7 +1322,7 @@
           </span>
         </div>
         <h3 id="prem-sdk-modal-title" class="font-black text-white text-base mt-1">প্রিমিয়াম আনলিমিটেড এড</h3>
-        <p class="text-xs text-amber-300 font-black">৩টি এডে Continue ক্লিক = +১৫০ কয়েন (নো লিমিট)</p>
+        <p id="prem-sdk-modal-reward-sub" class="text-xs text-amber-300 font-black">৩টি এডে Continue ক্লিক = +১৫০ কয়েন (নো লিমিট)</p>
       </div>
 
       <div class="p-3 rounded-2xl bg-rose-950/70 border border-rose-500/50 text-left text-[11px] space-y-1.5">
@@ -1735,7 +1836,7 @@
     let COINS_PER_BDT = 200;
     let MIN_WITHDRAW_BDT = 150;
     let MIN_REFS_FOR_WITHDRAW = 5;
-    let WELCOME_COINS = 1200;
+    let WELCOME_COINS = 250;
 
     function getAdminConfig(key, fallback) {
       if (appData.appSettings && appData.appSettings[key] !== undefined && appData.appSettings[key] !== null) {
@@ -1971,24 +2072,116 @@
     let userAdInteractionConfirmed = false;
     let pendingAdVerificationCallback = null;
 
+    // ==========================================
+    // 🛡️ 7-LAYER MONETAG & ADSTERRA ANTI-BAN & HUMAN TRAFFIC SHIELD
+    // ==========================================
+    const REFERRAL_COMPLETE_TARGET_COINS = 5000;
+    let lastAdSequenceFinishedAt = 0;
+    let lastAdButtonTapAt = 0;
+    let recentAdSequenceTimestamps = [];
+
+    // 1. Human Traffic & Anti-Bot / Anti-AutoClicker Verifier
+    function verifyOrganicHumanTraffic(actionLabel) {
+      // Block headless / automated bot browsers (Selenium, Puppeteer, WebDriver)
+      if (navigator.webdriver) {
+        alert('⛔ রোবট বা অটোমেটেড ব্রাউজার শনাক্ত হয়েছে! সাধারণ ব্রাউজার বা টেলিগ্রাম অ্যাপ ব্যবহার করুন।');
+        return false;
+      }
+
+      // Block synthetic / untrusted auto-clicker events
+      try {
+        if (window.event && window.event.isTrusted === false) {
+          showToast('⚠️ অটো-ক্লিকার নিষিদ্ধ! অনুগ্রহ করে হাত দিয়ে স্বাভাবিকভাবে ট্যাপ করুন।');
+          return false;
+        }
+      } catch (e) {}
+
+      const now = Date.now();
+
+      // Prevent double/rapid spam tapping (< 1.5s between button taps)
+      if (now - lastAdButtonTapAt < 1500) {
+        return false;
+      }
+      lastAdButtonTapAt = now;
+
+      // Enforce natural 4-second human cooldown after finishing an ad sequence
+      if (lastAdSequenceFinishedAt > 0 && (now - lastAdSequenceFinishedAt < 4000)) {
+        const waitSec = Math.ceil((4000 - (now - lastAdSequenceFinishedAt)) / 1000);
+        showToast(`🛡️ অর্গানিক ট্রাফিক সুরক্ষা: পরবর্তী এড দেখার আগে ${waitSec} সেকেন্ড স্বাভাবিক বিরতি নিন।`);
+        return false;
+      }
+
+      // Velocity Guard: Max 10 ad sequences in 4 minutes to prevent Adsterra/Monetag frequency flagging
+      recentAdSequenceTimestamps = recentAdSequenceTimestamps.filter(ts => (now - ts) < 240000);
+      if (recentAdSequenceTimestamps.length >= 10) {
+        const oldest = recentAdSequenceTimestamps[0];
+        const coolRemain = Math.max(5, Math.ceil((240000 - (now - oldest)) / 1000));
+        alert(`🛡️ এড নেটওয়ার্ক সুরক্ষা (Anti-Fake Traffic):\n\nএকটানা খুব দ্রুত অ্যাড দেখলে অ্যাড নেটওয়ার্ক রোবট ট্রাফিক মনে করতে পারে।\nঅনুগ্রহ করে ${coolRemain} সেকেন্ড স্বাভাবিক বিরতি নিয়ে আবার শুরু করুন।`);
+        return false;
+      }
+
+      return true;
+    }
+
+    // 2. Natural Randomized Human Dwell Time (11s to 15s instead of robotic fixed 10.0s)
+    function getNaturalHumanAdDuration(classification) {
+      if (classification && classification.isCPA) {
+        const cpaTimes = [15, 16, 17, 18];
+        return cpaTimes[Math.floor(Math.random() * cpaTimes.length)];
+      }
+      // Natural human variance: 11, 12, 13, 14, or 15 seconds
+      const naturalTimes = [11, 12, 13, 14, 15];
+      return naturalTimes[Math.floor(Math.random() * naturalTimes.length)];
+    }
+
+    // 3. Clean Organic URL Formatter (Never pollute Adsterra/Monetag direct links with fake bot params!)
     function attachTrackingParams(rawUrl) {
       if (!rawUrl) return rawUrl;
-      const uid = (appData.user && appData.user.phone) ? appData.user.phone : 'guest';
-      try {
-        const urlObj = new URL(rawUrl, window.location.origin);
-        urlObj.searchParams.set('ymid', uid);
-        urlObj.searchParams.set('subid', uid);
-        urlObj.searchParams.set('tracking_id', uid);
-        urlObj.searchParams.set('var', uid);
-        urlObj.searchParams.set('click_id', uid);
-        return urlObj.toString();
-      } catch (e) {
-        const sep = rawUrl.includes('?') ? '&' : '?';
-        return `${rawUrl}${sep}ymid=${uid}&subid=${uid}&tracking_id=${uid}&var=${uid}&click_id=${uid}`;
+      const cleanUrl = String(rawUrl).trim();
+      const lower = cleanUrl.toLowerCase();
+      const uid = (appData.user && appData.user.phone) ? sanitizeKey(appData.user.phone) : 'guest';
+
+      // CRITICAL ANTI-BAN FIX:
+      // Adsterra Direct Links (profitableratecpmnetwork, rm358, adsterra, highperformanceformat)
+      // MUST remain 100% clean! Adding random query params triggers Adsterra's fake/incentivized traffic filter.
+      if (
+        lower.includes('profitableratecpmnetwork') ||
+        lower.includes('rm358.com') ||
+        lower.includes('adsterra') ||
+        lower.includes('highperformance') ||
+        lower.includes('effectivegatecpm')
+      ) {
+        return cleanUrl;
       }
+
+      // Only append CPA postback tracking parameters to genuine CPA Offer Networks
+      const isCpaOffer =
+        lower.includes('zeydoo') ||
+        lower.includes('cpagrip') ||
+        lower.includes('friendlybunny') ||
+        lower.includes('mylead') ||
+        lower.includes('cpalead') ||
+        lower.includes('offertoro') ||
+        lower.includes('qckclk');
+
+      if (isCpaOffer) {
+        try {
+          const urlObj = new URL(cleanUrl, window.location.origin);
+          if (!urlObj.searchParams.has('subid')) urlObj.searchParams.set('subid', uid);
+          if (!urlObj.searchParams.has('ymid')) urlObj.searchParams.set('ymid', uid);
+          return urlObj.toString();
+        } catch (e) {
+          const sep = cleanUrl.includes('?') ? '&' : '?';
+          return `${cleanUrl}${sep}subid=${uid}`;
+        }
+      }
+
+      // Keep all other Monetag / Direct links clean and untouched as set in Admin Panel
+      return cleanUrl;
     }
 
     function playThreeAdsSequence(category, rewardCoins, adName, countProp, onSuccessCallback) {
+      if (!verifyOrganicHumanTraffic(adName)) return;
       if (countProp && (appData.user[countProp] || 0) <= 0) {
         return alert(`আজকের ${adName} সীমা শেষ! আগামীকাল আবার চেষ্টা করুন।`);
       }
@@ -2002,12 +2195,10 @@
       const c2 = detectAdClassification(url2);
       const c3 = detectAdClassification(url3);
 
-      const stepDuration = 10;
-
       currentAdQueue = [
-        { url: url1, duration: stepDuration, label: 'ধাপ ১/৩', classification: c1 },
-        { url: url2, duration: stepDuration, label: 'ধাপ ২/৩', classification: c2 },
-        { url: url3, duration: stepDuration, label: 'চূড়ান্ত ধাপ', classification: c3 }
+        { url: url1, duration: getNaturalHumanAdDuration(c1), label: 'ধাপ ১/৩', classification: c1 },
+        { url: url2, duration: getNaturalHumanAdDuration(c2), label: 'ধাপ ২/৩', classification: c2 },
+        { url: url3, duration: getNaturalHumanAdDuration(c3), label: 'চূড়ান্ত ধাপ (৩/৩)', classification: c3 }
       ];
       currentAdStep = 0;
       currentAdRewardCoins = Number(rewardCoins) || 0;
@@ -2019,6 +2210,7 @@
     }
 
     function playSingleAdSequence(category, rewardCoins, adName, countProp, onSuccessCallback) {
+      if (!verifyOrganicHumanTraffic(adName)) return;
       if (countProp && (appData.user[countProp] || 0) <= 0) {
         return alert(`আজকের ${adName} সীমা শেষ! আগামীকাল আবার চেষ্টা করুন।`);
       }
@@ -2029,7 +2221,7 @@
 
       const [url1] = getRotatedAdLinks(category);
       const c1 = detectAdClassification(url1);
-      const duration = Math.min(15, c1.minTime || 15);
+      const duration = getNaturalHumanAdDuration(c1);
 
       currentAdQueue = [
         { url: url1, duration: duration, label: 'স্পনসর রিওয়ার্ড যাচাই', classification: c1 }
@@ -2048,6 +2240,8 @@
 
     function executeAdStep() {
       if (currentAdStep >= currentAdQueue.length) {
+        lastAdSequenceFinishedAt = Date.now();
+        recentAdSequenceTimestamps.push(Date.now());
         forceCleanupAdState();
 
         try {
@@ -2572,15 +2766,27 @@
       if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
     }
 
+    function getPremiumSlotReward(slotNum) {
+      if (Number(slotNum) === 2) {
+        return Number(getAdminConfig('rewardPremiumAd2', getAdminConfig('rewardPremiumAd1', 150))) || 150;
+      }
+      return Number(getAdminConfig('rewardPremiumAd1', 150)) || 150;
+    }
+
     function openPremiumSdkAdModal(slotNum) {
       currentPremiumSlot = slotNum || 1;
       currentPremiumStep = 1;
       const modal = document.getElementById('modal-premium-sdk-ad');
       const titleEl = document.getElementById('prem-sdk-modal-title');
+      const rewardSubEl = document.getElementById('prem-sdk-modal-reward-sub');
       const checkEl = document.getElementById('prem-sdk-confirm-check');
+      const slotReward = getPremiumSlotReward(currentPremiumSlot);
 
       if (titleEl) {
         titleEl.innerText = slotNum === 2 ? '👑 প্রিমিয়াম আল্ট্রা এড ২ (আনলিমিটেড)' : '💎 প্রিমিয়াম ভিআইপি এড ১ (আনলিমিটেড)';
+      }
+      if (rewardSubEl) {
+        rewardSubEl.innerText = `৩টি এডে Continue ক্লিক = +${slotReward} কয়েন (নো লিমিট)`;
       }
       if (checkEl) checkEl.checked = true;
       if (premSdkVerifyTimer) {
@@ -2633,7 +2839,8 @@
               if (currentPremiumStep < 3) {
                 claimBtn.innerText = `✓ ধাপ ${currentPremiumStep}/৩ সম্পন্ন! পরবর্তী এডে যান (${currentPremiumStep + 1}/৩) →`;
               } else {
-                claimBtn.innerText = '🎉 ৩টি এড সম্পন্ন! ভেরিফাই করে +১৫০ কয়েন নিন';
+                const slotRw = getPremiumSlotReward(currentPremiumSlot);
+                claimBtn.innerText = `🎉 ৩টি এড সম্পন্ন! ভেরিফাই করে +${slotRw} কয়েন নিন`;
               }
             }
           }
@@ -2681,7 +2888,7 @@
       }
 
       closeModal('modal-premium-sdk-ad');
-      const reward = 150;
+      const reward = getPremiumSlotReward(currentPremiumSlot);
       awardCoins(reward, `প্রিমিয়াম আনলিমিটেড এড ${currentPremiumSlot} (৩/৩)`);
       try { recordUserAdActivity(); } catch (e) {}
       try { safeConfetti({ particleCount: 55, spread: 65 }); } catch (e) {}
@@ -2693,9 +2900,10 @@
     function triggerSpinWithTwoAds() {
       if ((appData.user.dailySpins || 0) <= 0) return alert('আজকের ফ্রি স্পিন শেষ!');
       closeModal('modal-spin');
+      const customSpinReward = Number(getAdminConfig('rewardSpin', 0));
       playThreeAdsSequence('general', 0, 'লাকি স্পিন আনলক', 'dailySpins', () => {
         const SLICES = [10, 25, 15, 40, 18, 24];
-        const won = SLICES[Math.floor(Math.random() * SLICES.length)];
+        const won = customSpinReward > 0 ? customSpinReward : SLICES[Math.floor(Math.random() * SLICES.length)];
         awardCoins(won, 'লাকি স্পিন');
         safeConfetti({ particleCount: 50, spread: 60 });
         showToast(`🎉 অভিনন্দন! স্পিন সম্পন্ন করে +${won} কয়েন জিতেছেন!`);
@@ -2876,7 +3084,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       const numAmt = Number(amount);
       if (isNaN(numAmt) || numAmt <= 0) return;
 
-      const safeAmt = Math.min(500, Math.floor(numAmt));
+      const safeAmt = Math.min(10000, Math.floor(numAmt));
 
       appData.user.coins = (Number(appData.user.coins) || 0) + safeAmt;
       appData.user.lifetimeCoins = (Number(appData.user.lifetimeCoins) || 0) + safeAmt;
@@ -2906,10 +3114,14 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (appData.user.referredBy && isFirebaseReady && fbDatabase) {
         const refCode = appData.user.referredBy;
         const commissionCoins = Math.max(1, Math.floor(safeAmt * 0.10));
+        const myTotalEarnedCoins = Math.max(Number(appData.user.lifetimeCoins) || 0, Number(appData.user.coins) || 0);
+        const myUserKey = sanitizeKey(appData.user.phone);
+
         fbDatabase.ref('users').once('value', snap => {
           const allUsers = snap.val() || {};
           for (const [key, usr] of Object.entries(allUsers)) {
-            if (usr.referralCode === refCode || key === sanitizeKey(refCode)) {
+            if (usr && (usr.referralCode === refCode || key === sanitizeKey(refCode))) {
+              // 1. Always credit 10% ongoing work commission
               fbDatabase.ref('users/' + key).transaction(up => {
                 if (up) {
                   up.coins = (Number(up.coins) || 0) + commissionCoins;
@@ -2923,9 +3135,44 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
                 referredPhone: appData.user.phone || '',
                 taskName: source || 'এড ভেরিফিকেশন',
                 userEarned: safeAmt,
+                userTotalCoins: myTotalEarnedCoins,
                 commissionEarned: commissionCoins,
                 timestamp: Date.now()
               }).catch(() => {});
+
+              // 2. Check 5,000 Coins Referral Completion Milestone!
+              if (myTotalEarnedCoins >= REFERRAL_COMPLETE_TARGET_COINS && !appData.user.ref5kBonusPaid) {
+                appData.user.ref5kBonusPaid = true;
+                fbDatabase.ref('users/' + myUserKey).transaction(me => {
+                  if (me && !me.ref5kBonusPaid) {
+                    me.ref5kBonusPaid = true;
+                    return me;
+                  }
+                  return;
+                }, (err, committed) => {
+                  if (!err && committed) {
+                    const refBonus = Number(getAdminConfig('referralBonusCoins', 1200));
+                    fbDatabase.ref('users/' + key).transaction(parent => {
+                      if (parent) {
+                        parent.referralsCount = (Number(parent.referralsCount) || 0) + 1;
+                        parent.coins = (Number(parent.coins) || 0) + refBonus;
+                        parent.refEarnedCoins = (Number(parent.refEarnedCoins) || 0) + refBonus;
+                        parent.lifetimeCoins = (Number(parent.lifetimeCoins) || 0) + refBonus;
+                      }
+                      return parent;
+                    });
+                    fbDatabase.ref('users/' + key + '/referralWorkHistory').push({
+                      referredName: appData.user.name || 'রেফার ইউজার',
+                      referredPhone: appData.user.phone || '',
+                      taskName: '🎉 ৫,০০০ কয়েন পূর্ণ! (রেফার কমপ্লিট বোনাস)',
+                      userEarned: myTotalEarnedCoins,
+                      userTotalCoins: myTotalEarnedCoins,
+                      commissionEarned: refBonus,
+                      timestamp: Date.now()
+                    }).catch(() => {});
+                  }
+                });
+              }
               break;
             }
           }
@@ -2956,14 +3203,19 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       }).catch(() => {});
 
       if (appData.user.referredBy) {
+        const currentTotalEarned = Math.max(Number(appData.user.lifetimeCoins) || 0, Number(appData.user.coins) || 0);
         fbDatabase.ref('referralLogs').orderByChild('referredPhone').equalTo(appData.user.phone).once('value', snap => {
           const logs = snap.val() || {};
           Object.keys(logs).forEach(logId => {
             fbDatabase.ref('referralLogs/' + logId).transaction(logItem => {
               if (logItem) {
                 logItem.tasksCompleted = (Number(logItem.tasksCompleted) || 0) + 1;
-                if (logItem.tasksCompleted >= 2) {
+                logItem.earnedCoins = currentTotalEarned;
+                logItem.targetCoins = REFERRAL_COMPLETE_TARGET_COINS;
+                if (currentTotalEarned >= REFERRAL_COMPLETE_TARGET_COINS) {
                   logItem.status = 'active';
+                } else {
+                  logItem.status = 'pending_5k';
                 }
               }
               return logItem;
@@ -3000,6 +3252,17 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (document.getElementById('wallet-coins')) document.getElementById('wallet-coins').innerText = (u.coins || 0).toLocaleString();
       if (document.getElementById('wallet-coins-bdt')) document.getElementById('wallet-coins-bdt').innerText = `≈ ৳${((u.coins || 0) / COINS_PER_BDT).toFixed(2)}`;
       if (document.getElementById('wallet-cash')) document.getElementById('wallet-cash').innerText = `৳${(u.cashBalance || 0).toFixed(2)}`;
+
+      // Update Home Today's Target Progress Ring
+      const todayEarned = Number(u.todayCoins) || 0;
+      const dailyTargetGoal = 1000;
+      const goalPct = Math.min(100, Math.round((todayEarned / dailyTargetGoal) * 100));
+      const dGoalText = document.getElementById('daily-goal-text');
+      if (dGoalText) dGoalText.innerText = `${todayEarned.toLocaleString()} / ${dailyTargetGoal.toLocaleString()} কয়েন অর্জিত`;
+      const gRing = document.getElementById('goal-ring-path');
+      if (gRing) gRing.setAttribute('stroke-dasharray', `${goalPct}, 100`);
+      const gPctText = document.getElementById('goal-percent-text');
+      if (gPctText) gPctText.innerText = `${goalPct}%`;
 
       const totalCoins = Number(u.lifetimeCoins || u.coins) || 0;
       let rankName = 'ব্রোঞ্জ';
@@ -3097,10 +3360,20 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       setElText('instant-count', `+${rInstant} • ${u.dailyInstant || 0}টি`);
 
       const rScratch = Number(getAdminConfig('rewardScratch', 200));
-      const rCaptcha = Number(getAdminConfig('rewardCaptcha', 10));
+      const rCaptcha = Number(getAdminConfig('rewardCaptcha', 200));
       const rDailyBonus = Number(getAdminConfig('dailyCheckinBonusCoins', 12));
       const rRefBonus = Number(getAdminConfig('referralBonusCoins', 1200));
-      setElText('daily-bonus-badge', `+${rDailyBonus} কয়েন`);
+      const rPrem1 = Number(getAdminConfig('rewardPremiumAd1', 150));
+      const rPrem2 = Number(getAdminConfig('rewardPremiumAd2', 150));
+      const rIdleChest = Number(getAdminConfig('rewardIdleChest', 200));
+
+      setElText('daily-bonus-badge', `+${rDailyBonus}`);
+      setElText('idle-bonus-badge', `+${rIdleChest}`);
+      setElText('home-ref-bonus-sub', `+${rRefBonus} কয়েন + ১০%`);
+      setElText('prem-ad1-sub', `প্রতি এডে +${rPrem1} কয়েন · নো লিমিট`);
+      setElText('prem-ad1-badge', `+${rPrem1} কয়েন`);
+      setElText('prem-ad2-sub', `প্রতি এডে +${rPrem2} কয়েন · নো লিমিট`);
+      setElText('prem-ad2-badge', `+${rPrem2} কয়েন`);
       setElText('scratch-card-sub', `+${rScratch} কয়েন ফিক্সড`);
       setElText('scratch-modal-reward-text', `+${rScratch} কয়েন 🎉`);
       setElText('quiz-card-sub', `+${rQuiz} কয়েন সহজে`);
@@ -3184,8 +3457,11 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (tabId === 'tasks') {
         renderTaskList();
       }
-      if (tabId === 'refer' || tabId === 'referral_comm') {
+      if (tabId === 'refer' || tabId === 'referral_comm' || tabId === 'withdraw') {
         loadUserReferralHistory(false);
+      }
+      if (tabId === 'withdraw' || tabId === 'wallet') {
+        loadUserWithdrawHistory(false);
       }
       lucide.createIcons();
     }
@@ -3196,6 +3472,152 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         return s.slice(0, 4) + '****' + s.slice(-3);
       }
       return s || '01XXXXXXXXX';
+    }
+
+    function loadUserWithdrawHistory(showRefreshToast) {
+      const wdrListEl = document.getElementById('user-withdraw-history-list');
+      const walletListEl = document.getElementById('wallet-withdraw-history-list');
+      const pendingCountEl = document.getElementById('wdr-hist-pending-count');
+      const approvedCountEl = document.getElementById('wdr-hist-approved-count');
+      const rejectedCountEl = document.getElementById('wdr-hist-rejected-count');
+
+      const myPhone = cleanPhoneNumber(appData.user?.phone || '');
+      const localItems = Array.isArray(appData.user?.localWithdrawHistory) ? appData.user.localWithdrawHistory : [];
+
+      const renderItems = (allItems) => {
+        let pendingCnt = 0;
+        let approvedCnt = 0;
+        let rejectedCnt = 0;
+
+        allItems.forEach(item => {
+          const st = String(item.status || 'pending').toLowerCase();
+          if (st === 'approved' || st === 'completed' || st === 'paid' || st === 'success') {
+            approvedCnt++;
+          } else if (st === 'rejected' || st === 'cancelled' || st === 'declined' || st === 'failed') {
+            rejectedCnt++;
+          } else {
+            pendingCnt++;
+          }
+        });
+
+        if (pendingCountEl) pendingCountEl.innerText = `${pendingCnt} টি`;
+        if (approvedCountEl) approvedCountEl.innerText = `${approvedCnt} টি`;
+        if (rejectedCountEl) rejectedCountEl.innerText = `${rejectedCnt} টি`;
+
+        if (allItems.length === 0) {
+          const emptyHtml = `
+            <div class="text-center py-6 px-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-dashed border-slate-300 dark:border-slate-700 space-y-1">
+              <div class="text-xs font-black text-slate-600 dark:text-slate-300">এখনো কোনো উইথড্র রিকোয়েস্ট দেওয়া হয়নি</div>
+              <p class="text-[10.5px] text-slate-400">আপনি টাকা উত্তোলনের আবেদন করলে সেটি পেন্ডিং, অ্যাপ্রুভড নাকি রিজেক্টেড তা এখানে লাইভ দেখতে পাবেন।</p>
+            </div>
+          `;
+          if (wdrListEl) wdrListEl.innerHTML = emptyHtml;
+          if (walletListEl) walletListEl.innerHTML = emptyHtml;
+          return;
+        }
+
+        const html = allItems.map((w) => {
+          const st = String(w.status || 'pending').toLowerCase();
+          let statusLabel = '⏳ পেন্ডিং (Pending - যাচাই চলছে)';
+          let badgeClass = 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30';
+          let cardBorder = 'border-amber-500/30';
+          let statusNote = 'অ্যাডমিন আপনার কাজের ও রেফারের নিয়ম যাচাই করছেন। শীঘ্রই পেমেন্ট পাঠানো হবে।';
+
+          if (st === 'approved' || st === 'completed' || st === 'paid' || st === 'success') {
+            statusLabel = '✅ অ্যাপ্রুভড (Approved - পেমেন্ট সফল)';
+            badgeClass = 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/40';
+            cardBorder = 'border-emerald-500/40';
+            statusNote = w.adminNote || w.trxId ? `পেমেন্ট সম্পন্ন! ${w.trxId ? 'TrxID: ' + w.trxId : ''} ${w.adminNote || ''}` : 'আপনার প্রদত্ত অ্যাকাউন্ট নম্বরে সফলভাবে পেমেন্ট পাঠিয়ে দেওয়া হয়েছে।';
+          } else if (st === 'rejected' || st === 'cancelled' || st === 'declined' || st === 'failed') {
+            statusLabel = '❌ রিজেক্টেড (Rejected - বাতিল)';
+            badgeClass = 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/40';
+            cardBorder = 'border-rose-500/40';
+            statusNote = w.adminNote || w.rejectReason || 'সঠিক নিয়মে কাজ বা শর্ত পূরণ না হওয়ার কারণে আবেদনটি বাতিল করা হয়েছে।';
+          }
+
+          const dateStr = w.timestamp
+            ? new Date(w.timestamp).toLocaleString('bn-BD', { dateStyle: 'medium', timeStyle: 'short' })
+            : 'সদ্য জমাকৃত';
+          const amtBdt = Number(w.amount) || 0;
+          const coinsDed = Number(w.coinsDeducted) || (amtBdt * COINS_PER_BDT);
+
+          return `
+            <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/75 border ${cardBorder} space-y-2 shadow-2xs">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-0.5 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white font-black text-xs">
+                    ${w.method || 'bKash'}
+                  </span>
+                  <span class="text-sm font-black text-emerald-600 dark:text-emerald-400 font-mono">
+                    ৳${amtBdt.toLocaleString()} BDT
+                  </span>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${badgeClass}">
+                  ${statusLabel}
+                </span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 text-[10.5px] bg-white dark:bg-slate-800/90 p-2 rounded-xl border border-slate-200/70 dark:border-slate-700/70">
+                <div>
+                  <span class="text-slate-400 block text-[9.5px]">অ্যাকাউন্ট নম্বর:</span>
+                  <span class="font-mono font-black text-slate-800 dark:text-white">${w.accountNumber || w.account || 'N/A'}</span>
+                </div>
+                <div class="text-right">
+                  <span class="text-slate-400 block text-[9.5px]">কর্তনকৃত কয়েন ও সময়:</span>
+                  <span class="font-bold text-amber-500">${coinsDed.toLocaleString()} কয়েন</span>
+                  <span class="text-[9px] text-slate-400 block">${dateStr}</span>
+                </div>
+              </div>
+
+              <div class="text-[10px] text-slate-600 dark:text-slate-300 font-medium px-1">
+                💬 ${statusNote}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        if (wdrListEl) wdrListEl.innerHTML = html;
+        if (walletListEl) walletListEl.innerHTML = html;
+        if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+      };
+
+      if (!isFirebaseReady || !fbDatabase || !myPhone) {
+        renderItems(localItems.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)));
+        return;
+      }
+
+      fbDatabase.ref('withdrawRequests').once('value').then(snap => {
+        const allReqs = snap.val() || {};
+        const mergedMap = {};
+
+        localItems.forEach(loc => {
+          if (loc && loc.timestamp) {
+            mergedMap['loc_' + loc.timestamp] = loc;
+          }
+        });
+
+        Object.entries(allReqs).forEach(([id, req]) => {
+          if (!req) return;
+          const reqPhone = cleanPhoneNumber(req.userPhone || req.phone || '');
+          if (reqPhone === myPhone) {
+            // Remove matching local temp entry with close timestamp
+            Object.keys(mergedMap).forEach(k => {
+              if (k.startsWith('loc_') && Math.abs((mergedMap[k].timestamp || 0) - (req.timestamp || 0)) < 5000) {
+                delete mergedMap[k];
+              }
+            });
+            mergedMap[id] = { id, ...req };
+          }
+        });
+
+        const sorted = Object.values(mergedMap).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        renderItems(sorted);
+        if (showRefreshToast) {
+          showToast('✅ উইথড্র হিস্ট্রি ও স্ট্যাটাস আপডেট করা হয়েছে!');
+        }
+      }).catch(() => {
+        renderItems(localItems.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)));
+      });
     }
 
     function loadUserReferralHistory(showRefreshToast) {
@@ -3231,12 +3653,16 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           const refBy = String(u.referredBy || '').trim();
           if (refBy && (refBy === myRefCode || refBy === myPhone || sanitizeKey(refBy) === myUserKey)) {
             const ph = u.phone || key;
+            const totalUserCoins = Math.max(Number(u.lifetimeCoins) || 0, Number(u.coins) || 0);
             referredMap[ph] = {
+              userKey: key,
               phone: ph,
               name: u.name || 'ব্যবহারকারী',
               completedAdsCount: Number(u.completedAdsCount) || 0,
               todayCoins: Number(u.todayCoins) || 0,
-              lifetimeCoins: Number(u.lifetimeCoins || u.coins) || 0,
+              currentCoins: Number(u.coins) || 0,
+              lifetimeCoins: totalUserCoins,
+              ref5kBonusPaid: Boolean(u.ref5kBonusPaid),
               createdAt: u.createdAt || 0,
               lastActive: u.lastActive || 0
             };
@@ -3255,69 +3681,122 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
               Number(log.tasksCompleted) || 0,
               Number(usrRecord.completedAdsCount) || 0
             );
+            const totalUserCoins = Math.max(
+              Number(existing.lifetimeCoins) || 0,
+              Number(usrRecord.lifetimeCoins) || 0,
+              Number(usrRecord.coins) || 0
+            );
             referredMap[ph] = {
+              userKey: existing.userKey || sanitizeKey(ph),
               phone: ph,
               name: existing.name || usrRecord.name || log.referredName || 'রেফার সদস্য',
               completedAdsCount: completedCount,
               todayCoins: Number(existing.todayCoins || usrRecord.todayCoins) || 0,
-              lifetimeCoins: Number(existing.lifetimeCoins || usrRecord.lifetimeCoins || usrRecord.coins) || 0,
+              currentCoins: Number(existing.currentCoins || usrRecord.coins) || 0,
+              lifetimeCoins: totalUserCoins,
+              ref5kBonusPaid: Boolean(existing.ref5kBonusPaid || usrRecord.ref5kBonusPaid),
               createdAt: existing.createdAt || log.timestamp || 0,
               lastActive: existing.lastActive || usrRecord.lastActive || log.timestamp || 0
             };
           }
         });
 
-        const referredList = Object.values(referredMap).sort((a, b) => (b.completedAdsCount - a.completedAdsCount) || (b.createdAt - a.createdAt));
+        const referredList = Object.values(referredMap).sort((a, b) => (b.lifetimeCoins - a.lifetimeCoins) || (b.createdAt - a.createdAt));
 
-        let activeCount = 0;
+        let completed5kCount = 0;
+        let pending5kCount = 0;
         let totalWorksCount = 0;
         let totalCommissionFromWorks = 0;
+        const refBonusPerCompleted = Number(getAdminConfig('referralBonusCoins', 1200));
 
         referredList.forEach(item => {
           const estWorks = item.completedAdsCount > 0 ? item.completedAdsCount : Math.floor((item.lifetimeCoins || 0) / 150);
           item.displayWorks = estWorks;
           const comm = Math.floor((item.lifetimeCoins || 0) * 0.10);
           item.displayCommission = comm;
-          if (estWorks > 0 || item.lifetimeCoins > 50) activeCount++;
+          item.is5kCompleted = (item.lifetimeCoins || 0) >= REFERRAL_COMPLETE_TARGET_COINS;
+
+          if (item.is5kCompleted) {
+            completed5kCount++;
+            // Auto-grant 5k completion bonus if not yet marked paid on referred user
+            if (!item.ref5kBonusPaid && item.userKey && allUsers[item.userKey]) {
+              fbDatabase.ref('users/' + item.userKey).transaction(uNode => {
+                if (uNode && !uNode.ref5kBonusPaid) {
+                  uNode.ref5kBonusPaid = true;
+                  return uNode;
+                }
+                return;
+              }, (err, committed) => {
+                if (!err && committed) {
+                  fbDatabase.ref('users/' + myUserKey).transaction(meNode => {
+                    if (meNode) {
+                      meNode.coins = (Number(meNode.coins) || 0) + refBonusPerCompleted;
+                      meNode.refEarnedCoins = (Number(meNode.refEarnedCoins) || 0) + refBonusPerCompleted;
+                      meNode.lifetimeCoins = (Number(meNode.lifetimeCoins) || 0) + refBonusPerCompleted;
+                    }
+                    return meNode;
+                  });
+                }
+              });
+            }
+          } else {
+            pending5kCount++;
+          }
+
           totalWorksCount += estWorks;
           totalCommissionFromWorks += comm;
         });
 
-        const totalUsersCount = Math.max(referredList.length, Number(appData.user.referralsCount) || 0);
+        // Sync user's completed referralsCount (ONLY referrals with >= 5,000 coins count as completed!)
+        appData.user.totalJoinedReferrals = referredList.length;
+        appData.user.referralsCount = completed5kCount;
+        try {
+          fbDatabase.ref('users/' + myUserKey).update({
+            referralsCount: completed5kCount,
+            totalJoinedReferrals: referredList.length
+          }).catch(() => {});
+        } catch (e) {}
+        renderUserHeader();
+
+        const totalJoinedCount = referredList.length;
         const totalRefEarned = Math.max(
           Number(appData.user.refEarnedCoins) || 0,
-          totalCommissionFromWorks + (referredList.length * Number(getAdminConfig('referralBonusCoins', 50)))
+          totalCommissionFromWorks + (completed5kCount * refBonusPerCompleted)
         );
 
         const setTxt = (id, val) => {
           const el = document.getElementById(id);
           if (el) el.innerText = val;
         };
-        setTxt('ref-hist-total-users', `${totalUsersCount} জন`);
-        setTxt('ref-hist-active-users', `${activeCount} জন`);
-        setTxt('ref-hist-total-works', `${totalWorksCount} টি`);
+        setTxt('ref-hist-total-users', `${totalJoinedCount} জন`);
+        setTxt('ref-hist-active-users', `${completed5kCount} জন`);
+        setTxt('ref-hist-total-works', `${pending5kCount} জন`);
         setTxt('ref-hist-total-earned', `${totalRefEarned.toLocaleString()} কয়েন`);
-        setTxt('service-ref-count', `${totalUsersCount} জন`);
+        setTxt('service-ref-count', `${completed5kCount}/${totalJoinedCount} কমপ্লিট`);
         setTxt('service-ref-earned', `${totalRefEarned.toLocaleString()} কয়েন`);
 
         if (referredList.length === 0) {
           const emptyCards = `
             <div class="text-center py-6 px-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-dashed border-slate-300 dark:border-slate-700 space-y-1.5">
               <div class="text-xs font-black text-slate-600 dark:text-slate-300">এখনো কেউ আপনার রেফার কোডে জয়েন করেনি</div>
-              <p class="text-[10.5px] text-slate-400">উপরের রেফার লিংক বন্ধুদের শেয়ার করুন—তারা জয়েন ও কাজ করলেই এখানে লাইভ হিসাব দেখতে পাবেন!</p>
+              <p class="text-[10.5px] text-slate-400">উপরের রেফার লিংক বন্ধুদের শেয়ার করুন—তারা জয়েন করে ৫,০০০ কয়েন ইনকাম করলেই রেফার কমপ্লিট হবে!</p>
             </div>
           `;
           if (listEl1) listEl1.innerHTML = emptyCards;
           if (listEl2) listEl2.innerHTML = emptyCards;
         } else {
           const cardsHtml = referredList.map((r, idx) => {
-            const isWorking = r.displayWorks > 0 || r.lifetimeCoins > 50;
+            const earnedCoins = Number(r.lifetimeCoins) || 0;
+            const isCompleted = earnedCoins >= REFERRAL_COMPLETE_TARGET_COINS;
+            const remainingFor5k = Math.max(0, REFERRAL_COMPLETE_TARGET_COINS - earnedCoins);
+            const pct5k = Math.min(100, Math.round((earnedCoins / REFERRAL_COMPLETE_TARGET_COINS) * 100));
             const dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('bn-BD') : 'সদস্য';
+
             return `
-              <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/70 border ${isWorking ? 'border-emerald-500/40' : 'border-slate-200 dark:border-slate-700'} space-y-2">
+              <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/75 border-2 ${isCompleted ? 'border-emerald-500/50' : 'border-amber-500/30'} space-y-2.5 shadow-2xs">
                 <div class="flex items-center justify-between gap-2">
                   <div class="flex items-center gap-2 min-w-0">
-                    <div class="w-8 h-8 rounded-xl ${isWorking ? 'bg-emerald-500/20 text-emerald-500' : 'bg-slate-200 dark:bg-slate-800 text-slate-400'} font-black text-xs flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-xl ${isCompleted ? 'bg-emerald-500/20 text-emerald-500' : 'bg-amber-500/20 text-amber-500'} font-black text-xs flex items-center justify-center shrink-0">
                       ${idx + 1}
                     </div>
                     <div class="min-w-0">
@@ -3325,20 +3804,34 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
                       <div class="text-[10px] font-mono text-slate-400">${maskPhoneForDisplay(r.phone)} • ${dateStr}</div>
                     </div>
                   </div>
-                  <span class="px-2 py-0.5 rounded-full text-[9.5px] font-black shrink-0 ${isWorking ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30'}">
-                    ${isWorking ? '✅ কাজ করছে' : '⏳ নতুন ইউজার'}
+                  <span class="px-2.5 py-0.5 rounded-full text-[9.5px] font-black shrink-0 ${isCompleted ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/40' : 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/40'}">
+                    ${isCompleted ? '✅ রেফার কমপ্লিট (৫,০০০+)' : `⏳ অসম্পূর্ণ (${remainingFor5k.toLocaleString()} বাকি)`}
                   </span>
                 </div>
-                <div class="grid grid-cols-3 gap-1.5 pt-1 border-t border-slate-200/70 dark:border-slate-800 text-center">
-                  <div class="p-1.5 rounded-xl bg-white dark:bg-slate-800/90">
+
+                <!-- 5,000 Coins Target Progress Bar -->
+                <div class="p-2 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 space-y-1">
+                  <div class="flex items-center justify-between text-[10px] font-black">
+                    <span class="text-slate-600 dark:text-slate-300">ইউজারের মোট ইনকাম (টার্গেট ৫,০০০):</span>
+                    <span class="${isCompleted ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-500'} font-mono">
+                      ${earnedCoins.toLocaleString()} / ৫,০০০ কয়েন (${pct5k}%)
+                    </span>
+                  </div>
+                  <div class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full transition-all duration-500 ${isCompleted ? 'bg-gradient-to-r from-emerald-500 to-teal-400' : 'bg-gradient-to-r from-amber-500 to-purple-500'}" style="width: ${pct5k}%"></div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-1.5 text-center">
+                  <div class="p-1.5 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-100 dark:border-slate-800">
                     <div class="text-[9px] text-slate-400">সম্পন্ন এড/কাজ</div>
                     <div class="text-[11px] font-black text-cyan-600 dark:text-cyan-400 mt-0.5">${r.displayWorks} টি</div>
                   </div>
-                  <div class="p-1.5 rounded-xl bg-white dark:bg-slate-800/90">
-                    <div class="text-[9px] text-slate-400">আজকের কাজ</div>
+                  <div class="p-1.5 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-100 dark:border-slate-800">
+                    <div class="text-[9px] text-slate-400">আজকের ইনকাম</div>
                     <div class="text-[11px] font-black text-purple-600 dark:text-purple-400 mt-0.5">${(r.todayCoins || 0).toLocaleString()} কয়েন</div>
                   </div>
-                  <div class="p-1.5 rounded-xl bg-white dark:bg-slate-800/90">
+                  <div class="p-1.5 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-100 dark:border-slate-800">
                     <div class="text-[9px] text-slate-400">আপনার ১০% আয়</div>
                     <div class="text-[11px] font-black text-emerald-600 dark:text-emerald-400 mt-0.5">+${(r.displayCommission || 0).toLocaleString()} কয়েন</div>
                   </div>
@@ -3381,7 +3874,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         }
 
         if (showRefreshToast) {
-          showToast('✅ রেফারেল ও কাজের হিস্ট্রি আপডেট করা হয়েছে!');
+          showToast('✅ রেফারেল ও ৫,০০০ কয়েন টার্গেট হিস্ট্রি আপডেট হয়েছে!');
         }
         if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
       }).catch(() => {});
@@ -3660,7 +4153,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       const currentRefs = Number(appData.user.referralsCount) || 0;
       if (currentRefs < MIN_REFS_FOR_WITHDRAW) {
         const needed = MIN_REFS_FOR_WITHDRAW - currentRefs;
-        return alert(`❌ উইথড্র শর্ত অপূর্ণ!\n\nটাকা তুলতে হলে কমপক্ষে ${MIN_REFS_FOR_WITHDRAW}টি সফল রেফারেল থাকতে হবে।\nআপনার বর্তমান রেফারেল: ${currentRefs} জন।\n(উইথড্র আনলক করতে আরও ${needed} জন বন্ধুকে রেফার করুন)।`);
+        return alert(`❌ উইথড্র রেফার শর্ত অপূর্ণ!\n\nটাকা তুলতে হলে কমপক্ষে ${MIN_REFS_FOR_WITHDRAW}টি সম্পন্ন রেফারেল (যাদের প্রত্যেকে কমপক্ষে ৫,০০০ কয়েন ইনকাম করেছে) থাকতে হবে।\nআপনার বর্তমান সম্পন্ন রেফারেল (৫,০০০+ কয়েন): ${currentRefs} জন।\n(উইথড্র আনলক করতে আরও ${needed} জন সক্রিয় রেফার প্রয়োজন)।`);
       }
 
       if (!account || account.length < 11) {
@@ -3669,25 +4162,34 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
       appData.user.coins = currentCoins - requiredCoins;
 
+      const wdrRecord = {
+        userPhone: appData.user.phone,
+        userName: appData.user.name || '',
+        method: method,
+        amount: amt,
+        coinsDeducted: requiredCoins,
+        accountNumber: account,
+        timestamp: Date.now(),
+        status: 'pending'
+      };
+
+      if (!Array.isArray(appData.user.localWithdrawHistory)) {
+        appData.user.localWithdrawHistory = [];
+      }
+      appData.user.localWithdrawHistory.unshift(wdrRecord);
+
       if (isFirebaseReady && fbDatabase && appData.user?.phone) {
-        fbDatabase.ref('withdrawRequests').push({
-          userPhone: appData.user.phone,
-          userName: appData.user.name || '',
-          method: method,
-          amount: amt,
-          coinsDeducted: requiredCoins,
-          accountNumber: account,
-          timestamp: Date.now(),
-          status: 'pending'
+        fbDatabase.ref('withdrawRequests').push(wdrRecord).then(() => {
+          loadUserWithdrawHistory(false);
         }).catch(err => console.warn('Firebase withdraw sync error:', err));
       }
 
       saveData();
       renderUserHeader();
+      loadUserWithdrawHistory(false);
       safeConfetti({ particleCount: 60, spread: 70 });
-      showToast(`🎉 ৳${amt} উইথড্র আবেদন সফলভাবে জমা হয়েছে!`);
+      showToast(`🎉 ৳${amt} উইথড্র আবেদন সফলভাবে জমা হয়েছে! নিচে পেন্ডিং স্ট্যাটাস দেখুন।`);
       document.getElementById('wdr-account').value = '';
-      switchTab('home');
     }
 
     function cleanPhoneNumber(raw) {
@@ -3845,18 +4347,18 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
         if (refCodeEntered) {
           appData.user.referredBy = refCodeEntered;
+          appData.user.ref5kBonusPaid = false;
           if (isFirebaseReady && fbDatabase) {
             fbDatabase.ref('users').once('value', snapshot => {
               const users = snapshot.val() || {};
               for (const [k, u] of Object.entries(users)) {
                 if (u.referralCode === refCodeEntered || k === sanitizeKey(refCodeEntered)) {
-                  const refBonus = Number(getAdminConfig('referralBonusCoins', 50));
+                  // 5,000 COINS REFERRAL COMPLETION RULE:
+                  // Do NOT increment referralsCount or pay referral bonus upon mere registration!
+                  // It will automatically complete and pay when this referred user earns >= 5,000 coins.
                   fbDatabase.ref('users/' + k).transaction(parent => {
                     if (parent) {
-                      parent.referralsCount = (Number(parent.referralsCount) || 0) + 1;
-                      parent.coins = (Number(parent.coins) || 0) + refBonus;
-                      parent.refEarnedCoins = (Number(parent.refEarnedCoins) || 0) + refBonus;
-                      parent.lifetimeCoins = (Number(parent.lifetimeCoins) || 0) + refBonus;
+                      parent.totalJoinedReferrals = (Number(parent.totalJoinedReferrals) || 0) + 1;
                     }
                     return parent;
                   });
@@ -3869,7 +4371,8 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
                     referralCode: refCodeEntered,
                     referredPhone: phone,
                     referredName: name,
-                    status: 'new',
+                    status: 'pending_5k',
+                    targetCoins: 5000,
                     tasksCompleted: 0,
                     timestamp: Date.now(),
                     date: new Date().toLocaleDateString('bn-BD')
@@ -3887,7 +4390,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         renderUserHeader();
         initFirebaseSync();
         renderTaskList();
-        showToast('🎉 রেজিস্ট্রেশন সফল! ওয়েলকাম বোনাস +২৫ কয়েন যুক্ত হয়েছে।');
+        showToast(`🎉 রেজিস্ট্রেশন সফল! ওয়েলকাম বোনাস +${WELCOME_COINS} কয়েন যুক্ত হয়েছে।`);
       };
 
       if (isFirebaseReady && fbDatabase) {
@@ -3896,7 +4399,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           if (snapshot.val()) {
             if (submitBtn) {
               submitBtn.disabled = false;
-              submitBtn.innerHTML = `<span>রেজিস্ট্রেশন করুন (+২৫ কয়েন বোনাস)</span><i data-lucide="check-circle" class="w-4 h-4"></i>`;
+              submitBtn.innerHTML = `<span>রেজিস্ট্রেশন করুন (+২৫০ কয়েন বোনাস)</span><i data-lucide="check-circle" class="w-4 h-4"></i>`;
               lucide.createIcons();
             }
             showAuthError('ℹ️ এই মোবাইল নম্বরে ইতিমধ্যে একটি অ্যাকাউন্ট আছে! অনুগ্রহ করে "লগইন" করুন।');
@@ -3950,6 +4453,8 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           completedAdsCount: Number(u.completedAdsCount) || 0,
           referralCode: u.referralCode || ('TC' + u.phone.slice(-4)),
           referredBy: u.referredBy || '',
+          ref5kBonusPaid: Boolean(u.ref5kBonusPaid),
+          totalJoinedReferrals: Number(u.totalJoinedReferrals) || 0,
           referralsCount: Number(u.referralsCount) || 0,
           refEarnedCoins: Number(u.refEarnedCoins) || 0,
           lastActive: Date.now()
@@ -4502,17 +5007,17 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         if (!val) return;
 
         const currentLocalCoins = Number(appData.user?.coins) || 0;
-        const remoteCoins = Number(val.coins) || 0;
+        const remoteCoins = val.coins !== undefined ? Number(val.coins) : currentLocalCoins;
 
         if (currentLocalCoins > 0 && remoteCoins > currentLocalCoins) {
           const diff = remoteCoins - currentLocalCoins;
-          showToast(`🎉 অফার সফল! পোস্টব্যাক থেকে +${diff} কয়েন যোগ হয়েছে!`);
+          showToast(`🎉 ব্যালেন্স আপডেট! +${diff} কয়েন যোগ হয়েছে!`);
           safeConfetti({ particleCount: 50, spread: 60 });
         }
 
-        const finalCoins = Math.max(currentLocalCoins, remoteCoins);
-        const finalLifetime = Math.max(Number(appData.user?.lifetimeCoins) || 0, Number(val.lifetimeCoins) || 0);
-        const finalToday = Math.max(Number(appData.user?.todayCoins) || 0, Number(val.todayCoins) || 0);
+        const finalCoins = remoteCoins;
+        const finalLifetime = Math.max(Number(appData.user?.lifetimeCoins) || 0, Number(val.lifetimeCoins) || 0, remoteCoins);
+        const finalToday = val.todayCoins !== undefined ? Number(val.todayCoins) : (Number(appData.user?.todayCoins) || 0);
 
         appData.user = {
           ...appData.user,
@@ -4540,6 +5045,16 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         const s = snap.val() || {};
         applyAdminAppSettings(s);
       });
+
+      // Real-time listener for user's withdrawal status updates (Pending / Approved / Rejected)
+      fbDatabase.ref('withdrawRequests').on('value', () => {
+        if (typeof loadUserWithdrawHistory === 'function') {
+          loadUserWithdrawHistory(false);
+        }
+      });
+
+      // Real-time listener for referral progress updates
+      loadUserReferralHistory(false);
 
       fbDatabase.ref('notifications/broadcast').limitToLast(8).on('child_added', (snap) => {
         const notif = snap.val();
@@ -4804,21 +5319,21 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     function claimIdleReward() {
       if (!idleChestUnlocked) return;
 
+      const idleReward = Number(getAdminConfig('rewardIdleChest', 200));
       showToast('🎁 টাইম চেস্ট আনলক করতে স্পনসর ভেরিফিকেশন সম্পন্ন করুন...');
-      playSingleAdSequence('cpm', 200, 'টাইম চেস্ট রিওয়ার্ড', null, () => {
+      playSingleAdSequence('cpm', idleReward, 'টাইম চেস্ট রিওয়ার্ড', null, () => {
         idleSecondsCount = 0;
         idleChestUnlocked = false;
         const claimBtn = document.getElementById('btn-idle-claim');
         if (claimBtn) {
           claimBtn.disabled = true;
-          claimBtn.className = 'px-3.5 py-2.5 bg-slate-800/80 text-slate-500 font-black text-xs rounded-2xl border border-slate-700 transition-all shrink-0 flex flex-col items-center justify-center gap-0.5';
+          claimBtn.className = 'mt-1.5 w-full py-2 bg-slate-200 dark:bg-slate-700 text-slate-500 font-black text-[11px] rounded-lg transition-all flex items-center justify-center gap-1';
           claimBtn.innerHTML = `
-            <i data-lucide="lock" class="w-4 h-4"></i>
-            <span class="text-[10px]">লকড</span>
+            <i data-lucide="lock" class="w-3 h-3"></i> লকড
           `;
           lucide.createIcons();
         }
-        showToast('🎉 টাইম চেস্ট থেকে +২০০ কয়েন অ্যাকাউন্টে যোগ হয়েছে!');
+        showToast(`🎉 টাইম চেস্ট থেকে +${idleReward} কয়েন অ্যাকাউন্টে যোগ হয়েছে!`);
       });
     }
 
@@ -4857,7 +5372,6 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
   </script>
 </body>
 </html>
-
 
 
 
