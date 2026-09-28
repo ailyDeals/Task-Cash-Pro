@@ -2215,43 +2215,8 @@
         startTenSecondCountdown();
       };
 
-      // Launch ONLY Monetag SDK (show_10335982) with strict Continue-button verification (NO Admin Panel direct link fallback!)
-      launchMonetagSdkWithContinueCheck(
-        () => {
-          // User clicked Continue! Run 10s verification timer
-          startTenSecondCountdown();
-        },
-        () => {
-          // User did NOT click Continue (only clicked Close) -> Block coin & step!
-          if (adCountdownInterval) {
-            clearInterval(adCountdownInterval);
-            adCountdownInterval = null;
-          }
-          if (timerBox) timerBox.classList.add('hidden');
-          if (confirmBox) confirmBox.classList.add('hidden');
-          if (failBox) failBox.classList.remove('hidden');
-          const reopenBtn = document.getElementById('ad-reopen-btn');
-          if (reopenBtn) {
-            reopenBtn.innerHTML = `<i data-lucide="refresh-cw" class="w-4 h-4"></i><span>আবার এড ওপেন করে Continue ক্লিক করুন (${item.label})</span>`;
-          }
-          if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
-        },
-        () => {
-          // SDK still loading or cooling down between steps -> DO NOT open Admin Panel links! Prompt user to tap again to trigger show_10335982
-          if (adCountdownInterval) {
-            clearInterval(adCountdownInterval);
-            adCountdownInterval = null;
-          }
-          if (timerBox) timerBox.classList.add('hidden');
-          if (confirmBox) confirmBox.classList.add('hidden');
-          if (failBox) failBox.classList.remove('hidden');
-          const reopenBtn = document.getElementById('ad-reopen-btn');
-          if (reopenBtn) {
-            reopenBtn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i><span>এড ওপেন করতে এখানে চাপ দিন (${item.label})</span>`;
-          }
-          if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
-        }
-      );
+      // Open Admin Panel Ad Links (600 rotated links) on all regular Ad buttons, exactly like before!
+      openFallbackDirectUrl();
     }
 
     function pauseAdTimer() {
@@ -2342,8 +2307,22 @@
     }
 
     function reopenActiveAdUrl() {
-      // Always re-trigger Monetag SDK (show_10335982), NEVER open Admin Panel direct links
-      executeAdStep();
+      if (currentActiveAdUrl) {
+        lastAdOpenedAt = Date.now();
+        resumeAdTimer();
+        try {
+          if (window.Telegram?.WebApp?.openLink) {
+            window.Telegram.WebApp.openLink(currentActiveAdUrl, { try_instant_view: false });
+          } else if (adWindowRef && !adWindowRef.closed) {
+            adWindowRef.location.href = currentActiveAdUrl;
+            adWindowRef.focus();
+          } else {
+            adWindowRef = window.open(currentActiveAdUrl, '_blank');
+          }
+        } catch (e) {
+          window.open(currentActiveAdUrl, '_blank');
+        }
+      }
     }
 
     function forceCleanupAdState() {
@@ -4769,7 +4748,13 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     }
 
     function clickStickyBanner() {
-      openPremiumSdkAdModal(1);
+      if (!currentStickyBannerUrl) {
+        refreshStickyBanner();
+      }
+      if (currentStickyBannerUrl) {
+        window.open(currentStickyBannerUrl, '_blank');
+        showToast('স্পনসর পেজ ভিজিট করার জন্য ধন্যবাদ! পেজটি কিছুক্ষণ ব্রাউজ করুন।');
+      }
     }
 
     setInterval(refreshStickyBanner, 35000);
@@ -4872,6 +4857,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
   </script>
 </body>
 </html>
+
 
 
 
