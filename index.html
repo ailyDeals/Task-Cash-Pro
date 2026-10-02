@@ -175,6 +175,37 @@
           </div>
         </div>
 
+        <!-- NEW: OFFICIAL TELEGRAM & YOUTUBE CHANNELS JOIN BANNER -->
+        <div id="official-channels-banner" class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border-2 border-sky-500/40 rounded-3xl p-4 text-white shadow-lg space-y-3 relative overflow-hidden">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-2xl bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
+                <i data-lucide="bell-ring" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">
+                  <span>অফিসিয়াল কমিউনিটি ও চ্যানেল সমূহ</span>
+                  <span class="px-1.5 py-0.2 rounded-md bg-emerald-500/20 text-emerald-400 text-[9px] font-bold">লাইভ</span>
+                </h3>
+                <p class="text-[10px] text-slate-300">প্রতিদিনের পেমেন্ট প্রুফ, নতুন বোনাস কোড ও কাজের ভিডিও গাইড দেখতে যুক্ত হোন:</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5 pt-1">
+            <!-- Telegram Channel Button -->
+            <button onclick="openOfficialTelegram()" class="py-2.5 px-3 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white rounded-xl text-xs font-black flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span id="btn-tg-text">টেলিগ্রাম চ্যানেল</span>
+            </button>
+            <!-- YouTube Channel Button -->
+            <button onclick="openOfficialYouTube()" class="py-2.5 px-3 bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white rounded-xl text-xs font-black flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
+              <i data-lucide="youtube" class="w-4 h-4"></i>
+              <span id="btn-yt-text">ইউটিউব চ্যানেল</span>
+            </button>
+          </div>
+        </div>
+
         <!-- 2. Super-App Unified Wallet Hero Card (Only on Home Tab!) -->
         <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950 text-white rounded-3xl p-5 shadow-xl border border-emerald-500/25 relative overflow-hidden">
           <div class="absolute -top-12 -right-12 w-44 h-44 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
@@ -831,6 +862,29 @@
               <div id="prof-lifetime" class="text-xs font-black text-amber-500 font-mono mt-0.5">০</div>
             </div>
           </div>
+        </div>
+
+        <!-- Official Channels Quick Click in Profile -->
+        <div class="grid grid-cols-2 gap-2.5">
+          <button onclick="openOfficialTelegram()" class="p-3 bg-sky-50 dark:bg-sky-950/40 border border-sky-300 dark:border-sky-800/60 rounded-2xl flex items-center gap-2.5 text-left active:scale-95 transition-all">
+            <div class="w-8 h-8 rounded-xl bg-sky-500 text-white flex items-center justify-center shrink-0">
+              <i data-lucide="send" class="w-4 h-4"></i>
+            </div>
+            <div class="min-w-0">
+              <div class="text-xs font-black text-slate-800 dark:text-white truncate">টেলিগ্রাম চ্যানেল</div>
+              <div class="text-[9.5px] text-sky-600 dark:text-sky-400 font-bold">পেমেন্ট প্রুফ ও আপডেট</div>
+            </div>
+          </button>
+
+          <button onclick="openOfficialYouTube()" class="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-800/60 rounded-2xl flex items-center gap-2.5 text-left active:scale-95 transition-all">
+            <div class="w-8 h-8 rounded-xl bg-rose-600 text-white flex items-center justify-center shrink-0">
+              <i data-lucide="youtube" class="w-4 h-4"></i>
+            </div>
+            <div class="min-w-0">
+              <div class="text-xs font-black text-slate-800 dark:text-white truncate">ইউটিউব চ্যানেল</div>
+              <div class="text-[9.5px] text-rose-600 dark:text-rose-400 font-bold">কাজের ভিডিও গাইড</div>
+            </div>
+          </button>
         </div>
 
         <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-2.5 divide-y divide-slate-100 dark:divide-slate-700/60 shadow-xs text-xs font-bold">
@@ -3049,64 +3103,73 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         const myTotalEarnedCoins = Math.max(Number(appData.user.lifetimeCoins) || 0, Number(appData.user.coins) || 0);
         const myUserKey = sanitizeKey(appData.user.phone);
 
-        fbDatabase.ref('users').once('value', snap => {
-          const allUsers = snap.val() || {};
-          for (const [key, usr] of Object.entries(allUsers)) {
-            if (usr && (usr.referralCode === refCode || key === sanitizeKey(refCode))) {
-              // 1. Always credit 10% ongoing work commission
-              fbDatabase.ref('users/' + key).transaction(up => {
-                if (up) {
-                  up.coins = (Number(up.coins) || 0) + commissionCoins;
-                  up.refEarnedCoins = (Number(up.refEarnedCoins) || 0) + commissionCoins;
-                  up.lifetimeCoins = (Number(up.lifetimeCoins) || 0) + commissionCoins;
-                }
-                return up;
-              });
-              fbDatabase.ref('users/' + key + '/referralWorkHistory').push({
-                referredName: appData.user.name || 'রেফার ইউজার',
-                referredPhone: appData.user.phone || '',
-                taskName: source || 'এড ভেরিফিকেশন',
-                userEarned: safeAmt,
-                userTotalCoins: myTotalEarnedCoins,
-                commissionEarned: commissionCoins,
-                timestamp: Date.now()
-              }).catch(() => {});
-
-              // 2. Check 5,000 Coins Referral Completion Milestone!
-              if (myTotalEarnedCoins >= REFERRAL_COMPLETE_TARGET_COINS && !appData.user.ref5kBonusPaid) {
-                appData.user.ref5kBonusPaid = true;
-                fbDatabase.ref('users/' + myUserKey).transaction(me => {
-                  if (me && !me.ref5kBonusPaid) {
-                    me.ref5kBonusPaid = true;
-                    return me;
-                  }
-                  return;
-                }, (err, committed) => {
-                  if (!err && committed) {
-                    const refBonus = Number(getAdminConfig('referralBonusCoins', 1200));
-                    fbDatabase.ref('users/' + key).transaction(parent => {
-                      if (parent) {
-                        parent.referralsCount = (Number(parent.referralsCount) || 0) + 1;
-                        parent.coins = (Number(parent.coins) || 0) + refBonus;
-                        parent.refEarnedCoins = (Number(parent.refEarnedCoins) || 0) + refBonus;
-                        parent.lifetimeCoins = (Number(parent.lifetimeCoins) || 0) + refBonus;
-                      }
-                      return parent;
-                    });
-                    fbDatabase.ref('users/' + key + '/referralWorkHistory').push({
-                      referredName: appData.user.name || 'রেফার ইউজার',
-                      referredPhone: appData.user.phone || '',
-                      taskName: '🎉 ৫,০০০ কয়েন পূর্ণ! (রেফার কমপ্লিট বোনাস)',
-                      userEarned: myTotalEarnedCoins,
-                      userTotalCoins: myTotalEarnedCoins,
-                      commissionEarned: refBonus,
-                      timestamp: Date.now()
-                    }).catch(() => {});
-                  }
-                });
-              }
-              break;
+        const handleReferrerCredit = (key, usr) => {
+          if (!usr) return;
+          // 1. Always credit 10% ongoing work commission
+          fbDatabase.ref('users/' + key).transaction(up => {
+            if (up) {
+              up.coins = (Number(up.coins) || 0) + commissionCoins;
+              up.refEarnedCoins = (Number(up.refEarnedCoins) || 0) + commissionCoins;
+              up.lifetimeCoins = (Number(up.lifetimeCoins) || 0) + commissionCoins;
             }
+            return up;
+          });
+          fbDatabase.ref('users/' + key + '/referralWorkHistory').push({
+            referredName: appData.user.name || 'রেফার ইউজার',
+            referredPhone: appData.user.phone || '',
+            taskName: source || 'এড ভেরিফিকেশন',
+            userEarned: safeAmt,
+            userTotalCoins: myTotalEarnedCoins,
+            commissionEarned: commissionCoins,
+            timestamp: Date.now()
+          }).catch(() => {});
+
+          // 2. Check 5,000 Coins Referral Completion Milestone!
+          if (myTotalEarnedCoins >= REFERRAL_COMPLETE_TARGET_COINS && !appData.user.ref5kBonusPaid) {
+            appData.user.ref5kBonusPaid = true;
+            fbDatabase.ref('users/' + myUserKey).transaction(me => {
+              if (me && !me.ref5kBonusPaid) {
+                me.ref5kBonusPaid = true;
+                return me;
+              }
+              return;
+            }, (err, committed) => {
+              if (!err && committed) {
+                const refBonus = Number(getAdminConfig('referralBonusCoins', 1200));
+                fbDatabase.ref('users/' + key).transaction(parent => {
+                  if (parent) {
+                    parent.referralsCount = (Number(parent.referralsCount) || 0) + 1;
+                    parent.coins = (Number(parent.coins) || 0) + refBonus;
+                    parent.refEarnedCoins = (Number(parent.refEarnedCoins) || 0) + refBonus;
+                    parent.lifetimeCoins = (Number(parent.lifetimeCoins) || 0) + refBonus;
+                  }
+                  return parent;
+                });
+                fbDatabase.ref('users/' + key + '/referralWorkHistory').push({
+                  referredName: appData.user.name || 'রেফার ইউজার',
+                  referredPhone: appData.user.phone || '',
+                  taskName: '🎉 ৫,০০০ কয়েন পূর্ণ! (রেফার কমপ্লিট বোনাস)',
+                  userEarned: myTotalEarnedCoins,
+                  userTotalCoins: myTotalEarnedCoins,
+                  commissionEarned: refBonus,
+                  timestamp: Date.now()
+                }).catch(() => {});
+              }
+            });
+          }
+        };
+
+        // Indexed lookup without downloading full users node (prevents lag with 10k+ users)
+        fbDatabase.ref('users').orderByChild('referralCode').equalTo(refCode).limitToFirst(1).once('value', snap => {
+          const matched = snap.val();
+          if (matched) {
+            const [k, u] = Object.entries(matched)[0];
+            handleReferrerCredit(k, u);
+          } else {
+            fbDatabase.ref('users/' + sanitizeKey(refCode)).once('value', directSnap => {
+              const u = directSnap.val();
+              if (u) handleReferrerCredit(sanitizeKey(refCode), u);
+            });
           }
         }).catch(() => {});
       }
@@ -3571,68 +3634,53 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       const myUserKey = sanitizeKey(myPhone);
 
       Promise.all([
-        fbDatabase.ref('users').once('value'),
-        fbDatabase.ref('referralLogs').once('value'),
+        fbDatabase.ref('referralLogs').orderByChild('referrerPhone').equalTo(myPhone).limitToLast(60).once('value'),
         fbDatabase.ref('users/' + myUserKey + '/referralWorkHistory').limitToLast(40).once('value')
-      ]).then(([usersSnap, logsSnap, workHistSnap]) => {
-        const allUsers = usersSnap.val() || {};
+      ]).then(([logsSnap, workHistSnap]) => {
         const allLogs = logsSnap.val() || {};
         const workHistObj = workHistSnap.val() || {};
 
         const referredMap = {};
 
-        // 1. Collect from users node where referredBy matches myRefCode or myPhone
-        Object.entries(allUsers).forEach(([key, u]) => {
-          if (!u) return;
-          const refBy = String(u.referredBy || '').trim();
-          if (refBy && (refBy === myRefCode || refBy === myPhone || sanitizeKey(refBy) === myUserKey)) {
-            const ph = u.phone || key;
-            const totalUserCoins = Math.max(Number(u.lifetimeCoins) || 0, Number(u.coins) || 0);
-            referredMap[ph] = {
-              userKey: key,
-              phone: ph,
-              name: u.name || 'ব্যবহারকারী',
-              completedAdsCount: Number(u.completedAdsCount) || 0,
-              todayCoins: Number(u.todayCoins) || 0,
-              currentCoins: Number(u.coins) || 0,
-              lifetimeCoins: totalUserCoins,
-              ref5kBonusPaid: Boolean(u.ref5kBonusPaid),
-              createdAt: u.createdAt || 0,
-              lastActive: u.lastActive || 0
-            };
-          }
-        });
-
-        // 2. Merge with referralLogs node
+        // 1. Process referralLogs for this specific user (fast indexed query, avoids app hanging)
         Object.values(allLogs).forEach(log => {
           if (!log) return;
-          if (log.referrerPhone === myPhone || log.referralCode === myRefCode) {
-            const ph = log.referredPhone || log.id;
-            const existing = referredMap[ph] || {};
-            const usrRecord = allUsers[sanitizeKey(ph)] || {};
-            const completedCount = Math.max(
-              Number(existing.completedAdsCount) || 0,
-              Number(log.tasksCompleted) || 0,
-              Number(usrRecord.completedAdsCount) || 0
-            );
-            const totalUserCoins = Math.max(
-              Number(existing.lifetimeCoins) || 0,
-              Number(usrRecord.lifetimeCoins) || 0,
-              Number(usrRecord.coins) || 0
-            );
-            referredMap[ph] = {
-              userKey: existing.userKey || sanitizeKey(ph),
-              phone: ph,
-              name: existing.name || usrRecord.name || log.referredName || 'রেফার সদস্য',
-              completedAdsCount: completedCount,
-              todayCoins: Number(existing.todayCoins || usrRecord.todayCoins) || 0,
-              currentCoins: Number(existing.currentCoins || usrRecord.coins) || 0,
-              lifetimeCoins: totalUserCoins,
-              ref5kBonusPaid: Boolean(existing.ref5kBonusPaid || usrRecord.ref5kBonusPaid),
-              createdAt: existing.createdAt || log.timestamp || 0,
-              lastActive: existing.lastActive || usrRecord.lastActive || log.timestamp || 0
-            };
-          }
+          const ph = log.referredPhone || log.id;
+          const completedCount = Number(log.tasksCompleted) || 0;
+          const totalUserCoins = Number(log.userTotalCoins || log.lifetimeCoins || 0);
+          referredMap[ph] = {
+            userKey: sanitizeKey(ph),
+            phone: ph,
+            name: log.referredName || 'রেফার সদস্য',
+            completedAdsCount: completedCount,
+            todayCoins: 0,
+            currentCoins: totalUserCoins,
+            lifetimeCoins: totalUserCoins,
+            ref5kBonusPaid: log.status === 'completed' || Boolean(log.bonusPaid),
+            createdAt: log.timestamp || 0,
+            lastActive: log.timestamp || 0
+          };
+        });
+
+        // 2. Also incorporate referralWorkHistory if present
+        Object.values(workHistObj).forEach(w => {
+          if (!w || !w.referredPhone) return;
+          const ph = w.referredPhone;
+          const existing = referredMap[ph] || {
+            userKey: sanitizeKey(ph),
+            phone: ph,
+            name: w.referredName || 'রেফার সদস্য',
+            completedAdsCount: 0,
+            todayCoins: 0,
+            currentCoins: 0,
+            lifetimeCoins: 0,
+            ref5kBonusPaid: false,
+            createdAt: w.timestamp || 0,
+            lastActive: w.timestamp || 0
+          };
+          existing.lifetimeCoins = Math.max(existing.lifetimeCoins, Number(w.userTotalCoins) || 0);
+          existing.lastActive = Math.max(existing.lastActive, w.timestamp || 0);
+          referredMap[ph] = existing;
         });
 
         const referredList = Object.values(referredMap).sort((a, b) => (b.lifetimeCoins - a.lifetimeCoins) || (b.createdAt - a.createdAt));
@@ -3653,7 +3701,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           if (item.is5kCompleted) {
             completed5kCount++;
             // Auto-grant 5k completion bonus if not yet marked paid on referred user
-            if (!item.ref5kBonusPaid && item.userKey && allUsers[item.userKey]) {
+            if (!item.ref5kBonusPaid && item.userKey) {
               fbDatabase.ref('users/' + item.userKey).transaction(uNode => {
                 if (uNode && !uNode.ref5kBonusPaid) {
                   uNode.ref5kBonusPaid = true;
@@ -4139,6 +4187,9 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       } else if (num.startsWith('88')) {
         num = '0' + num.slice(2);
       }
+      if (num.length === 10 && num.startsWith('1')) {
+        num = '0' + num;
+      }
       return num;
     }
 
@@ -4176,16 +4227,20 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i><span>প্রবেশ করা হচ্ছে...</span>`;
-        lucide.createIcons();
+        if (window.lucide?.createIcons) lucide.createIcons();
       }
 
+      const resetLoginBtn = () => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>একাউন্টে প্রবেশ করুন</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+          if (window.lucide?.createIcons) lucide.createIcons();
+        }
+      };
+
       const proceedLogin = (userData) => {
+        resetLoginBtn();
         if (userData && userData.banned) {
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = `<span>একাউন্টে প্রবেশ করুন</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
-            lucide.createIcons();
-          }
           return showAuthError('⛔ আপনার একাউন্টটি সাময়িকভাবে ব্যান করা হয়েছে। সাপোর্টে যোগাযোগ করুন।');
         }
 
@@ -4198,6 +4253,10 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           appData.user.referralCode = 'TC' + phone.slice(-4);
         }
 
+        try {
+          localStorage.setItem('TASKCASH_USER_DATA', JSON.stringify(appData.user));
+        } catch (e) {}
+
         document.getElementById('auth-screen').classList.add('hidden');
         document.getElementById('main-app-container').classList.remove('hidden');
         renderUserHeader();
@@ -4206,38 +4265,67 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         showToast(`👋 স্বাগতম, ${appData.user.name || 'ব্যবহারকারী'}!`);
       };
 
-      if (isFirebaseReady && fbDatabase) {
-        const userKey = sanitizeKey(phone);
-        fbDatabase.ref('users/' + userKey).once('value', snapshot => {
-          const val = snapshot.val();
-          if (val) {
-            if (val.password && password && val.password !== password) {
-              if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = `<span>একাউন্টে প্রবেশ করুন</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
-                lucide.createIcons();
-              }
-              return showAuthError('❌ পাসওয়ার্ড সঠিক নয়! অনুগ্রহ করে সঠিক পাসওয়ার্ড দিন।');
-            }
-            proceedLogin(val);
-          } else {
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.innerHTML = `<span>একাউন্টে প্রবেশ করুন</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
-              lucide.createIcons();
-            }
-            const regPhoneInput = document.getElementById('reg-phone');
-            if (regPhoneInput) regPhoneInput.value = phone;
-            showAuthError('ℹ️ এই নম্বরে কোনো অ্যাকাউন্ট পাওয়া যায়নি। অনুগ্রহ করে "নতুন একাউন্ট" তৈরি করুন।');
-            toggleAuthMode('register');
-          }
-        }).catch(err => {
-          console.warn('Firebase login check failed, offline fallback:', err);
-          proceedLogin(null);
-        });
-      } else {
+      if (!isFirebaseReady || !fbDatabase) {
         proceedLogin(null);
+        return;
       }
+
+      let isCompleted = false;
+      const loginTimer = setTimeout(() => {
+        if (!isCompleted) {
+          isCompleted = true;
+          console.warn('Firebase login timeout, checking cached session');
+          const cached = localStorage.getItem('TASKCASH_USER_DATA');
+          if (cached) {
+            try { proceedLogin(JSON.parse(cached)); return; } catch(e) {}
+          }
+          proceedLogin(null);
+        }
+      }, 5000);
+
+      const userKey = sanitizeKey(phone);
+
+      const evaluateUserData = (val, actualKey) => {
+        if (isCompleted) return;
+        isCompleted = true;
+        clearTimeout(loginTimer);
+
+        if (val) {
+          if (val.password && password && val.password !== password) {
+            resetLoginBtn();
+            return showAuthError('❌ পাসওয়ার্ড সঠিক নয়! অনুগ্রহ করে সঠিক পাসওয়ার্ড দিন।');
+          }
+          if (!val.password && password) {
+            fbDatabase.ref('users/' + actualKey).update({ password: password }).catch(() => {});
+          }
+          proceedLogin(val);
+        } else {
+          resetLoginBtn();
+          const regPhoneInput = document.getElementById('reg-phone');
+          if (regPhoneInput) regPhoneInput.value = phone;
+          showAuthError('ℹ️ এই নম্বরে কোনো অ্যাকাউন্ট পাওয়া যায়নি। অনুগ্রহ করে "নতুন একাউন্ট" তৈরি করুন।');
+          toggleAuthMode('register');
+        }
+      };
+
+      fbDatabase.ref('users/' + userKey).once('value', snapshot => {
+        const val = snapshot.val();
+        if (val) {
+          evaluateUserData(val, userKey);
+        } else {
+          fbDatabase.ref('users/u_' + userKey).once('value', s2 => {
+            const v2 = s2.val();
+            if (v2) {
+              evaluateUserData(v2, 'u_' + userKey);
+            } else {
+              evaluateUserData(null, userKey);
+            }
+          }).catch(() => evaluateUserData(null, userKey));
+        }
+      }).catch(err => {
+        console.warn('Firebase login error:', err);
+        evaluateUserData(null, userKey);
+      });
     }
 
     function handleUserRegister(e) {
@@ -4265,54 +4353,98 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i><span>রেজিস্ট্রেশন হচ্ছে...</span>`;
-        lucide.createIcons();
+        if (window.lucide?.createIcons) lucide.createIcons();
       }
 
+      const resetRegBtn = () => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>রেজিস্ট্রেশন করুন (+২৫০ কয়েন বোনাস)</span><i data-lucide="check-circle" class="w-4 h-4"></i>`;
+          if (window.lucide?.createIcons) lucide.createIcons();
+        }
+      };
+
       const completeRegistration = () => {
+        resetRegBtn();
         localStorage.setItem(SESSION_USER_KEY, phone);
-        appData.user.phone = phone;
-        appData.user.name = name;
-        appData.user.password = password;
-        appData.user.coins = WELCOME_COINS;
-        appData.user.referralCode = 'TC' + phone.slice(-4);
-        appData.user.referralsCount = 0;
-        appData.user.refEarnedCoins = 0;
-        appData.user.createdAt = Date.now();
+        
+        const newUserData = {
+          name: name,
+          phone: phone,
+          password: password,
+          coins: WELCOME_COINS,
+          cashBalance: 0,
+          lifetimeCoins: WELCOME_COINS,
+          todayCoins: WELCOME_COINS,
+          dailySpins: 50,
+          dailyQuiz: 50,
+          dailyCaptcha: 50,
+          dailyAdsgram: 50,
+          dailyMonetag: 50,
+          dailyWatchAd: 50,
+          dailyUnlockExtra: 50,
+          dailyInstant: 50,
+          dailyScratch: 50,
+          completedAdsCount: 0,
+          referralCode: 'TC' + phone.slice(-4),
+          referredBy: refCodeEntered || '',
+          ref5kBonusPaid: false,
+          totalJoinedReferrals: 0,
+          referralsCount: 0,
+          refEarnedCoins: 0,
+          createdAt: Date.now(),
+          lastActive: Date.now()
+        };
 
-        if (refCodeEntered) {
-          appData.user.referredBy = refCodeEntered;
-          appData.user.ref5kBonusPaid = false;
-          if (isFirebaseReady && fbDatabase) {
-            fbDatabase.ref('users').once('value', snapshot => {
-              const users = snapshot.val() || {};
-              for (const [k, u] of Object.entries(users)) {
-                if (u.referralCode === refCodeEntered || k === sanitizeKey(refCodeEntered)) {
-                  // 5,000 COINS REFERRAL COMPLETION RULE:
-                  // Do NOT increment referralsCount or pay referral bonus upon mere registration!
-                  // It will automatically complete and pay when this referred user earns >= 5,000 coins.
-                  fbDatabase.ref('users/' + k).transaction(parent => {
-                    if (parent) {
-                      parent.totalJoinedReferrals = (Number(parent.totalJoinedReferrals) || 0) + 1;
-                    }
-                    return parent;
-                  });
+        appData.user = { ...appData.user, ...newUserData };
 
-                  const logId = 'ref_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
-                  fbDatabase.ref('referralLogs/' + logId).set({
-                    id: logId,
-                    referrerPhone: u.phone || k,
-                    referrerName: u.name || 'রেফারার',
-                    referralCode: refCodeEntered,
-                    referredPhone: phone,
-                    referredName: name,
-                    status: 'pending_5k',
-                    targetCoins: 5000,
-                    tasksCompleted: 0,
-                    timestamp: Date.now(),
-                    date: new Date().toLocaleDateString('bn-BD')
-                  }).catch(() => {});
-                  break;
+        try {
+          localStorage.setItem('TASKCASH_USER_DATA', JSON.stringify(appData.user));
+        } catch (e) {}
+
+        const userKey = sanitizeKey(phone);
+
+        if (isFirebaseReady && fbDatabase) {
+          fbDatabase.ref('users/' + userKey).set(newUserData).catch(err => {
+            console.warn('Firebase initial user set error:', err);
+          });
+
+          // Indexed lookup without downloading full users node (fast and never hangs)
+          if (refCodeEntered) {
+            const handleParentReferral = (parentKey, parentUser) => {
+              fbDatabase.ref('users/' + parentKey).transaction(parent => {
+                if (parent) {
+                  parent.totalJoinedReferrals = (Number(parent.totalJoinedReferrals) || 0) + 1;
                 }
+                return parent;
+              });
+
+              const logId = 'ref_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+              fbDatabase.ref('referralLogs/' + logId).set({
+                id: logId,
+                referrerPhone: parentUser.phone || parentKey,
+                referrerName: parentUser.name || 'রেফারার',
+                referralCode: refCodeEntered,
+                referredPhone: phone,
+                referredName: name,
+                status: 'pending_5k',
+                targetCoins: 5000,
+                tasksCompleted: 0,
+                timestamp: Date.now(),
+                date: new Date().toLocaleDateString('bn-BD')
+              }).catch(() => {});
+            };
+
+            fbDatabase.ref('users').orderByChild('referralCode').equalTo(refCodeEntered).limitToFirst(1).once('value', snap => {
+              const matched = snap.val();
+              if (matched) {
+                const [k, u] = Object.entries(matched)[0];
+                handleParentReferral(k, u);
+              } else {
+                fbDatabase.ref('users/' + sanitizeKey(refCodeEntered)).once('value', directSnap => {
+                  const u = directSnap.val();
+                  if (u) handleParentReferral(sanitizeKey(refCodeEntered), u);
+                });
               }
             }).catch(() => {});
           }
@@ -4320,36 +4452,60 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
         document.getElementById('auth-screen').classList.add('hidden');
         document.getElementById('main-app-container').classList.remove('hidden');
-        saveData();
         renderUserHeader();
         initFirebaseSync();
         renderTaskList();
         showToast(`🎉 রেজিস্ট্রেশন সফল! ওয়েলকাম বোনাস +${WELCOME_COINS} কয়েন যুক্ত হয়েছে।`);
       };
 
-      if (isFirebaseReady && fbDatabase) {
-        const userKey = sanitizeKey(phone);
-        fbDatabase.ref('users/' + userKey).once('value', snapshot => {
-          if (snapshot.val()) {
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.innerHTML = `<span>রেজিস্ট্রেশন করুন (+২৫০ কয়েন বোনাস)</span><i data-lucide="check-circle" class="w-4 h-4"></i>`;
-              lucide.createIcons();
-            }
-            showAuthError('ℹ️ এই মোবাইল নম্বরে ইতিমধ্যে একটি অ্যাকাউন্ট আছে! অনুগ্রহ করে "লগইন" করুন।');
-            const loginPhoneInput = document.getElementById('login-phone');
-            if (loginPhoneInput) loginPhoneInput.value = phone;
-            toggleAuthMode('login');
-          } else {
-            completeRegistration();
-          }
-        }).catch(err => {
-          console.warn('Firebase registration check error:', err);
-          completeRegistration();
-        });
-      } else {
+      if (!isFirebaseReady || !fbDatabase) {
         completeRegistration();
+        return;
       }
+
+      let checkDone = false;
+      const regTimer = setTimeout(() => {
+        if (!checkDone) {
+          checkDone = true;
+          completeRegistration();
+        }
+      }, 5000);
+
+      const userKey = sanitizeKey(phone);
+
+      const checkKey = (keyToCheck, callback) => {
+        fbDatabase.ref('users/' + keyToCheck).once('value', snapshot => {
+          callback(Boolean(snapshot.val()));
+        }).catch(() => callback(false));
+      };
+
+      checkKey(userKey, exists => {
+        if (checkDone) return;
+        if (exists) {
+          checkDone = true;
+          clearTimeout(regTimer);
+          resetRegBtn();
+          showAuthError('ℹ️ এই মোবাইল নম্বরে ইতিমধ্যে একটি অ্যাকাউন্ট আছে! অনুগ্রহ করে "লগইন" করুন।');
+          const loginPhoneInput = document.getElementById('login-phone');
+          if (loginPhoneInput) loginPhoneInput.value = phone;
+          toggleAuthMode('login');
+        } else {
+          checkKey('u_' + userKey, exists2 => {
+            if (checkDone) return;
+            checkDone = true;
+            clearTimeout(regTimer);
+            if (exists2) {
+              resetRegBtn();
+              showAuthError('ℹ️ এই মোবাইল নম্বরে ইতিমধ্যে একটি অ্যাকাউন্ট আছে! অনুগ্রহ করে "লগইন" করুন।');
+              const loginPhoneInput = document.getElementById('login-phone');
+              if (loginPhoneInput) loginPhoneInput.value = phone;
+              toggleAuthMode('login');
+            } else {
+              completeRegistration();
+            }
+          });
+        }
+      });
     }
 
     function handleUserLogout() {
@@ -4371,6 +4527,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         const payload = {
           name: u.name || 'ব্যবহারকারী',
           phone: u.phone,
+          password: u.password || '',
           coins: Number(u.coins) || 0,
           cashBalance: Number(u.cashBalance) || 0,
           lifetimeCoins: Number(u.lifetimeCoins) || 0,
@@ -5005,13 +5162,64 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       });
     }
 
+    function openOfficialTelegram() {
+      const s = appData.appSettings || {};
+      const tgUrl = (s.telegramUrl || s.telegramChannel || s.telegramLink || 'https://t.me/pockemoneytrust').trim();
+      try {
+        if (window.Telegram?.WebApp?.openTelegramLink) {
+          window.Telegram.WebApp.openTelegramLink(tgUrl);
+        } else if (window.Telegram?.WebApp?.openLink) {
+          window.Telegram.WebApp.openLink(tgUrl, { try_instant_view: false });
+        } else {
+          window.open(tgUrl, '_blank');
+        }
+      } catch (e) {
+        window.open(tgUrl, '_blank');
+      }
+      showToast('📢 টেলিগ্রাম চ্যানেল ওপেন করা হচ্ছে...');
+    }
+
+    function openOfficialYouTube() {
+      const s = appData.appSettings || {};
+      const ytUrl = (s.youtubeUrl || s.youtubeChannel || s.youtubeLink || 'https://youtube.com').trim();
+      try {
+        if (window.Telegram?.WebApp?.openLink) {
+          window.Telegram.WebApp.openLink(ytUrl, { try_instant_view: false });
+        } else {
+          window.open(ytUrl, '_blank');
+        }
+      } catch (e) {
+        window.open(ytUrl, '_blank');
+      }
+      showToast('🎬 ইউটিউব চ্যানেল ওপেন করা হচ্ছে...');
+    }
+
     function applyAdminAppSettings(s) {
       if (!s) return;
       appData.appSettings = s;
 
       const nEl = document.getElementById('notice-text');
-      if (nEl && s.marqueeNotice) {
-        nEl.innerText = s.marqueeNotice;
+      if (nEl && (s.marqueeNotice || s.notice)) {
+        nEl.innerText = s.marqueeNotice || s.notice;
+      }
+
+      // Sync Admin Telegram and YouTube URLs into system tasks and buttons
+      const tgUrl = (s.telegramUrl || s.telegramChannel || s.telegramLink || 'https://t.me/pockemoneytrust').trim();
+      if (tgUrl && DEFAULT_SYSTEM_TASKS['task_tg_join']) {
+        DEFAULT_SYSTEM_TASKS['task_tg_join'].targetUrl = tgUrl;
+      }
+      const ytUrl = (s.youtubeUrl || s.youtubeChannel || s.youtubeLink || '').trim();
+      if (ytUrl && DEFAULT_SYSTEM_TASKS['task_yt_sub']) {
+        DEFAULT_SYSTEM_TASKS['task_yt_sub'].targetUrl = ytUrl;
+      }
+
+      const tgBtn = document.getElementById('btn-tg-text');
+      if (tgBtn) {
+        tgBtn.innerText = tgUrl ? 'টেলিগ্রাম চ্যানেল (যুক্ত হোন)' : 'টেলিগ্রাম চ্যানেল';
+      }
+      const ytBtn = document.getElementById('btn-yt-text');
+      if (ytBtn) {
+        ytBtn.innerText = ytUrl ? 'ইউটিউব চ্যানেল (গাইড ভিডিও)' : 'ইউটিউব চ্যানেল';
       }
 
       let maintOverlay = document.getElementById('maintenance-overlay');
