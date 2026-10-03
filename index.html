@@ -86,6 +86,10 @@
           <span>একাউন্টে প্রবেশ করুন</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
+        <div class="flex items-center justify-between text-xs pt-1 px-1 text-slate-400">
+          <button type="button" onclick="toggleAuthMode('register')" class="text-emerald-400 hover:text-emerald-300 font-semibold underline">নতুন একাউন্ট তৈরি করুন</button>
+          <button type="button" onclick="handleForgotPasswordNotice()" class="text-amber-400 hover:text-amber-300 font-medium">পাসওয়ার্ড মনে নেই?</button>
+        </div>
       </form>
 
       <form id="form-register" onsubmit="handleUserRegister(event)" class="space-y-3 hidden">
@@ -109,6 +113,10 @@
           <span>রেজিস্ট্রেশন করুন (+২৫০ কয়েন বোনাস)</span>
           <i data-lucide="check-circle" class="w-4 h-4"></i>
         </button>
+        <div class="text-center text-xs pt-1">
+          <span class="text-slate-400">ইতিমধ্যে একাউন্ট আছে? </span>
+          <button type="button" onclick="toggleAuthMode('login')" class="text-emerald-400 hover:text-emerald-300 font-bold underline">সরাসরি লগইন করুন</button>
+        </div>
       </form>
     </div>
   </div>
@@ -1930,19 +1938,11 @@
       // Track if Admin changed any limit in Admin Panel
       const currentAdminLimitKey = `${spinLim}_${scratchLim}_${captchaLim}_${quizLim}_${adsgramLim}_${monetagLim}_${watchLim}_${unlockLim}_${instantLim}`;
 
-      const allZero =
-        (Number(u.dailyAdsgram) || 0) <= 0 &&
-        (Number(u.dailyMonetag) || 0) <= 0 &&
-        (Number(u.dailyWatchAd) || 0) <= 0 &&
-        (Number(u.dailyUnlockExtra) || 0) <= 0 &&
-        (Number(u.dailyInstant) || 0) <= 0;
+      // Reset ONLY when it is actually a new day
+      const isNewDay = !u.lastLimitResetDate || u.lastLimitResetDate !== todayStr;
+      const isAdminKeyChanged = u.lastAdminLimitKey && u.lastAdminLimitKey !== currentAdminLimitKey;
 
-      // Update immediately if: (1) New day, (2) Stuck at 0, or (3) Admin changed limits in Admin Panel
-      if (
-        u.lastLimitResetDate !== todayStr ||
-        allZero ||
-        (u.lastAdminLimitKey && u.lastAdminLimitKey !== currentAdminLimitKey)
-      ) {
+      if (isNewDay) {
         u.dailySpins = spinLim;
         u.dailyScratch = scratchLim;
         u.dailyCaptcha = captchaLim;
@@ -1952,6 +1952,8 @@
         u.dailyWatchAd = watchLim;
         u.dailyUnlockExtra = unlockLim;
         u.dailyInstant = instantLim;
+        u.dailyIdleChest = 5;
+        u.todayCoins = 0;
         u.lastLimitResetDate = todayStr;
         u.lastAdminLimitKey = currentAdminLimitKey;
 
@@ -1968,13 +1970,15 @@
               dailyWatchAd: u.dailyWatchAd,
               dailyUnlockExtra: u.dailyUnlockExtra,
               dailyInstant: u.dailyInstant,
+              dailyIdleChest: u.dailyIdleChest,
+              todayCoins: 0,
               lastLimitResetDate: todayStr,
               lastAdminLimitKey: currentAdminLimitKey
             });
           }
           if (typeof renderUserHeader === 'function') renderUserHeader();
         } catch (e) {}
-      } else if (!u.lastAdminLimitKey) {
+      } else if (isAdminKeyChanged) {
         u.lastAdminLimitKey = currentAdminLimitKey;
       }
     }
@@ -3377,6 +3381,20 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       setElText('captcha-card-sub', `+${rCaptcha} কয়েন প্রতিবার`);
       setElText('service-menu-ref-bonus', `প্রতি রেফারে ${rRefBonus} কয়েন`);
 
+      const todayDateStr = new Date().toISOString().split('T')[0];
+      const btnCheckin = document.getElementById('btn-checkin');
+      if (btnCheckin) {
+        if (u.lastDailyCheckinDate === todayDateStr) {
+          btnCheckin.disabled = true;
+          btnCheckin.innerText = 'আজকের ক্লেইম সম্পন্ন';
+          btnCheckin.className = 'w-full py-2 bg-slate-200 dark:bg-slate-700 text-slate-500 font-bold text-xs rounded-xl cursor-not-allowed';
+        } else {
+          btnCheckin.disabled = false;
+          btnCheckin.innerText = 'ক্লেইম করুন';
+          btnCheckin.className = 'w-full py-2 bg-amber-500 hover:bg-amber-400 text-white font-black text-xs rounded-xl active:scale-95 transition-all shadow-xs';
+        }
+      }
+
       COINS_PER_BDT = Number(getAdminConfig('coinsPerBdt', 100));
       MIN_WITHDRAW_BDT = Number(getAdminConfig('minWithdrawBDT', 50));
       const reqRef = getAdminConfig('requireRefForWithdraw', true);
@@ -4060,15 +4078,33 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     }
 
     function claimDailyBonus() {
+      const todayStr = new Date().toISOString().split('T')[0];
+      if (appData.user?.lastDailyCheckinDate === todayStr) {
+        showToast('⚠️ আপনি আজকের দৈনিক বোনাস ইতিমধ্যে গ্রহণ করেছেন! আগামীকাল আবার চেষ্টা করুন।');
+        const btn = document.getElementById('btn-checkin');
+        if (btn) {
+          btn.disabled = true;
+          btn.innerText = 'আজকের ক্লেইম সম্পন্ন';
+          btn.className = 'w-full py-2 bg-slate-200 dark:bg-slate-700 text-slate-500 font-bold text-xs rounded-xl cursor-not-allowed';
+        }
+        return;
+      }
+
       const btn = document.getElementById('btn-checkin');
       if (btn && btn.disabled) return;
       
       const rw = Number(getAdminConfig('dailyCheckinBonusCoins', 12));
       showToast('🎁 দৈনিক বোনাস আনলক করতে স্পনসর ভেরিফিকেশন সম্পন্ন করুন...');
       playSingleAdSequence('cpm', rw, 'দৈনিক বোনাস', null, () => {
+        appData.user.lastDailyCheckinDate = todayStr;
+        if (isFirebaseReady && fbDatabase && appData.user?.phone) {
+          fbDatabase.ref(`users/${cleanPhoneNumber(appData.user.phone)}/lastDailyCheckinDate`).set(todayStr);
+        }
+        saveData();
         if (btn) {
           btn.disabled = true;
-          btn.innerText = 'ক্লেইমড';
+          btn.innerText = 'আজকের ক্লেইম সম্পন্ন';
+          btn.className = 'w-full py-2 bg-slate-200 dark:bg-slate-700 text-slate-500 font-bold text-xs rounded-xl cursor-not-allowed';
         }
         showToast(`🎉 দৈনিক বোনাস +${rw} কয়েন সফলভাবে জমা হয়েছে!`);
       });
@@ -4138,10 +4174,19 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         return alert(`❌ উইথড্র রেফার শর্ত অপূর্ণ!\n\nটাকা তুলতে হলে কমপক্ষে ${MIN_REFS_FOR_WITHDRAW}টি সম্পন্ন রেফারেল (যাদের প্রত্যেকে কমপক্ষে ৫,০০০ কয়েন ইনকাম করেছে) থাকতে হবে।\nআপনার বর্তমান সম্পন্ন রেফারেল (৫,০০০+ কয়েন): ${currentRefs} জন।\n(উইথড্র আনলক করতে আরও ${needed} জন সক্রিয় রেফার প্রয়োজন)।`);
       }
 
+      // গোপন শর্ত: প্রতিবার উইথড্র করার জন্য TimeWall থেকে কমপক্ষে ২,০০০ কয়েন ট্রান্সফার বাধ্যতামূলক
+      const requireTimeWall = getAdminConfig('requireTimewallForWithdraw', true);
+      const twTransfers = Number(appData.user.timewallTransfersAvailable || 0);
+      if (requireTimeWall && twTransfers < 1) {
+        return alert(`❌ উইথড্র শর্ত অপূর্ণ!\n\nটাকা তোলার জন্য TimeWall থেকে কমপক্ষে ২,০০০ কয়েন ট্রান্সফার করে অ্যাপে জমা দেওয়া বাধ্যতামূলক।\n\nঅনুগ্রহ করে TimeWall-এ গিয়ে ২,০০০ কয়েন ট্রান্সফার সম্পন্ন করে স্ক্রিনশট প্রুফ জমা দিন। প্রতিবার উইথড্র করার জন্য TimeWall থেকে ২,০০০ কয়েন ট্রান্সফার করা বাধ্যতামূলক।`);
+      }
+
       if (!account || account.length < 11) {
         return alert('⚠️ অনুগ্রহ করে সঠিক ১১ ডিজিটের মোবাইল নম্বর লিখুন (যেমন: 017XXXXXXXX)।');
       }
 
+      const newTwTransfers = requireTimeWall ? Math.max(0, twTransfers - 1) : twTransfers;
+      appData.user.timewallTransfersAvailable = newTwTransfers;
       appData.user.coins = currentCoins - requiredCoins;
 
       const wdrRecord = {
@@ -4152,7 +4197,8 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         coinsDeducted: requiredCoins,
         accountNumber: account,
         timestamp: Date.now(),
-        status: 'pending'
+        status: 'pending',
+        timewallTransferVerified: true
       };
 
       if (!Array.isArray(appData.user.localWithdrawHistory)) {
@@ -4161,6 +4207,10 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       appData.user.localWithdrawHistory.unshift(wdrRecord);
 
       if (isFirebaseReady && fbDatabase && appData.user?.phone) {
+        fbDatabase.ref(`users/${cleanPhoneNumber(appData.user.phone)}`).update({
+          coins: appData.user.coins,
+          timewallTransfersAvailable: newTwTransfers
+        });
         fbDatabase.ref('withdrawRequests').push(wdrRecord).then(() => {
           loadUserWithdrawHistory(false);
         }).catch(err => console.warn('Firebase withdraw sync error:', err));
@@ -4198,6 +4248,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (errBox) {
         errBox.innerText = msg;
         errBox.classList.remove('hidden');
+        errBox.style.display = 'block';
       } else {
         alert(msg);
       }
@@ -4208,6 +4259,140 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (errBox) {
         errBox.innerText = '';
         errBox.classList.add('hidden');
+        errBox.style.display = 'none';
+      }
+    }
+
+    function showAppScreen() {
+      const authScreen = document.getElementById('auth-screen');
+      if (authScreen) {
+        authScreen.classList.add('hidden');
+        authScreen.style.setProperty('display', 'none', 'important');
+      }
+      const mainContainer = document.getElementById('main-app-container');
+      if (mainContainer) {
+        mainContainer.classList.remove('hidden');
+        mainContainer.style.setProperty('display', 'flex', 'important');
+      }
+    }
+
+    function showAuthScreen() {
+      const authScreen = document.getElementById('auth-screen');
+      if (authScreen) {
+        authScreen.classList.remove('hidden');
+        authScreen.style.setProperty('display', 'flex', 'important');
+      }
+      const mainContainer = document.getElementById('main-app-container');
+      if (mainContainer) {
+        mainContainer.classList.add('hidden');
+        mainContainer.style.setProperty('display', 'none', 'important');
+      }
+    }
+
+    function findFirebaseUserByPhone(phone, callback) {
+      if (!isFirebaseReady || !fbDatabase || !phone) {
+        return callback(null, null);
+      }
+      const clean = cleanPhoneNumber(phone);
+      const noZero = clean.startsWith('0') ? clean.slice(1) : clean;
+      const withZero = clean.startsWith('0') ? clean : ('0' + clean);
+
+      const keysToTry = [
+        withZero,
+        clean,
+        noZero,
+        'u_' + withZero,
+        'u_' + clean,
+        'u_' + noZero
+      ];
+      const uniqueKeys = Array.from(new Set(keysToTry));
+
+      let resolved = false;
+      let pending = uniqueKeys.length;
+      let matchedVal = null;
+      let matchedKey = null;
+
+      uniqueKeys.forEach(k => {
+        fbDatabase.ref('users/' + k).once('value', snap => {
+          if (resolved) return;
+          const v = snap.val();
+          if (v && !matchedVal) {
+            matchedVal = v;
+            matchedKey = k;
+          }
+          pending--;
+          if (matchedVal || pending === 0) {
+            resolved = true;
+            callback(matchedVal, matchedKey);
+          }
+        }).catch(() => {
+          if (resolved) return;
+          pending--;
+          if (pending === 0) {
+            resolved = true;
+            callback(matchedVal, matchedKey);
+          }
+        });
+      });
+
+      setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          callback(matchedVal, matchedKey);
+        }
+      }, 4000);
+    }
+
+    function handleParentReferralFast(refCodeEntered, childPhone, childName) {
+      if (!isFirebaseReady || !fbDatabase || !refCodeEntered) return;
+      const cleanRef = sanitizeKey(refCodeEntered);
+
+      const applyParentUpdate = (parentKey, parentUser) => {
+        fbDatabase.ref('users/' + parentKey).transaction(parent => {
+          if (parent) {
+            parent.totalJoinedReferrals = (Number(parent.totalJoinedReferrals) || 0) + 1;
+          }
+          return parent;
+        });
+
+        const logId = 'ref_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+        fbDatabase.ref('referralLogs/' + logId).set({
+          id: logId,
+          referrerPhone: (parentUser && parentUser.phone) ? parentUser.phone : parentKey,
+          referrerName: (parentUser && parentUser.name) ? parentUser.name : 'রেফারার',
+          referralCode: refCodeEntered,
+          referredPhone: childPhone,
+          referredName: childName,
+          status: 'pending_5k',
+          targetCoins: 5000,
+          tasksCompleted: 0,
+          timestamp: Date.now(),
+          date: new Date().toLocaleDateString('bn-BD')
+        }).catch(() => {});
+      };
+
+      fbDatabase.ref('users').orderByChild('referralCode').equalTo(refCodeEntered).limitToFirst(1).once('value', snap => {
+        const matched = snap.val();
+        if (matched) {
+          const [k, u] = Object.entries(matched)[0];
+          applyParentUpdate(k, u);
+        } else {
+          fbDatabase.ref('users/' + cleanRef).once('value', directSnap => {
+            const u = directSnap.val();
+            if (u) applyParentUpdate(cleanRef, u);
+          });
+        }
+      }).catch(() => {});
+    }
+
+    function handleForgotPasswordNotice() {
+      const ph = cleanPhoneNumber(document.getElementById('login-phone')?.value || '');
+      if (ph) {
+        showToast('💡 পাসওয়ার্ড মনে না থাকলে "নতুন একাউন্ট" ট্যাবে আপনার নাম ও নতুন পাসওয়ার্ড দিয়ে সাবমিট করলেই স্বয়ংক্রিয়ভাবে প্রবেশ করতে পারবেন।');
+        toggleAuthMode('register');
+      } else {
+        showToast('💡 মোবাইল নম্বর প্রদান করে "নতুন একাউন্ট" ট্যাবে পাসওয়ার্ড সেট করে সরাসরি প্রবেশ করতে পারবেন।');
+        toggleAuthMode('register');
       }
     }
 
@@ -4227,78 +4412,68 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i><span>প্রবেশ করা হচ্ছে...</span>`;
-        if (window.lucide?.createIcons) lucide.createIcons();
+        try { if (window.lucide?.createIcons) lucide.createIcons(); } catch (e) {}
       }
 
       const resetLoginBtn = () => {
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.innerHTML = `<span>একাউন্টে প্রবেশ করুন</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
-          if (window.lucide?.createIcons) lucide.createIcons();
+          try { if (window.lucide?.createIcons) lucide.createIcons(); } catch (e) {}
         }
       };
 
-      const proceedLogin = (userData) => {
+      const proceedLogin = (userData, activePhone) => {
+        const finalPhone = activePhone || phone;
         resetLoginBtn();
         if (userData && userData.banned) {
           return showAuthError('⛔ আপনার একাউন্টটি সাময়িকভাবে ব্যান করা হয়েছে। সাপোর্টে যোগাযোগ করুন।');
         }
 
-        localStorage.setItem(SESSION_USER_KEY, phone);
-        appData.user.phone = phone;
+        try {
+          localStorage.setItem(SESSION_USER_KEY, finalPhone);
+          localStorage.setItem('TASKCASH_SESSION_PHONE', finalPhone);
+          sessionStorage.setItem(SESSION_USER_KEY, finalPhone);
+          sessionStorage.setItem('TASKCASH_SESSION_PHONE', finalPhone);
+        } catch (e) {}
+
+        appData.user.phone = finalPhone;
         if (userData) {
-          appData.user = { ...appData.user, ...userData };
+          appData.user = { ...appData.user, ...userData, phone: finalPhone };
         }
         if (!appData.user.referralCode) {
-          appData.user.referralCode = 'TC' + phone.slice(-4);
+          appData.user.referralCode = 'TC' + finalPhone.slice(-4);
         }
 
         try {
           localStorage.setItem('TASKCASH_USER_DATA', JSON.stringify(appData.user));
         } catch (e) {}
 
-        document.getElementById('auth-screen').classList.add('hidden');
-        document.getElementById('main-app-container').classList.remove('hidden');
-        renderUserHeader();
-        initFirebaseSync();
-        renderTaskList();
+        showAppScreen();
+
+        try { renderUserHeader(); } catch (e) { console.warn(e); }
+        try { initFirebaseSync(); } catch (e) { console.warn(e); }
+        try { renderTaskList(); } catch (e) { console.warn(e); }
+        try { if (window.lucide?.createIcons) lucide.createIcons(); } catch (e) {}
         showToast(`👋 স্বাগতম, ${appData.user.name || 'ব্যবহারকারী'}!`);
       };
 
       if (!isFirebaseReady || !fbDatabase) {
-        proceedLogin(null);
+        proceedLogin(null, phone);
         return;
       }
 
-      let isCompleted = false;
-      const loginTimer = setTimeout(() => {
-        if (!isCompleted) {
-          isCompleted = true;
-          console.warn('Firebase login timeout, checking cached session');
-          const cached = localStorage.getItem('TASKCASH_USER_DATA');
-          if (cached) {
-            try { proceedLogin(JSON.parse(cached)); return; } catch(e) {}
-          }
-          proceedLogin(null);
-        }
-      }, 5000);
-
-      const userKey = sanitizeKey(phone);
-
-      const evaluateUserData = (val, actualKey) => {
-        if (isCompleted) return;
-        isCompleted = true;
-        clearTimeout(loginTimer);
-
+      findFirebaseUserByPhone(phone, (val, actualKey) => {
         if (val) {
-          if (val.password && password && val.password !== password) {
+          const userPass = String(val.password || '').trim();
+          if (userPass && password && userPass !== password) {
             resetLoginBtn();
             return showAuthError('❌ পাসওয়ার্ড সঠিক নয়! অনুগ্রহ করে সঠিক পাসওয়ার্ড দিন।');
           }
-          if (!val.password && password) {
+          if (!userPass && password) {
             fbDatabase.ref('users/' + actualKey).update({ password: password }).catch(() => {});
           }
-          proceedLogin(val);
+          proceedLogin(val, phone);
         } else {
           resetLoginBtn();
           const regPhoneInput = document.getElementById('reg-phone');
@@ -4306,25 +4481,6 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           showAuthError('ℹ️ এই নম্বরে কোনো অ্যাকাউন্ট পাওয়া যায়নি। অনুগ্রহ করে "নতুন একাউন্ট" তৈরি করুন।');
           toggleAuthMode('register');
         }
-      };
-
-      fbDatabase.ref('users/' + userKey).once('value', snapshot => {
-        const val = snapshot.val();
-        if (val) {
-          evaluateUserData(val, userKey);
-        } else {
-          fbDatabase.ref('users/u_' + userKey).once('value', s2 => {
-            const v2 = s2.val();
-            if (v2) {
-              evaluateUserData(v2, 'u_' + userKey);
-            } else {
-              evaluateUserData(null, userKey);
-            }
-          }).catch(() => evaluateUserData(null, userKey));
-        }
-      }).catch(err => {
-        console.warn('Firebase login error:', err);
-        evaluateUserData(null, userKey);
       });
     }
 
@@ -4353,20 +4509,25 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i><span>রেজিস্ট্রেশন হচ্ছে...</span>`;
-        if (window.lucide?.createIcons) lucide.createIcons();
+        try { if (window.lucide?.createIcons) lucide.createIcons(); } catch (e) {}
       }
 
       const resetRegBtn = () => {
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.innerHTML = `<span>রেজিস্ট্রেশন করুন (+২৫০ কয়েন বোনাস)</span><i data-lucide="check-circle" class="w-4 h-4"></i>`;
-          if (window.lucide?.createIcons) lucide.createIcons();
+          try { if (window.lucide?.createIcons) lucide.createIcons(); } catch (e) {}
         }
       };
 
       const completeRegistration = () => {
         resetRegBtn();
-        localStorage.setItem(SESSION_USER_KEY, phone);
+        try {
+          localStorage.setItem(SESSION_USER_KEY, phone);
+          localStorage.setItem('TASKCASH_SESSION_PHONE', phone);
+          sessionStorage.setItem(SESSION_USER_KEY, phone);
+          sessionStorage.setItem('TASKCASH_SESSION_PHONE', phone);
+        } catch (e) {}
         
         const newUserData = {
           name: name,
@@ -4385,6 +4546,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           dailyUnlockExtra: 50,
           dailyInstant: 50,
           dailyScratch: 50,
+          dailyIdleChest: 5,
           completedAdsCount: 0,
           referralCode: 'TC' + phone.slice(-4),
           referredBy: refCodeEntered || '',
@@ -4392,6 +4554,8 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           totalJoinedReferrals: 0,
           referralsCount: 0,
           refEarnedCoins: 0,
+          timewallTransfersAvailable: 0,
+          timewallTransferCount: 0,
           createdAt: Date.now(),
           lastActive: Date.now()
         };
@@ -4409,52 +4573,17 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
             console.warn('Firebase initial user set error:', err);
           });
 
-          // Indexed lookup without downloading full users node (fast and never hangs)
           if (refCodeEntered) {
-            const handleParentReferral = (parentKey, parentUser) => {
-              fbDatabase.ref('users/' + parentKey).transaction(parent => {
-                if (parent) {
-                  parent.totalJoinedReferrals = (Number(parent.totalJoinedReferrals) || 0) + 1;
-                }
-                return parent;
-              });
-
-              const logId = 'ref_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
-              fbDatabase.ref('referralLogs/' + logId).set({
-                id: logId,
-                referrerPhone: parentUser.phone || parentKey,
-                referrerName: parentUser.name || 'রেফারার',
-                referralCode: refCodeEntered,
-                referredPhone: phone,
-                referredName: name,
-                status: 'pending_5k',
-                targetCoins: 5000,
-                tasksCompleted: 0,
-                timestamp: Date.now(),
-                date: new Date().toLocaleDateString('bn-BD')
-              }).catch(() => {});
-            };
-
-            fbDatabase.ref('users').orderByChild('referralCode').equalTo(refCodeEntered).limitToFirst(1).once('value', snap => {
-              const matched = snap.val();
-              if (matched) {
-                const [k, u] = Object.entries(matched)[0];
-                handleParentReferral(k, u);
-              } else {
-                fbDatabase.ref('users/' + sanitizeKey(refCodeEntered)).once('value', directSnap => {
-                  const u = directSnap.val();
-                  if (u) handleParentReferral(sanitizeKey(refCodeEntered), u);
-                });
-              }
-            }).catch(() => {});
+            handleParentReferralFast(refCodeEntered, phone, name);
           }
         }
 
-        document.getElementById('auth-screen').classList.add('hidden');
-        document.getElementById('main-app-container').classList.remove('hidden');
-        renderUserHeader();
-        initFirebaseSync();
-        renderTaskList();
+        showAppScreen();
+
+        try { renderUserHeader(); } catch (e) { console.warn(e); }
+        try { initFirebaseSync(); } catch (e) { console.warn(e); }
+        try { renderTaskList(); } catch (e) { console.warn(e); }
+        try { if (window.lucide?.createIcons) lucide.createIcons(); } catch (e) {}
         showToast(`🎉 রেজিস্ট্রেশন সফল! ওয়েলকাম বোনাস +${WELCOME_COINS} কয়েন যুক্ত হয়েছে।`);
       };
 
@@ -4463,53 +4592,57 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         return;
       }
 
-      let checkDone = false;
-      const regTimer = setTimeout(() => {
-        if (!checkDone) {
-          checkDone = true;
-          completeRegistration();
-        }
-      }, 5000);
-
-      const userKey = sanitizeKey(phone);
-
-      const checkKey = (keyToCheck, callback) => {
-        fbDatabase.ref('users/' + keyToCheck).once('value', snapshot => {
-          callback(Boolean(snapshot.val()));
-        }).catch(() => callback(false));
-      };
-
-      checkKey(userKey, exists => {
-        if (checkDone) return;
-        if (exists) {
-          checkDone = true;
-          clearTimeout(regTimer);
+      findFirebaseUserByPhone(phone, (existingUser, existingKey) => {
+        if (existingUser) {
           resetRegBtn();
-          showAuthError('ℹ️ এই মোবাইল নম্বরে ইতিমধ্যে একটি অ্যাকাউন্ট আছে! অনুগ্রহ করে "লগইন" করুন।');
+          const storedPass = String(existingUser.password || '').trim();
+          // If password matches or no password was set, directly log in!
+          if (!storedPass || storedPass === password) {
+            if (!storedPass && password) {
+              fbDatabase.ref('users/' + existingKey).update({ password: password }).catch(() => {});
+            }
+            try {
+              localStorage.setItem(SESSION_USER_KEY, phone);
+              localStorage.setItem('TASKCASH_SESSION_PHONE', phone);
+              sessionStorage.setItem(SESSION_USER_KEY, phone);
+              sessionStorage.setItem('TASKCASH_SESSION_PHONE', phone);
+            } catch (e) {}
+            appData.user.phone = phone;
+            appData.user = { ...appData.user, ...existingUser, phone };
+            try { localStorage.setItem('TASKCASH_USER_DATA', JSON.stringify(appData.user)); } catch (e) {}
+            showAppScreen();
+            try { renderUserHeader(); } catch (e) { console.warn(e); }
+            try { initFirebaseSync(); } catch (e) { console.warn(e); }
+            try { renderTaskList(); } catch (e) { console.warn(e); }
+            try { if (window.lucide?.createIcons) lucide.createIcons(); } catch (e) {}
+            showToast(`👋 আপনার একাউন্ট আগে থেকেই তৈরি ছিল—সরাসরি সফলভাবে প্রবেশ করানো হয়েছে!`);
+            return;
+          }
+
+          // If password does not match, clearly guide them to login with password
+          showAuthError('ℹ️ এই মোবাইল নম্বরে ইতিমধ্যে একটি একাউন্ট আছে! অনুগ্রহ করে সঠিক পাসওয়ার্ড দিয়ে লগইন করুন।');
           const loginPhoneInput = document.getElementById('login-phone');
           if (loginPhoneInput) loginPhoneInput.value = phone;
+          const loginPassInput = document.getElementById('login-password');
+          if (loginPassInput) {
+            loginPassInput.value = '';
+            loginPassInput.focus();
+          }
           toggleAuthMode('login');
         } else {
-          checkKey('u_' + userKey, exists2 => {
-            if (checkDone) return;
-            checkDone = true;
-            clearTimeout(regTimer);
-            if (exists2) {
-              resetRegBtn();
-              showAuthError('ℹ️ এই মোবাইল নম্বরে ইতিমধ্যে একটি অ্যাকাউন্ট আছে! অনুগ্রহ করে "লগইন" করুন।');
-              const loginPhoneInput = document.getElementById('login-phone');
-              if (loginPhoneInput) loginPhoneInput.value = phone;
-              toggleAuthMode('login');
-            } else {
-              completeRegistration();
-            }
-          });
+          completeRegistration();
         }
       });
     }
 
     function handleUserLogout() {
-      localStorage.removeItem(SESSION_USER_KEY);
+      try {
+        localStorage.removeItem(SESSION_USER_KEY);
+        localStorage.removeItem('TASKCASH_SESSION_PHONE');
+        localStorage.removeItem('TASKCASH_USER_DATA');
+        sessionStorage.removeItem(SESSION_USER_KEY);
+        sessionStorage.removeItem('TASKCASH_SESSION_PHONE');
+      } catch (e) {}
       location.reload();
     }
 
@@ -5461,11 +5594,27 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     function claimIdleReward() {
       if (!idleChestUnlocked) return;
 
+      const idleChestCount = Number(appData.user?.dailyIdleChest ?? 5);
+      if (idleChestCount <= 0) {
+        return alert('আজকের টাইম চেস্ট রিওয়ার্ড সীমা শেষ! আগামীকাল আবার চেষ্টা করুন।');
+      }
+
       const idleReward = Number(getAdminConfig('rewardIdleChest', 200));
       showToast('🎁 টাইম চেস্ট আনলক করতে স্পনসর ভেরিফিকেশন সম্পন্ন করুন...');
       playSingleAdSequence('cpm', idleReward, 'টাইম চেস্ট রিওয়ার্ড', null, () => {
         idleSecondsCount = 0;
         idleChestUnlocked = false;
+        if (appData.user) {
+          appData.user.dailyIdleChest = Math.max(0, idleChestCount - 1);
+          appData.user.lastIdleClaimTimestamp = Date.now();
+          if (isFirebaseReady && fbDatabase && appData.user.phone) {
+            fbDatabase.ref('users/' + sanitizeKey(appData.user.phone)).update({
+              dailyIdleChest: appData.user.dailyIdleChest,
+              lastIdleClaimTimestamp: appData.user.lastIdleClaimTimestamp
+            });
+          }
+          saveData();
+        }
         const claimBtn = document.getElementById('btn-idle-claim');
         if (claimBtn) {
           claimBtn.disabled = true;
@@ -5479,10 +5628,86 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       });
     }
 
+    function checkAndRestoreUserSession() {
+      try {
+        let savedPhone = localStorage.getItem(SESSION_USER_KEY) || 
+                         localStorage.getItem('TASKCASH_SESSION_PHONE') ||
+                         sessionStorage.getItem(SESSION_USER_KEY) ||
+                         sessionStorage.getItem('TASKCASH_SESSION_PHONE');
+
+        let cachedUser = null;
+        try {
+          const rawCached = localStorage.getItem('TASKCASH_USER_DATA');
+          if (rawCached) {
+            cachedUser = JSON.parse(rawCached);
+            if (!savedPhone && cachedUser && cachedUser.phone) {
+              savedPhone = cachedUser.phone;
+            }
+          }
+        } catch (e) {}
+
+        // Also check if running in Telegram WebApp
+        if (!savedPhone && window.Telegram?.WebApp?.initDataUnsafe?.user) {
+          const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+          if (tgUser && tgUser.id) {
+            savedPhone = 'tg_' + tgUser.id;
+          }
+        }
+
+        if (savedPhone) {
+          const cleanPhone = cleanPhoneNumber(savedPhone) || savedPhone;
+          appData.user.phone = cleanPhone;
+          if (cachedUser && typeof cachedUser === 'object') {
+            appData.user = { ...appData.user, ...cachedUser, phone: cleanPhone };
+          }
+          if (!appData.user.referralCode) {
+            appData.user.referralCode = 'TC' + cleanPhone.slice(-4);
+          }
+
+          showAppScreen();
+
+          try { renderUserHeader(); } catch (e) { console.warn(e); }
+          try { initFirebaseSync(); } catch (e) { console.warn(e); }
+          try { renderTaskList(); } catch (e) { console.warn(e); }
+          try { refreshStickyBanner(); } catch (e) {}
+          try { initIdleRetentionTimer(); } catch (e) {}
+          try { if (window.lucide?.createIcons) lucide.createIcons(); } catch (e) {}
+          return true;
+        } else {
+          showAuthScreen();
+          try { if (window.lucide?.createIcons) lucide.createIcons(); } catch (e) {}
+          return false;
+        }
+      } catch (err) {
+        console.warn('checkAndRestoreUserSession error:', err);
+        return false;
+      }
+    }
+
+    // Run session check immediately without waiting for slow ad networks or window.onload
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        checkAndRestoreUserSession();
+        try { refreshStickyBanner(); } catch (e) {}
+        try { initIdleRetentionTimer(); } catch (e) {}
+        try { if (window.lucide?.createIcons) lucide.createIcons(); } catch (e) {}
+      });
+    } else {
+      checkAndRestoreUserSession();
+    }
+
+    window.addEventListener('load', () => {
+      checkAndRestoreUserSession();
+      try { refreshStickyBanner(); } catch (e) {}
+      try { initIdleRetentionTimer(); } catch (e) {}
+      try { if (window.lucide?.createIcons) lucide.createIcons(); } catch (e) {}
+    });
+
     window.onload = () => {
-      lucide.createIcons();
-      refreshStickyBanner();
-      initIdleRetentionTimer();
+      checkAndRestoreUserSession();
+      try { refreshStickyBanner(); } catch (e) {}
+      try { initIdleRetentionTimer(); } catch (e) {}
+      try { if (window.lucide?.createIcons) lucide.createIcons(); } catch (e) {}
 
       const urlParams = new URLSearchParams(window.location.search);
       const urlRef = urlParams.get('ref');
@@ -5490,25 +5715,6 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         const regRef = document.getElementById('reg-refer');
         if (regRef) regRef.value = urlRef;
         toggleAuthMode('register');
-      }
-
-      const saved = localStorage.getItem(SESSION_USER_KEY);
-      if (saved) {
-        appData.user.phone = saved;
-        const cachedUser = localStorage.getItem('TASKCASH_USER_DATA');
-        if (cachedUser) {
-          try {
-            const parsed = JSON.parse(cachedUser);
-            if (parsed && typeof parsed === 'object') {
-              appData.user = { ...appData.user, ...parsed };
-            }
-          } catch (e) {}
-        }
-        document.getElementById('auth-screen').classList.add('hidden');
-        document.getElementById('main-app-container').classList.remove('hidden');
-        renderUserHeader();
-        initFirebaseSync();
-        renderTaskList();
       }
     };
   </script>
