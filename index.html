@@ -1287,13 +1287,28 @@
         </div>
 
         <!-- Not Leader Yet -->
+        <!-- Rules info card -->
+        <div class="bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 rounded-3xl p-4 space-y-2 text-[11px] text-slate-700 dark:text-slate-200 leading-relaxed">
+          <div class="font-black text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5 text-xs">
+            <i data-lucide="info" class="w-4 h-4"></i> টিম সিস্টেম নিয়মাবলী (পড়ুন)
+          </div>
+          <ul class="list-disc pl-4 space-y-1">
+            <li><b>কাজ:</b> TimeWall-এ গিয়ে কাজ করে কয়েন <b>রিডিম</b> করুন, তারপর স্ক্রিনশট প্রুফ এখানে জমা দিন।</li>
+            <li><b>দৈনিক টার্গেট:</b> অ্যাডমিন নির্ধারিত কয়েন (ডিফল্ট ৩,০০০) — প্রুফ অ্যাপ্রুভ হলে অ্যাপে <b>বোনাস কয়েন</b> পাবেন।</li>
+            <li><b>টিম জয়েন:</b> একজন ইউজার শুধু <b>১টি টিমে</b> জয়েন করতে পারবে।</li>
+            <li><b>টিম লিডার:</b> নিজের টিম চালাতে পারবেন; চাইলে <b>অন্য ১টি টিমেও</b> মেম্বার হিসেবে জয়েন করে কাজ করতে পারবেন।</li>
+            <li><b>লিডার সেলারি:</b> সপ্তাহে (৭ দিন) টিমের ৮০%+ অ্যাক্টিভ থাকলে ফুল সেলারি; ৬০–৭৯% হলে আংশিক; নিচে বা নিজে মিস করলে ৳০।</li>
+            <li><b>ব্যান:</b> একই স্ক্রিনশট টিম প্রুফ ও সাধারণ টাস্ক — দুই জায়গায় দিলে একাউন্ট ব্যান।</li>
+          </ul>
+        </div>
+
         <div id="team-not-leader-box" class="space-y-4">
-          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-4 space-y-3 shadow-xs">
+          <div id="team-leader-request-card" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-4 space-y-3 shadow-xs">
             <h4 class="text-sm font-black text-slate-800 dark:text-white flex items-center gap-2">
               <i data-lucide="crown" class="w-4 h-4 text-amber-500"></i> টিম লিডার হতে চান?
             </h4>
             <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-              টিম লিডার হলে আপনি ১০ জন মেম্বার নিয়ে টিম চালাবেন। মেম্বাররা প্রতিদিন নির্ধারিত কয়েন রিডিম করে প্রুফ জমা দিলে আপনি সাপ্তাহিক সেলারি পাবেন।
+              টিম লিডার হলে নিজের টিম কোড পাবেন, মেম্বার যোগ করতে পারবেন। মেম্বাররা প্রতিদিন TimeWall থেকে কয়েন রিডিম করে প্রুফ জমা দিলে আপনি <b>সাপ্তাহিক সেলারি</b> পাবেন (অ্যাডমিন পেমেন্ট)। আপনি চাইলে অন্য একটি টিমেও মেম্বার হিসেবে জয়েন করে কাজ করতে পারবেন।
             </p>
             <form onsubmit="handleTeamLeaderRequest(event)" class="space-y-3">
               <div>
@@ -1311,11 +1326,11 @@
             <div id="tl-req-status" class="hidden text-center text-xs font-bold p-2 rounded-xl"></div>
           </div>
 
-          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-4 space-y-3 shadow-xs">
+          <div id="team-join-card" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-4 space-y-3 shadow-xs">
             <h4 class="text-sm font-black text-slate-800 dark:text-white flex items-center gap-2">
               <i data-lucide="user-plus" class="w-4 h-4 text-emerald-500"></i> টিমে জয়েন করুন
             </h4>
-            <p class="text-[11px] text-slate-500">টিম লিডারের কোড দিয়ে জয়েন করুন। প্রতিদিন কয়েন রিডিম করে প্রুফ জমা দিতে হবে।</p>
+            <p class="text-[11px] text-slate-500">টিম লিডারের কোড দিয়ে জয়েন করুন। <b>শুধু ১টি টিমে</b> জয়েন করা যাবে। প্রতিদিন TimeWall থেকে অ্যাডমিন নির্ধারিত কয়েন রিডিম করে স্ক্রিনশট প্রুফ জমা দিতে হবে। অ্যাপ্রুভ হলে অ্যাপে বোনাস কয়েন পাবেন।</p>
             <form onsubmit="handleJoinTeam(event)" class="flex gap-2">
               <input type="text" id="join-team-code" placeholder="TLXXXX" class="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs font-mono uppercase text-slate-800 dark:text-white" required>
               <button type="submit" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl active:scale-95">জয়েন</button>
@@ -1373,9 +1388,9 @@
         <!-- Member View (joined a team) -->
         <div id="team-member-box" class="space-y-4 hidden">
           <div class="bg-white dark:bg-slate-800 border border-emerald-300 dark:border-emerald-700 rounded-3xl p-4 shadow-xs space-y-2">
-            <div class="text-[10px] text-slate-400 font-bold uppercase">আপনি যে টিমে আছেন</div>
+            <div class="text-[10px] text-slate-400 font-bold uppercase">আপনি যে টিমে মেম্বার হিসেবে আছেন (সর্বোচ্চ ১টি)</div>
             <div id="tm-team-info" class="text-sm font-black text-slate-800 dark:text-white">—</div>
-            <div class="text-[11px] text-slate-500">প্রতিদিন নির্ধারিত কয়েন রিডিম করে নিচে প্রুফ জমা দিন।</div>
+            <div class="text-[11px] text-slate-500 leading-relaxed">প্রতিদিন TimeWall থেকে অ্যাডমিন নির্ধারিত কয়েন রিডিম করে নিচে প্রুফ জমা দিন। অ্যাপ্রুভ হলে বোনাস কয়েন পাবেন। চাইলে নিজেও আলাদা টিম লিডার হতে পারেন (উপরের ফর্ম থেকে)।</div>
           </div>
         </div>
 
@@ -1384,10 +1399,16 @@
           <h4 class="text-xs font-black text-slate-800 dark:text-white flex items-center gap-1.5">
             <i data-lucide="camera" class="w-4 h-4 text-rose-500"></i> আজকের কয়েন রিডিম প্রুফ জমা দিন
           </h4>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400">TimeWall থেকে কয়েন রিডিম করে স্ক্রিনশট আপলোড করুন। অ্যাডমিন অ্যাপ্রুভ করলে আপনি অ্যাপ ওয়ালেটে <strong id="team-report-reward-hint" class="text-emerald-600">বোনাস কয়েন</strong> পাবেন। একই প্রুফ সাধারণ টাস্ক ও টিম — দুই জায়গায় দিলে একাউন্ট ব্যান হবে।</p>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+            <b>১)</b> TimeWall খুলে কাজ করুন → কয়েন রিডিম করুন।<br>
+            <b>২)</b> রিডিম/হিস্ট্রির স্পষ্ট স্ক্রিনশট নিন।<br>
+            <b>৩)</b> নিচে আপলোড করে জমা দিন। অ্যাডমিন অ্যাপ্রুভ করলে অ্যাপ ওয়ালেটে <strong id="team-report-reward-hint" class="text-emerald-600">বোনাস কয়েন</strong> পাবেন।<br>
+            <span class="text-rose-500 font-bold">⚠️ একই স্ক্রিনশট টিম + সাধারণ টাস্ক দুই জায়গায় দিলে একাউন্ট ব্যান।</span>
+          </p>
           <div>
-            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">রিডিম করা কয়েন:</label>
-            <input type="number" id="team-report-coins" min="100" value="3000" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs font-mono text-slate-800 dark:text-white">
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">রিডিম টার্গেট (অ্যাডমিন নির্ধারিত — পরিবর্তন করা যাবে না):</label>
+            <input type="number" id="team-report-coins" min="100" value="3000" readonly class="w-full bg-slate-100 dark:bg-slate-900/80 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs font-mono text-slate-800 dark:text-white font-black cursor-not-allowed">
+            <p class="text-[10px] text-slate-400 mt-1">TimeWall থেকে অন্তত এত কয়েন রিডিম করে স্ক্রিনশট দিন। টার্গেট অ্যাডমিন প্যানেল থেকে সেট হয়।</p>
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">স্ক্রিনশট:</label>
@@ -5811,24 +5832,45 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       const leaderDash = document.getElementById('team-leader-dashboard');
       const memberBox = document.getElementById('team-member-box');
       const reportBox = document.getElementById('team-daily-report-box');
+      const leaderReqForm = document.getElementById('team-leader-request-card');
+      const joinFormCard = document.getElementById('team-join-card');
+
+      // Daily report: leader বা মেম্বার হলে দেখাও
+      if (isLeader || joinedTeam) {
+        if (reportBox) reportBox.classList.remove('hidden');
+      } else {
+        if (reportBox) reportBox.classList.add('hidden');
+      }
 
       if (isLeader) {
-        if (notLeaderBox) notLeaderBox.classList.add('hidden');
         if (leaderDash) leaderDash.classList.remove('hidden');
-        if (memberBox) memberBox.classList.add('hidden');
-        if (reportBox) reportBox.classList.remove('hidden');
         loadLeaderDashboard();
+        // লিডার হলে "লিডার হও" ফর্ম লুকাও, কিন্তু যদি এখনো অন্য টিমে জয়েন না থাকে তাহলে জয়েন ফর্ম দেখাও
+        if (leaderReqForm) leaderReqForm.classList.add('hidden');
+        if (joinedTeam) {
+          if (memberBox) memberBox.classList.remove('hidden');
+          if (joinFormCard) joinFormCard.classList.add('hidden');
+          if (notLeaderBox) notLeaderBox.classList.add('hidden');
+          loadMemberTeamInfo();
+        } else {
+          if (memberBox) memberBox.classList.add('hidden');
+          if (notLeaderBox) notLeaderBox.classList.remove('hidden');
+          if (joinFormCard) joinFormCard.classList.remove('hidden');
+        }
       } else if (joinedTeam) {
-        if (notLeaderBox) notLeaderBox.classList.add('hidden');
+        // শুধু মেম্বার — চাইলে লিডার রিকোয়েস্ট করতে পারবে
         if (leaderDash) leaderDash.classList.add('hidden');
         if (memberBox) memberBox.classList.remove('hidden');
-        if (reportBox) reportBox.classList.remove('hidden');
+        if (notLeaderBox) notLeaderBox.classList.remove('hidden');
+        if (joinFormCard) joinFormCard.classList.add('hidden');
+        if (leaderReqForm) leaderReqForm.classList.remove('hidden');
         loadMemberTeamInfo();
       } else {
-        if (notLeaderBox) notLeaderBox.classList.remove('hidden');
         if (leaderDash) leaderDash.classList.add('hidden');
         if (memberBox) memberBox.classList.add('hidden');
-        if (reportBox) reportBox.classList.add('hidden');
+        if (notLeaderBox) notLeaderBox.classList.remove('hidden');
+        if (leaderReqForm) leaderReqForm.classList.remove('hidden');
+        if (joinFormCard) joinFormCard.classList.remove('hidden');
         // Check pending request
         if (isFirebaseReady && fbDatabase) {
           fbDatabase.ref('teamLeaderRequests').orderByChild('userPhone').equalTo(appData.user.phone).limitToLast(1).once('value', snap => {
@@ -5853,9 +5895,9 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       const hint = document.getElementById('team-report-reward-hint');
       if (hint) hint.innerText = '+' + cfg.memberReward + ' কয়েন বোনাস';
       const coinsInput = document.getElementById('team-report-coins');
-      if (coinsInput && !coinsInput.dataset.set) {
+      if (coinsInput) {
         coinsInput.value = cfg.dailyCoins;
-        coinsInput.dataset.set = '1';
+        coinsInput.readOnly = true;
       }
       lucide.createIcons();
     }
@@ -5863,7 +5905,8 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     function handleTeamLeaderRequest(e) {
       e.preventDefault();
       if (!appData.user?.phone) return alert('লগইন করুন');
-      if (appData.user.isTeamLeader) return alert('আপনি ইতিমধ্যে টিম লিডার!');
+      if (appData.user.isTeamLeader) return alert('আপনি ইতিমধ্যে টিম লিডার! নিজের টিম কোড দিয়ে মেম্বার যোগ করুন।');
+      // মেম্বার হিসেবে অন্য টিমে থাকলেও নিজে টিম লিডার হতে পারবে
       const payment = (document.getElementById('tl-req-payment')?.value || '').trim();
       const teamName = (document.getElementById('tl-req-teamname')?.value || '').trim();
       if (!payment || payment.length < 11) return alert('সঠিক বিকাশ/নগদ নম্বর দিন');
@@ -5893,11 +5936,17 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     function handleJoinTeam(e) {
       e.preventDefault();
       if (!appData.user?.phone) return alert('লগইন করুন');
-      if (appData.user.isTeamLeader) return alert('টিম লিডার অন্য টিমে জয়েন করতে পারবেন না');
-      if (appData.user.joinedTeamId) return alert('আপনি ইতিমধ্যে একটি টিমে আছেন');
+      // একজন ইউজার শুধু ১টা টিমে জয়েন করতে পারবে (লিডার হলেও অন্য ১টা টিমে জয়েন করা যায়)
+      if (appData.user.joinedTeamId) {
+        return alert('আপনি ইতিমধ্যে একটি টিমে জয়েন আছেন! একজন ইউজার শুধুমাত্র ১টি টিমে জয়েন করতে পারে।');
+      }
 
       const code = (document.getElementById('join-team-code')?.value || '').trim().toUpperCase();
       if (!code) return;
+      // নিজের টিম কোডে জয়েন করা যাবে না
+      if (appData.user.isTeamLeader && appData.user.teamCode && code === String(appData.user.teamCode).toUpperCase()) {
+        return alert('নিজের টিম কোডে জয়েন করা যাবে না!');
+      }
 
       if (!isFirebaseReady || !fbDatabase) return alert('ডাটাবেজ সংযুক্ত নেই');
 
@@ -6014,13 +6063,29 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       // Salary estimate
       const salEl = document.getElementById('tl-salary-status');
       if (salEl) {
+        const maxM = cfg.maxMembers || 10;
+        const need80 = Math.ceil(maxM * 0.8);
         salEl.innerHTML = `
-          <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-[11px] space-y-1">
-            <div class="font-bold text-indigo-700 dark:text-indigo-300">এই সপ্তাহের আনুমানিক সেলারি</div>
-            <div class="text-slate-600 dark:text-slate-300">৮০%+ অ্যাক্টিভ (৮+/১০) → <b class="text-emerald-600">৳${cfg.weeklyFull}</b></div>
-            <div class="text-slate-600 dark:text-slate-300">৬০–৭৯% → <b class="text-amber-600">৳${cfg.weeklyMid}</b></div>
-            <div class="text-slate-600 dark:text-slate-300">৬০% এর নিচে বা নিজে মিস → <b class="text-rose-600">৳০</b></div>
-            <div class="text-[10px] text-slate-400 pt-1">সপ্তাহ শেষে অ্যাডমিন অ্যাপ্রুভ করে পেমেন্ট করবে</div>
+          <div class="p-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-[11px] space-y-2 leading-relaxed">
+            <div class="font-black text-indigo-700 dark:text-indigo-300 text-xs">সাপ্তাহিক সেলারি নিয়ম (৭ দিন)</div>
+            <div class="text-slate-600 dark:text-slate-300">সপ্তাহ = <b>শনিবার → শুক্রবার</b>। প্রতিদিন TimeWall রিডিম প্রুফ অ্যাপ্রুভ হলে সেইদিন অ্যাক্টিভ।</div>
+            <div class="space-y-1 pt-1">
+              <div class="flex justify-between gap-2 p-2 rounded-xl bg-white/70 dark:bg-slate-900/50">
+                <span>টিমের ${need80}+/${maxM} জন (৮০%+) ৭ দিন অ্যাক্টিভ + আপনি নিজেও ৭ দিন</span>
+                <b class="text-emerald-600 shrink-0">৳${cfg.weeklyFull}</b>
+              </div>
+              <div class="flex justify-between gap-2 p-2 rounded-xl bg-white/70 dark:bg-slate-900/50">
+                <span>৬০–৭৯% অ্যাক্টিভ</span>
+                <b class="text-amber-600 shrink-0">৳${cfg.weeklyMid}</b>
+              </div>
+              <div class="flex justify-between gap-2 p-2 rounded-xl bg-white/70 dark:bg-slate-900/50">
+                <span>৬০% এর নিচে অথবা আপনি ১ দিন মিস</span>
+                <b class="text-rose-600 shrink-0">৳০</b>
+              </div>
+            </div>
+            <div class="text-[10px] text-slate-500 pt-1 border-t border-indigo-200/50 dark:border-indigo-800/50">
+              পেমেন্ট: আপনার দেওয়া বিকাশ/নগদ নম্বরে অ্যাডমিন সপ্তাহ শেষে পাঠাবে। মাসিক ≈ ৪ সপ্তাহ × উপরের রেট (ফুল পারফরম্যান্স হলে প্রায় ৳${cfg.weeklyFull * 4})।
+            </div>
           </div>`;
       }
     }
@@ -6121,10 +6186,11 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (!appData.user?.phone) return alert('লগইন করুন');
       if (!appData.user.isTeamLeader && !appData.user.joinedTeamId) return alert('আগে টিমে জয়েন করুন বা টিম লিডার হন');
 
-      const coins = Number(document.getElementById('team-report-coins')?.value || 0);
       const cfg = getTeamConfig();
-      if (coins < 100) return alert('কমপক্ষে ১০০ কয়েন লিখুন');
-      if (!currentTeamReportScreenshot) return alert('স্ক্রিনশট আপলোড করুন!');
+      const coins = Number(cfg.dailyCoins || 3000);
+      const coinsInput = document.getElementById('team-report-coins');
+      if (coinsInput) coinsInput.value = coins;
+      if (!currentTeamReportScreenshot) return alert('স্ক্রিনশট আপলোড করুন! TimeWall রিডিমের স্পষ্ট ছবি দিন।');
 
       if (!isFirebaseReady || !fbDatabase) return alert('ডাটাবেজ সংযুক্ত নেই');
 
