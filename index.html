@@ -3678,6 +3678,52 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       lucide.createIcons();
     }
 
+
+    // সম্পূর্ণ ছবির হ্যাশ (শুধু শুরুর অংশ নয়) — ভুল ডুপ্লিকেট ব্যান ঠেকাতে
+    function tlImgHash(str){let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677);}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return (4294967296*(2097151&h2)+(h1>>>0))+'_'+str.length;}
+
+    // ===== TEAM SHARED HELPERS =====
+    function tlIso(ms){return new Date(ms).toISOString().split('T')[0];}
+    function tlWeekDates(){const since=(new Date().getDay()+1)%7,st=Date.now()-since*864e5;return Array.from({length:7},(_,i)=>tlIso(st+i*864e5));}
+    function tlPrevWeek(){return tlWeekDates().map(d=>tlIso(Date.parse(d+'T00:00:00Z')-7*864e5));}
+    function tlAfter(d){return tlIso(Date.parse(d+'T00:00:00Z')+864e5);}
+    function tlMonthStart(){return new Date().toISOString().slice(0,8)+'01';}
+    // মাসিক সেলারি থেকে ৭ দিনের টাকা = মাসিক × ৭ ÷ ৩০
+    function tlTiers(s){
+      const pct=+s.teamPartialPercent||65;
+      let t=Object.values(s.teamSalaryTiers||{}).map(x=>{const mo=+x.monthly||0,wk=Math.round(mo*7/30);return{members:+x.members||0,monthly:mo,weekly:wk,mid:Math.round(wk*pct/100)};}).filter(x=>x.members>0).sort((a,b)=>a.members-b.members);
+      if(!t.length){const f=+s.teamLeaderWeeklyFull||700;t=[{members:+s.teamMaxMembers||10,weekly:f,mid:+s.teamLeaderWeeklyMid||450,monthly:Math.round(f*30/7)}];}
+      return t;
+    }
+    function tlPick(t,n){let p=null;t.forEach(x=>{if(n>=x.members)p=x;});return p;}
+    function tlCompute(src,week,today,ms){
+      const m=Object.assign({},src),st=d=>(m.idx[d]&&m.idx[d].status)||'';
+      m.dots=week.map(d=>({d,st:st(d),future:d>today}));
+      m.weekApproved=m.dots.filter(x=>x.st==='approved').length;
+      m.todayStatus=st(today);
+      m.missed=week.filter(d=>d<today&&st(d)!=='approved').length;
+      m.onTrack=m.missed===0&&m.todayStatus!=='rejected';
+      m.monthApproved=Object.keys(m.idx).filter(d=>d>=ms&&d<=today&&st(d)==='approved').length;
+      return m;
+    }
+    function tlDots(m){return m.dots.map(x=>`<span title="${x.d}" class="w-3.5 h-3.5 rounded-full inline-block ${x.st==='approved'?'bg-emerald-500':x.st==='pending'?'bg-amber-400':x.st==='rejected'?'bg-rose-500':x.future?'bg-slate-400/40':'bg-rose-900/60'}"></span>`).join('');}
+    function tlBadge(st){
+      if(st==='approved')return '<span class="px-2 py-0.5 rounded-lg bg-emerald-500/15 text-emerald-500 font-bold text-[10px]">✅ অ্যাপ্রুভড</span>';
+      if(st==='pending')return '<span class="px-2 py-0.5 rounded-lg bg-amber-500/15 text-amber-500 font-bold text-[10px]">⏳ জমা দিয়েছে (পেন্ডিং)</span>';
+      if(st==='rejected')return '<span class="px-2 py-0.5 rounded-lg bg-rose-500/15 text-rose-500 font-bold text-[10px]">❌ রিজেক্টেড</span>';
+      return '<span class="px-2 py-0.5 rounded-lg bg-slate-500/15 text-slate-400 font-bold text-[10px]">আজ জমা দেয়নি</span>';
+    }
+    function tlSummary(rows,tier){
+      const L=rows.find(r=>r.isLeader),mem=rows.filter(r=>!r.isLeader);
+      const ok=mem.filter(r=>r.onTrack).length,pct=mem.length?Math.round(ok*100/mem.length):0,leaderOk=!!(L&&L.onTrack);
+      let pay=0;if(tier&&leaderOk){if(pct>=80)pay=tier.weekly;else if(pct>=60)pay=tier.mid;}
+      const possible=rows.length*Math.max(1,new Date().getUTCDate());
+      const got=rows.reduce((a,r)=>a+r.monthApproved,0),mrate=Math.round(got*100/possible);
+      return{ok,pct,leaderOk,pay,mrate,monthOk:mrate>=80&&!!tier};
+    }
+    function tlEvalWeek(people,wk,today,ms,tier){const rows=people.map(p=>tlCompute(p,wk,today,ms));return{rows,sum:tlSummary(rows,tier)};}
+    function tlReason(sum,tier){if(!tier)return 'টিমে স্ল্যাবের মতো মেম্বার নেই';if(!sum.leaderOk)return 'লিডার সপ্তাহে প্রুফ মিস করেছে';if(sum.pct<60)return 'মেম্বার অ্যাক্টিভ মাত্র '+sum.pct+'%';return '';}
+
     function maskPhoneForDisplay(ph) {
       const s = String(ph || '');
       if (s.length >= 10) {
@@ -6023,91 +6069,80 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     }
 
     function renderLeaderUI(teamId, team) {
-      const cfg = getTeamConfig();
-      const codeEl = document.getElementById('tl-my-code');
-      if (codeEl) codeEl.innerText = team.teamCode || 'TL----';
-      appData.user.teamCode = team.teamCode;
-      appData.user.teamId = teamId;
+      const s = appData.appSettings || {}, cfg = getTeamConfig();
+      const codeEl = document.getElementById('tl-my-code'); if (codeEl) codeEl.innerText = team.teamCode || 'TL----';
+      appData.user.teamCode = team.teamCode; appData.user.teamId = teamId;
+      const members = team.members || {}, mk = Object.keys(members), maxM = team.maxMembers || cfg.maxMembers;
+      const cEl = document.getElementById('tl-member-count'); if (cEl) cEl.innerText = mk.length + '/' + maxM;
 
-      const members = team.members || {};
-      const memberKeys = Object.keys(members);
-      const countEl = document.getElementById('tl-member-count');
-      if (countEl) countEl.innerText = memberKeys.length + '/' + (team.maxMembers || cfg.maxMembers);
+      const today = new Date().toISOString().split('T')[0], week = tlWeekDates(), prevWeek = tlPrevWeek(), ms = tlMonthStart();
+      const from = prevWeek[0] < ms ? prevWeek[0] : ms, myKey = sanitizeKey(appData.user.phone);
+      const people = [{key: myKey, name: 'আপনি (লিডার)', phone: appData.user.phone, isLeader: true}]
+        .concat(mk.map(k => ({key: k, name: members[k].name || 'মেম্বার', phone: members[k].phone || k, isLeader: false})));
 
-      const todayStr = new Date().toISOString().split('T')[0];
-      let todayActive = 0;
-      const listEl = document.getElementById('tl-members-list');
+      Promise.all([
+        Promise.all(people.map(p => Promise.all([
+          fbDatabase.ref('teamReportIndex/' + p.key).orderByKey().startAt(from).once('value'),
+          fbDatabase.ref('dailyTeamReports/' + p.key + '/' + today + '/status').once('value')
+        ]).then(([a, b]) => {
+          p.idx = a.val() || {};
+          if (!p.idx[today] && b.val()) p.idx[today] = {status: b.val()};
+          return p;
+        }))),
+        fbDatabase.ref('teamSalaryPayments/' + teamId + '/' + prevWeek[0]).once('value')
+      ]).then(([ppl, paySnap]) => {
+        const payRec = paySnap.val();
+        const tiers = tlTiers(s), tier = tlPick(tiers, mk.length);
+        const cur = tlEvalWeek(ppl, week, today, ms, tier), rows = cur.rows, sum = cur.sum;
+        const prev = tlEvalWeek(ppl, prevWeek, tlAfter(prevWeek[6]), ms, tier);
+        const next = tiers.find(t => t.members > mk.length);
+        const ta = document.getElementById('tl-today-active'); if (ta) ta.innerText = rows.filter(r => r.todayStatus === 'approved').length;
+        const wa = document.getElementById('tl-week-active'); if (wa) wa.innerText = rows.filter(r => r.onTrack).length;
 
-      // Load today's reports for members
-      const promises = memberKeys.map(mk => {
-        return fbDatabase.ref('dailyTeamReports/' + mk + '/' + todayStr).once('value').then(s => {
-          const r = s.val();
-          return { key: mk, member: members[mk], report: r };
-        });
-      });
-
-      Promise.all(promises).then(results => {
-        todayActive = results.filter(r => r.report && r.report.status !== 'rejected').length;
-        // Leader self
-        fbDatabase.ref('dailyTeamReports/' + sanitizeKey(appData.user.phone) + '/' + todayStr).once('value', ls => {
-          const lr = ls.val();
-          if (lr && lr.status !== 'rejected') todayActive++;
-          const taEl = document.getElementById('tl-today-active');
-          if (taEl) taEl.innerText = todayActive;
-
-          if (listEl) {
-            if (results.length === 0) {
-              listEl.innerHTML = '<div class="text-center py-4 text-xs text-slate-400">এখনো কোনো মেম্বার নেই। কোড শেয়ার করুন।</div>';
-            } else {
-              listEl.innerHTML = results.map(r => {
-                const done = r.report && r.report.status !== 'rejected';
-                const pending = r.report && r.report.status === 'pending';
-                const coins = r.report ? r.report.coins : 0;
-                return `<div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2 text-xs">
-                  <div class="min-w-0">
-                    <div class="font-black text-slate-800 dark:text-white truncate">${r.member.name || 'মেম্বার'}</div>
-                    <div class="text-[10px] text-slate-400 font-mono">${maskPhoneForDisplay(r.member.phone)}</div>
-                  </div>
-                  <div class="text-right shrink-0">
-                    ${done ? `<span class="px-2 py-0.5 rounded-lg bg-emerald-500/15 text-emerald-600 font-bold text-[10px]">✅ ${coins} কয়েন</span>` :
-                      pending ? `<span class="px-2 py-0.5 rounded-lg bg-amber-500/15 text-amber-600 font-bold text-[10px]">⏳ পেন্ডিং</span>` :
-                      `<span class="px-2 py-0.5 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-500 font-bold text-[10px]">মিস</span>`}
-                  </div>
-                </div>`;
-              }).join('');
-            }
-          }
-        });
-      });
-
-      // Salary estimate
-      const salEl = document.getElementById('tl-salary-status');
-      if (salEl) {
-        const maxM = cfg.maxMembers || 10;
-        const need80 = Math.ceil(maxM * 0.8);
-        salEl.innerHTML = `
-          <div class="p-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-[11px] space-y-2 leading-relaxed">
-            <div class="font-black text-indigo-700 dark:text-indigo-300 text-xs">সাপ্তাহিক সেলারি নিয়ম (৭ দিন)</div>
-            <div class="text-slate-600 dark:text-slate-300">সপ্তাহ = <b>শনিবার → শুক্রবার</b>। প্রতিদিন TimeWall রিডিম প্রুফ অ্যাপ্রুভ হলে সেইদিন অ্যাক্টিভ।</div>
-            <div class="space-y-1 pt-1">
-              <div class="flex justify-between gap-2 p-2 rounded-xl bg-white/70 dark:bg-slate-900/50">
-                <span>টিমের ${need80}+/${maxM} জন (৮০%+) ৭ দিন অ্যাক্টিভ + আপনি নিজেও ৭ দিন</span>
-                <b class="text-emerald-600 shrink-0">৳${cfg.weeklyFull}</b>
+        const listEl = document.getElementById('tl-members-list');
+        if (listEl) listEl.innerHTML = rows.map(r => `
+          <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border ${r.isLeader ? 'border-indigo-400/60' : 'border-slate-200 dark:border-slate-700'} space-y-1.5 text-xs">
+            <div class="flex items-center justify-between gap-2">
+              <div class="min-w-0">
+                <div class="font-black text-slate-800 dark:text-white truncate">${r.name}</div>
+                <div class="text-[10px] text-slate-400 font-mono">${maskPhoneForDisplay(r.phone)}</div>
               </div>
-              <div class="flex justify-between gap-2 p-2 rounded-xl bg-white/70 dark:bg-slate-900/50">
-                <span>৬০–৭৯% অ্যাক্টিভ</span>
-                <b class="text-amber-600 shrink-0">৳${cfg.weeklyMid}</b>
-              </div>
-              <div class="flex justify-between gap-2 p-2 rounded-xl bg-white/70 dark:bg-slate-900/50">
-                <span>৬০% এর নিচে অথবা আপনি ১ দিন মিস</span>
-                <b class="text-rose-600 shrink-0">৳০</b>
-              </div>
+              <div class="shrink-0 text-right">${tlBadge(r.todayStatus)}</div>
             </div>
-            <div class="text-[10px] text-slate-500 pt-1 border-t border-indigo-200/50 dark:border-indigo-800/50">
-              পেমেন্ট: আপনার দেওয়া বিকাশ/নগদ নম্বরে অ্যাডমিন সপ্তাহ শেষে পাঠাবে। মাসিক ≈ ৪ সপ্তাহ × উপরের রেট (ফুল পারফরম্যান্স হলে প্রায় ৳${cfg.weeklyFull * 4})।
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex gap-1" title="শনি → শুক্র">${tlDots(r)}</div>
+              <div class="text-[10px] text-slate-500 font-mono">সপ্তাহ ${r.weekApproved}/৭ · মাস ${r.monthApproved} দিন ${r.onTrack ? '' : '· <span class="text-rose-500 font-bold">মিস ' + r.missed + '</span>'}</div>
             </div>
+          </div>`).join('');
+
+        const lastOk = prev.sum.pay > 0;
+        const salEl = document.getElementById('tl-salary-status');
+        if (salEl) salEl.innerHTML = `
+          <div class="p-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-[11px] space-y-2.5 leading-relaxed">
+            <div class="font-black text-indigo-700 dark:text-indigo-300 text-xs">আপনার টিম সেলারি (অ্যাডমিন নির্ধারিত)</div>
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="p-2 rounded-xl bg-white/70 dark:bg-slate-900/50"><div class="text-[10px] text-slate-400">প্রতি ৭ দিনের পেমেন্ট</div><div class="text-base font-black text-emerald-600">৳${tier ? tier.weekly : 0}</div></div>
+              <div class="p-2 rounded-xl bg-white/70 dark:bg-slate-900/50"><div class="text-[10px] text-slate-400">মাসিক সেলারি</div><div class="text-base font-black text-amber-600">৳${tier ? tier.monthly : 0}</div></div>
+            </div>
+            ${tier ? '' : '<div class="text-rose-500 font-bold">সেলারির জন্য কমপক্ষে ' + tiers[0].members + ' জন মেম্বার লাগবে।</div>'}
+            <div class="space-y-1">${tiers.map(t => `<div class="flex justify-between p-1.5 rounded-lg ${tier && tier.members === t.members ? 'bg-emerald-500/15 font-black' : 'bg-white/60 dark:bg-slate-900/40'}"><span>${t.members}+ জন টিম</span><span>মাসিক ৳${t.monthly} · ৭ দিনে ৳${t.weekly}</span></div>`).join('')}</div>
+            ${next ? `<div class="text-indigo-600 dark:text-indigo-300">আর ${next.members - mk.length} জন যোগ করলে মাসিক ৳${next.monthly} (৭ দিনে ৳${next.weekly})</div>` : ''}
+            <div class="pt-2 border-t border-indigo-200/50 dark:border-indigo-800/50 space-y-1">
+              <div class="font-black text-slate-700 dark:text-slate-200">এই সপ্তাহ (চলমান)</div>
+              <div class="flex justify-between"><span>ট্র্যাকে থাকা মেম্বার</span><b>${sum.ok}/${mk.length} (${sum.pct}%)</b></div>
+              <div class="flex justify-between"><span>আপনি নিজে ট্র্যাকে</span><b class="${sum.leaderOk ? 'text-emerald-600' : 'text-rose-600'}">${sum.leaderOk ? '✅ হ্যাঁ' : '❌ না'}</b></div>
+              <div class="flex justify-between"><span>এখনকার হিসাবে প্রাপ্য</span><b class="text-emerald-600">৳${sum.pay}</b></div>
+              <div class="flex justify-between"><span>এই মাসের টিম অ্যাপ্রুভাল রেট</span><b class="${sum.monthOk ? 'text-emerald-600' : 'text-amber-600'}">${sum.mrate}% ${sum.monthOk ? '✅' : '(৮০% লাগবে)'}</b></div>
+            </div>
+            <div class="p-2.5 rounded-xl ${payRec ? 'bg-emerald-500/15' : lastOk ? 'bg-amber-500/15' : 'bg-rose-500/10'} space-y-0.5">
+              <div class="font-black text-slate-700 dark:text-slate-200">গত সপ্তাহ (${prevWeek[0]} → ${prevWeek[6]})</div>
+              <div>${lastOk ? '✅ যোগ্য — ৳' + prev.sum.pay : '❌ যোগ্য নয় — ' + (tlReason(prev.sum, tier) || 'শর্ত পূরণ হয়নি')}</div>
+              ${payRec ? '<div class="text-emerald-600 font-bold">💸 ৳' + payRec.amount + ' আপনার নম্বরে পাঠানো হয়েছে</div>' : (lastOk ? '<div class="text-amber-600 font-bold">⏳ অ্যাডমিন পেমেন্ট পাঠানোর অপেক্ষায়</div>' : '')}
+            </div>
+            <div class="text-[10px] text-slate-500">সপ্তাহ: শনি → শুক্র · ৭ দিনের টাকা = মাসিক সেলারি × ৭ ÷ ৩০ · পেমেন্ট আপনার দেওয়া বিকাশ/নগদ নম্বরে।</div>
           </div>`;
-      }
+        lucide.createIcons();
+      });
     }
 
     function loadMemberTeamInfo() {
@@ -6224,10 +6259,10 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         // DUPLICATE PROOF BAN CHECK: same screenshot used in taskProofs
         fbDatabase.ref('taskProofs').orderByChild('userPhone').equalTo(appData.user.phone).limitToLast(30).once('value', tpSnap => {
           const proofs = tpSnap.val() || {};
-          const screenshotHash = currentTeamReportScreenshot.substring(0, 200);
+          const screenshotHash = tlImgHash(currentTeamReportScreenshot);
           let duplicate = false;
           Object.values(proofs).forEach(p => {
-            if (p.screenshotBase64 && p.screenshotBase64.substring(0, 200) === screenshotHash) {
+            if (p.screenshotBase64 && p.screenshotBase64.length === currentTeamReportScreenshot.length && tlImgHash(p.screenshotBase64) === screenshotHash) {
               duplicate = true;
             }
           });
@@ -6246,6 +6281,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
             userName: appData.user.name || '',
             coins: coins,
             screenshotBase64: currentTeamReportScreenshot,
+            screenshotHash: screenshotHash,
             teamId: appData.user.teamId || appData.user.joinedTeamId || '',
             isLeader: !!appData.user.isTeamLeader,
             status: 'pending',
@@ -6254,6 +6290,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           };
 
           fbDatabase.ref('dailyTeamReports/' + userKey + '/' + todayStr).set(reportData).then(() => {
+            fbDatabase.ref('teamReportIndex/' + userKey + '/' + todayStr).set({status: 'pending', coins: coins});
             // Also push to a flat list for admin
             fbDatabase.ref('teamDailyReportsList').push({ ...reportData, id: userKey + '_' + todayStr });
             showToast('✅ আজকের টিম প্রুফ জমা হয়েছে! অ্যাডমিন যাচাই করবে।');
@@ -6359,4 +6396,5 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
   </script>
 </body>
 </html>
+
 
