@@ -760,6 +760,8 @@
           </div>
         </div>
 
+        <button type="button" onclick="openTimeWallGuide()" class="w-full py-2.5 bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/40 text-sky-600 dark:text-sky-300 rounded-2xl text-xs font-black flex items-center justify-center gap-2 active:scale-95 transition-all"><i data-lucide="help-circle" class="w-4 h-4"></i> TimeWall এ কীভাবে কাজ করবেন (নিয়ম ও ভিডিও গাইড)</button>
+
         <div class="flex gap-1.5 overflow-x-auto scrollbar-none pb-1 text-[11px] font-bold">
           <button onclick="filterTasks('all')" id="tf-all" class="task-filter-btn px-3 py-1.5 rounded-xl bg-emerald-600 text-white shadow-xs">সব টাস্ক</button>
           <button onclick="filterTasks('daily')" id="tf-daily" class="task-filter-btn px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">📅 প্রতিদিন (Daily)</button>
@@ -1431,6 +1433,15 @@
             <input type="number" id="team-report-coins" min="100" value="3000" readonly class="w-full bg-slate-100 dark:bg-slate-900/80 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs font-mono text-slate-800 dark:text-white font-black cursor-not-allowed">
             <p class="text-[10px] text-slate-400 mt-1">TimeWall থেকে অন্তত এত কয়েন রিডিম করে স্ক্রিনশট দিন। টার্গেট অ্যাডমিন প্যানেল থেকে সেট হয়।</p>
           </div>
+          <div class="p-3 rounded-xl bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-800 space-y-2">
+            <div class="text-[11px] font-black text-sky-700 dark:text-sky-300">📌 TimeWall Redeem তথ্য (বাধ্যতামূলক)</div>
+            <p class="text-[10px] text-slate-600 dark:text-slate-300 leading-relaxed">TimeWall এ কয়েন REDEEM করার পর <b>Redeem History</b> এর সর্বশেষ সারির (তারিখ, Coins, Redeem ID) স্ক্রিনশট দিন। রিডিম কয়েন অ্যাডমিন নির্ধারিত টার্গেটের কম হলে প্রুফ গ্রহণ হবে না।</p>
+            <div class="grid grid-cols-2 gap-2">
+              <input type="number" id="team-redeem-coins" min="0" placeholder="রিডিম করা কয়েন" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-xs font-mono text-slate-800 dark:text-white">
+              <input type="tel" id="team-redeem-id" placeholder="Redeem ID" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-xs font-mono text-slate-800 dark:text-white">
+            </div>
+            <button type="button" onclick="openTimeWallGuide()" class="w-full py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-[11px] font-bold">❓ কীভাবে রিডিম করবেন (গাইড ও ভিডিও)</button>
+          </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">স্ক্রিনশট:</label>
             <input type="file" id="team-report-file" accept="image/*" onchange="handleTeamReportScreenshot(event)" class="w-full text-xs text-slate-600 dark:text-slate-300">
@@ -1791,7 +1802,18 @@
             </span>
           </div>
 
-          <div class="p-2.5 bg-slate-950/80 rounded-xl border border-slate-800 text-[11px] space-y-1 text-slate-300">
+          <div id="trun-redeem-fields" class="hidden p-3 rounded-xl bg-sky-950/40 border border-sky-500/40 space-y-2">
+            <div class="text-[11px] font-black text-sky-300">📌 TimeWall থেকে "REDEEM" করে এই তথ্য দিন</div>
+            <p class="text-[10px] text-slate-300 leading-relaxed">TimeWall এ <b>REDEEM COINS</b> চাপার পর নিচের <b>Redeem History</b> তে সর্বশেষ সারিতে তারিখ, <b>Coins</b> ও <b>Redeem ID</b> আসে। ওই সারি স্পষ্ট দেখা যায় এমন স্ক্রিনশট দিন। ন্যূনতম <b id="trun-redeem-min" class="text-amber-300">১,০০০</b> কয়েন রিডিম করতে হবে।</p>
+            <div class="grid grid-cols-2 gap-2">
+              <div><label class="block text-[10px] font-bold text-slate-400 mb-0.5">রিডিম করা কয়েন:</label>
+                <input type="number" id="trun-redeem-coins" min="0" placeholder="যেমন 1218" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white font-mono focus:outline-none focus:border-sky-500"></div>
+              <div><label class="block text-[10px] font-bold text-slate-400 mb-0.5">Redeem ID:</label>
+                <input type="tel" id="trun-redeem-id" placeholder="যেমন 21793512" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white font-mono focus:outline-none focus:border-sky-500"></div>
+            </div>
+            <button type="button" onclick="openTimeWallGuide()" class="w-full py-1.5 bg-sky-600/30 hover:bg-sky-600/50 text-sky-200 rounded-lg text-[11px] font-bold">❓ কীভাবে রিডিম করবেন (গাইড ও ভিডিও)</button>
+          </div>
+          <div id="trun-old-proof-info" class="p-2.5 bg-slate-950/80 rounded-xl border border-slate-800 text-[11px] space-y-1 text-slate-300">
             <div class="font-bold text-amber-400 flex items-center gap-1 text-[10.5px]">
               <i data-lucide="info" class="w-3.5 h-3.5"></i> <span>কোন জায়গার স্ক্রিনশট দিতে হবে?</span>
             </div>
@@ -1989,6 +2011,45 @@
       </form>
     </div>
   </div>
+  <!-- TIMEWALL GUIDE MODAL -->
+  <div id="modal-tw-guide" class="fixed inset-0 bg-black/80 backdrop-blur-xs flex items-center justify-center p-3 z-[60] hidden">
+    <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 max-w-sm w-full max-h-[90vh] overflow-y-auto shadow-2xl relative border border-slate-200 dark:border-slate-700 space-y-3">
+      <button onclick="closeModal('modal-tw-guide')" class="absolute top-3.5 right-3.5 p-1.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300"><i data-lucide="x" class="w-4 h-4"></i></button>
+      <h3 class="text-sm font-black text-slate-800 dark:text-white pr-8">TimeWall এ কীভাবে কাজ করবেন ও রিডিম জমা দেবেন</h3>
+      <button id="tw-guide-video-btn" type="button" class="hidden w-full py-2.5 bg-gradient-to-r from-rose-600 to-red-600 text-white rounded-xl text-xs font-black flex items-center justify-center gap-2"><i data-lucide="play-circle" class="w-4 h-4"></i> ভিডিও গাইড দেখুন</button>
+      <ol class="space-y-2 text-[11.5px] text-slate-700 dark:text-slate-200 leading-relaxed list-decimal pl-4">
+        <li>অ্যাপের <b>"TimeWall ওপেন করুন"</b> বাটন চাপুন।</li>
+        <li>পছন্দমতো কাজ (ভিডিও দেখা, অফার, সার্ভে, ক্লিক) সম্পন্ন করুন। কাজ অ্যাডভার্টাইজার অনুমোদন করলে পয়েন্ট <b>Approved</b> হয়, তার আগে <b>Pending</b> থাকে।</li>
+        <li>উপরে <b>"Approved: ... Coins"</b> দেখুন। ন্যূনতম <b id="tw-guide-min">১,০০০</b> কয়েন হলে নিচের <b>REDEEM COINS</b> বাটন কাজ করে।</li>
+        <li><b>REDEEM COINS</b> চাপুন। এরপর <b>Redeem History</b> তে নতুন একটি সারি আসবে: <i>তারিখ, Coins, Redeem ID</i>।</li>
+        <li>ওই সর্বশেষ সারি স্পষ্ট দেখা যায় এমন <b>স্ক্রিনশট</b> নিন।</li>
+        <li>অ্যাপে এসে স্ক্রিনশট দিন এবং <b>রিডিম করা কয়েন</b> ও <b>Redeem ID</b> লিখে জমা দিন।</li>
+        <li>অ্যাডমিন যাচাই করলে আপনার প্রুফ অ্যাপ্রুভ হবে।</li>
+      </ol>
+      <div class="p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-[11px] text-slate-700 dark:text-slate-200"><b>টিম মেম্বার/লিডার:</b> প্রতিদিন কমপক্ষে <b id="tw-guide-team">৩,০০০</b> কয়েন (অ্যাডমিন নির্ধারিত) রিডিম করে প্রুফ দিতে হবে। <b>সাধারণ ইউজার:</b> ন্যূনতম রিডিম পরিমাণ উপরের মতো।</div>
+      <div class="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-[11px] text-rose-800 dark:text-rose-200 space-y-0.5">
+        <div class="font-black">⚠️ এই ভুলগুলো করবেন না</div>
+        <div>• একই Redeem ID দ্বিতীয়বার ব্যবহার করা যায় না</div>
+        <div>• পুরোনো বা অন্যের স্ক্রিনশট, এডিট করা ছবি দেওয়া</div>
+        <div>• লেখা কয়েন বা ID স্ক্রিনশটের সাথে না মেলা</div>
+        <div>• VPN বা একাধিক একাউন্ট ব্যবহার</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MANDATORY CHANNEL JOIN GATE -->
+  <div id="modal-channel-gate" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4 z-[70] hidden">
+    <div class="bg-slate-900 border border-sky-500/40 rounded-3xl p-5 max-w-sm w-full text-center shadow-2xl space-y-3 text-white">
+      <div class="w-14 h-14 rounded-2xl bg-sky-500/20 text-sky-400 flex items-center justify-center mx-auto"><i data-lucide="send" class="w-7 h-7"></i></div>
+      <h3 class="text-base font-black">অফিসিয়াল চ্যানেলে জয়েন করুন</h3>
+      <p class="text-xs text-slate-300 leading-relaxed">অ্যাপ ব্যবহার চালিয়ে যেতে আমাদের টেলিগ্রাম চ্যানেলে জয়েন থাকা বাধ্যতামূলক। সেখানে নতুন কাজ, নিয়ম, TimeWall গাইড ও পেমেন্ট প্রুফ আপডেট দেওয়া হয়।</p>
+      <button onclick="channelGateOpenTelegram()" class="w-full py-3 bg-gradient-to-r from-sky-600 to-blue-600 text-white font-black rounded-2xl text-xs flex items-center justify-center gap-2 active:scale-95"><i data-lucide="send" class="w-4 h-4"></i> টেলিগ্রাম চ্যানেলে জয়েন করুন</button>
+      <button onclick="openOfficialYouTube()" class="w-full py-2 bg-slate-800 text-slate-200 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5"><i data-lucide="youtube" class="w-3.5 h-3.5 text-rose-400"></i> ইউটিউব গাইড (ঐচ্ছিক)</button>
+      <button id="channel-gate-confirm" onclick="channelGateConfirm()" disabled class="w-full py-3 bg-slate-700 text-slate-400 font-black rounded-2xl text-xs cursor-not-allowed">আগে চ্যানেলে জয়েন করুন</button>
+      <p class="text-[10px] text-slate-500">জয়েন করে অ্যাপে ফিরে এসে নিশ্চিত বাটন চাপুন।</p>
+    </div>
+  </div>
+
   <!-- JAVASCRIPT LOGIC -->
   <script>
     // ==========================================
@@ -2022,6 +2083,57 @@
     } catch(err) { console.warn("Firebase Init fallback:", err); }
 
     const SESSION_USER_KEY = 'TASKCASH_SESSION_PHONE';
+
+    // ===== TELEGRAM REFERRAL LINK (Mini App) =====
+    // রেফার লিংক: https://t.me/taskcashpro33_bot?startapp=<কোড>
+    // (BotFather → Bot Settings → Configure Mini App এ আপনার অ্যাপের URL দেওয়া থাকতে হবে)
+    const TELEGRAM_APP_LINK = 'https://t.me/taskcashpro33_bot';
+
+    function buildReferLink(code) {
+      const s = (typeof appData !== 'undefined' && appData.appSettings) || {};
+      let base = String(s.telegramAppUrl || TELEGRAM_APP_LINK || '').trim();
+      if (base) {
+        base = base.replace(/[?#].*$/, '').replace(/\/+$/, '');
+        return base + '?startapp=' + encodeURIComponent(code);
+      }
+      return window.location.origin + window.location.pathname + '?ref=' + code;
+    }
+
+    function cleanRefCode(c) { return String(c || '').trim().toUpperCase().replace(/[^A-Z0-9_-]/g, '').slice(0, 20); }
+
+    function getIncomingRefCode() {
+      let c = '';
+      try { c = (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.start_param) || ''; } catch (e) {}
+      if (!c) { try { const p = new URLSearchParams(window.location.search); c = p.get('ref') || p.get('tgWebAppStartParam') || ''; } catch (e) {} }
+      if (!c) { try { const h = new URLSearchParams(String(window.location.hash || '').replace(/^#/, '')); c = h.get('tgWebAppStartParam') || ''; } catch (e) {} }
+      c = cleanRefCode(c);
+      // লিংকে ক্লিক করার পর অ্যাপ বন্ধ করে আবার খুললেও কোড মনে থাকবে (রেজিস্ট্রেশন শেষ না হওয়া পর্যন্ত)
+      try {
+        if (c) localStorage.setItem('TC_PENDING_REF', c);
+        else c = cleanRefCode(localStorage.getItem('TC_PENDING_REF'));
+      } catch (e) {}
+      return c;
+    }
+
+    function applyIncomingRefLock() {
+      const code = getIncomingRefCode();
+      if (!code) return false;
+      const r = document.getElementById('reg-refer');
+      if (!r) return false;
+      r.value = code;
+      r.readOnly = true;
+      r.classList.add('opacity-80', 'cursor-not-allowed', 'border-emerald-500/60');
+      r.title = 'রেফার কোড লক করা আছে';
+      if (!document.getElementById('reg-refer-lock-note')) {
+        const note = document.createElement('div');
+        note.id = 'reg-refer-lock-note';
+        note.className = 'text-[10px] text-emerald-400 font-bold mt-1';
+        note.innerText = '🔒 বন্ধুর রেফার কোড স্বয়ংক্রিয়ভাবে বসে গেছে (পরিবর্তন করা যাবে না)';
+        r.parentNode.appendChild(note);
+      }
+      toggleAuthMode('register');
+      return true;
+    }
     let COINS_PER_BDT = 200;
     let MIN_WITHDRAW_BDT = 150;
     let MIN_REFS_FOR_WITHDRAW = 5;
@@ -3501,7 +3613,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
       if (document.getElementById('refer-code-box')) document.getElementById('refer-code-box').innerText = refCode;
       if (document.getElementById('full-refer-link-input')) {
-        document.getElementById('full-refer-link-input').value = `${window.location.origin}${window.location.pathname}?ref=${refCode}`;
+        document.getElementById('full-refer-link-input').value = buildReferLink(refCode);
       }
       if (document.getElementById('service-ref-count')) document.getElementById('service-ref-count').innerText = `${u.referralsCount || 0} জন`;
       if (document.getElementById('service-ref-earned')) document.getElementById('service-ref-earned').innerText = `${(u.refEarnedCoins || 0).toLocaleString()} কয়েন`;
@@ -3682,6 +3794,67 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
     // সম্পূর্ণ ছবির হ্যাশ (শুধু শুরুর অংশ নয়) — ভুল ডুপ্লিকেট ব্যান ঠেকাতে
     function tlImgHash(str){let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677);}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return (4294967296*(2097151&h2)+(h1>>>0))+'_'+str.length;}
+
+    // ===== TIMEWALL REDEEM GUIDE / REDEEM ID / CHANNEL GATE =====
+    function openTimeWallGuide() {
+      const s = appData.appSettings || {}, cfg = getTeamConfig();
+      const set = (id, t) => { const e = document.getElementById(id); if (e) e.innerText = t; };
+      set('tw-guide-min', Number(s.timewallMinRedeem || 1000).toLocaleString());
+      set('tw-guide-team', Number(cfg.dailyCoins).toLocaleString());
+      const v = (s.timewallVideoUrl || '').trim(), vb = document.getElementById('tw-guide-video-btn');
+      if (vb) {
+        if (v) { vb.classList.remove('hidden'); vb.onclick = () => { try { window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink ? window.Telegram.WebApp.openLink(v) : window.open(v, '_blank'); } catch (e) { window.open(v, '_blank'); } }; }
+        else vb.classList.add('hidden');
+      }
+      document.getElementById('modal-tw-guide').classList.remove('hidden');
+      lucide.createIcons();
+    }
+    function twValidRedeemId(v) { return /^\d{5,12}$/.test(String(v || '').trim()); }
+    function claimRedeemId(id, ok, fail) {
+      if (!isFirebaseReady || !fbDatabase) return fail('ডাটাবেজ সংযুক্ত নেই');
+      fbDatabase.ref('usedRedeemIds/' + id).transaction(cur => cur ? undefined : {phone: appData.user.phone, at: Date.now()}, (err, committed) => {
+        if (err) return fail('যাচাই করা যায়নি, আবার চেষ্টা করুন');
+        if (!committed) return fail('❌ এই Redeem ID আগে ব্যবহার করা হয়েছে!');
+        ok();
+      }, false);
+    }
+    let channelGateOpenedAt = 0;
+    function channelGateOpenTelegram() {
+      openOfficialTelegram();
+      channelGateOpenedAt = Date.now();
+      const b = document.getElementById('channel-gate-confirm'); if (!b) return;
+      let left = 8; b.disabled = true;
+      const t = setInterval(() => {
+        left--;
+        if (left > 0) { b.innerText = 'অপেক্ষা করুন ' + left + 's...'; return; }
+        clearInterval(t);
+        b.disabled = false; b.innerText = '✅ আমি চ্যানেলে জয়েন করেছি';
+        b.className = 'w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black rounded-2xl text-xs active:scale-95';
+      }, 1000);
+      b.innerText = 'অপেক্ষা করুন ' + left + 's...';
+    }
+    function channelGateConfirm() {
+      if (!channelGateOpenedAt) return;
+      const u = appData.user; if (!u || !u.phone) return;
+      u.channelJoined = true; u.channelJoinedAt = Date.now();
+      try { localStorage.setItem('TC_CH_JOINED_' + u.phone, '1'); } catch (e) {}
+      if (isFirebaseReady && fbDatabase) fbDatabase.ref('users/' + sanitizeKey(u.phone)).update({channelJoined: true, channelJoinedAt: u.channelJoinedAt}).catch(() => {});
+      document.getElementById('modal-channel-gate').classList.add('hidden');
+      showToast('✅ ধন্যবাদ! অ্যাপ ব্যবহার করতে পারবেন।');
+    }
+    function checkChannelGate() {
+      try {
+        const s = appData.appSettings; if (!s) return;
+        const u = appData.user; if (!u || !u.phone || u.phone === '017XXXXXXXX') return;
+        const m = document.getElementById('modal-channel-gate'); if (!m) return;
+        if (s.requireChannelJoin === false) { m.classList.add('hidden'); return; }
+        if (!appData._userSynced) return;
+        let done = !!u.channelJoined;
+        try { if (localStorage.getItem('TC_CH_JOINED_' + u.phone)) done = true; } catch (e) {}
+        if (done) { m.classList.add('hidden'); return; }
+        if (m.classList.contains('hidden')) { m.classList.remove('hidden'); lucide.createIcons(); }
+      } catch (e) {}
+    }
 
     // ===== TEAM SHARED HELPERS =====
     function tlIso(ms){return new Date(ms).toISOString().split('T')[0];}
@@ -4189,14 +4362,14 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
     function shareWhatsApp() {
       const code = appData.user.referralCode || (appData.user.phone ? 'TC' + appData.user.phone.slice(-4) : 'TC7701');
-      const link = `${window.location.origin}${window.location.pathname}?ref=${code}`;
+      const link = buildReferLink(code);
       const text = encodeURIComponent(`Task Cash Pro তে যোগ দিন এবং প্রতিদিন সহজ কাজ সম্পন্ন করে বিকাশে টাকা ইনকাম করুন!\n🎁 আমার রেফারেল কোড: ${code}\n👉 জয়েন লিংক: ${link}`);
       window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
     }
 
     function shareTelegram() {
       const code = appData.user.referralCode || (appData.user.phone ? 'TC' + appData.user.phone.slice(-4) : 'TC7701');
-      const link = `${window.location.origin}${window.location.pathname}?ref=${code}`;
+      const link = buildReferLink(code);
       const text = encodeURIComponent(`Task Cash Pro - ঘরে বসে প্রতিদিন সহজ কাজ করে আয় করুন!\n🎁 রেফারেল কোড: ${code}\n👉 জয়েন লিংক: ${link}`);
       window.open(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${text}`, '_blank');
     }
@@ -4508,6 +4681,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     }
 
     function showAppScreen() {
+      try { localStorage.removeItem('TC_PENDING_REF'); } catch (e) {}
       const authScreen = document.getElementById('auth-screen');
       if (authScreen) {
         authScreen.classList.add('hidden');
@@ -4737,7 +4911,8 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       const name = document.getElementById('reg-name').value.trim();
       const password = (document.getElementById('reg-password')?.value || '').trim();
       const refInput = document.getElementById('reg-refer');
-      const refCodeEntered = refInput ? refInput.value.trim() : '';
+      let refCodeEntered = refInput ? refInput.value.trim() : '';
+      if (refCodeEntered && refCodeEntered.toUpperCase() === 'TC' + phone.slice(-4)) refCodeEntered = '';
 
       if (!phone || phone.length < 10) {
         return showAuthError('⚠️ অনুগ্রহ করে সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন (যেমন: 017XXXXXXXX)');
@@ -5288,6 +5463,21 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
     function submitTaskProof() {
       if (!activeTaskObj) return;
+      if (activeTaskObj.id === 'timewall_special_task') {
+        const min = Number((appData.appSettings || {}).timewallMinRedeem || 1000);
+        const rc = Number(document.getElementById('trun-redeem-coins')?.value || 0);
+        const rid = (document.getElementById('trun-redeem-id')?.value || '').trim();
+        if (!currentTaskScreenshotBase64) return alert('Redeem History এর স্ক্রিনশট দিন!');
+        if (rc < min) return alert('ন্যূনতম ' + min.toLocaleString() + ' কয়েন রিডিম করতে হবে!');
+        if (!twValidRedeemId(rid)) return alert('সঠিক Redeem ID (শুধু সংখ্যা) লিখুন!');
+        claimRedeemId(rid, () => submitTaskProofCore({rc, rid}), msg => alert(msg));
+        return;
+      }
+      submitTaskProofCore(null);
+    }
+
+    function submitTaskProofCore(twMeta) {
+      if (!activeTaskObj) return;
 
       const userNote = (document.getElementById('trun-proof-text')?.value || '').trim();
       if (!currentTaskScreenshotBase64 && !userNote) {
@@ -5306,7 +5496,9 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         userPhone: appData.user.phone,
         userName: appData.user.name || 'ইউজার',
         screenshotBase64: currentTaskScreenshotBase64 || '',
-        userNote: userNote,
+        userNote: twMeta ? ('Redeem ID: ' + twMeta.rid + ' | Redeem কয়েন: ' + twMeta.rc + (userNote ? ' | ' + userNote : '')) : userNote,
+        redeemId: twMeta ? twMeta.rid : '',
+        redeemCoins: twMeta ? twMeta.rc : 0,
         status: 'pending',
         submittedAt: Date.now()
       };
@@ -5327,6 +5519,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           closeTaskRunModal();
         }).catch(err => {
           console.error("Proof submission error:", err);
+          if (twMeta && fbDatabase) fbDatabase.ref('usedRedeemIds/' + twMeta.rid).remove().catch(() => {});
           showToast('প্রুফ জমা দিতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
         });
       } else {
@@ -5381,6 +5574,8 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
       document.getElementById('trun-timer-box').classList.add('hidden');
       document.getElementById('trun-proof-box').classList.add('hidden');
+      document.getElementById('trun-redeem-fields').classList.add('hidden');
+      document.getElementById('trun-old-proof-info').classList.remove('hidden');
       document.getElementById('trun-submit-proof-btn').classList.add('hidden');
       document.getElementById('trun-action-btn').classList.remove('hidden');
       document.getElementById('trun-action-btn').disabled = false;
@@ -5501,6 +5696,8 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
         renderUserHeader();
         renderTaskList();
+        appData._userSynced = true;
+        try { checkChannelGate(); } catch (e) {}
       });
       fbDatabase.ref('adLinks').on('value', snap => {
         appData.adLinks = snap.val() || {};
@@ -5665,6 +5862,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (typeof renderUserHeader === 'function') {
         renderUserHeader();
       }
+      try { checkChannelGate(); } catch (e) {}
     }
 
     function renderTimeWallCardUI(settings) {
@@ -5732,6 +5930,10 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       document.getElementById('trun-timer-box').classList.add('hidden');
       document.getElementById('trun-action-btn').classList.add('hidden');
       document.getElementById('trun-proof-box').classList.remove('hidden');
+      document.getElementById('trun-redeem-fields').classList.remove('hidden');
+      document.getElementById('trun-old-proof-info').classList.add('hidden');
+      document.getElementById('trun-redeem-min').innerText = Number(s.timewallMinRedeem || 1000).toLocaleString();
+      document.getElementById('trun-redeem-coins').value = ''; document.getElementById('trun-redeem-id').value = '';
       document.getElementById('trun-submit-proof-btn').classList.remove('hidden');
 
       document.getElementById('modal-task-run').classList.remove('hidden');
@@ -6268,6 +6470,10 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       const coinsInput = document.getElementById('team-report-coins');
       if (coinsInput) coinsInput.value = coins;
       if (!currentTeamReportScreenshot) return alert('স্ক্রিনশট আপলোড করুন! TimeWall রিডিমের স্পষ্ট ছবি দিন।');
+      const rc = Number(document.getElementById('team-redeem-coins')?.value || 0);
+      const rid = (document.getElementById('team-redeem-id')?.value || '').trim();
+      if (rc < coins) return alert('অ্যাডমিন নির্ধারিত ' + coins.toLocaleString() + ' কয়েন রিডিম করতে হবে! আপনি লিখেছেন: ' + rc.toLocaleString());
+      if (!twValidRedeemId(rid)) return alert('সঠিক Redeem ID (শুধু সংখ্যা) লিখুন!');
 
       if (!isFirebaseReady || !fbDatabase) return alert('ডাটাবেজ সংযুক্ত নেই');
 
@@ -6304,6 +6510,8 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
             coins: coins,
             screenshotBase64: currentTeamReportScreenshot,
             screenshotHash: screenshotHash,
+            redeemId: rid,
+            redeemCoins: rc,
             teamId: appData.user.teamId || appData.user.joinedTeamId || '',
             isLeader: !!appData.user.isTeamLeader,
             status: 'pending',
@@ -6311,7 +6519,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
             timestamp: Date.now()
           };
 
-          fbDatabase.ref('dailyTeamReports/' + userKey + '/' + todayStr).set(reportData).then(() => {
+          claimRedeemId(rid, () => fbDatabase.ref('dailyTeamReports/' + userKey + '/' + todayStr).set(reportData).then(() => {
             fbDatabase.ref('teamReportIndex/' + userKey + '/' + todayStr).set({status: 'pending', coins: coins});
             // Also push to a flat list for admin
             fbDatabase.ref('teamDailyReportsList').push({ ...reportData, id: userKey + '_' + todayStr });
@@ -6321,7 +6529,8 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
             document.getElementById('team-report-preview-box')?.classList.add('hidden');
             checkTodayTeamReport();
             if (appData.user.isTeamLeader) loadLeaderDashboard();
-          }).catch(err => alert('ত্রুটি: ' + err.message));
+            document.getElementById('team-redeem-coins').value = ''; document.getElementById('team-redeem-id').value = '';
+          }).catch(err => { fbDatabase.ref('usedRedeemIds/' + rid).remove().catch(() => {}); alert('ত্রুটি: ' + err.message); }), msg => alert(msg));
         });
       });
     }
@@ -6345,7 +6554,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         } catch (e) {}
 
         // Also check if running in Telegram WebApp
-        if (!savedPhone && window.Telegram?.WebApp?.initDataUnsafe?.user) {
+        if (!savedPhone && !getIncomingRefCode() && window.Telegram?.WebApp?.initDataUnsafe?.user) {
           const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
           if (tgUser && tgUser.id) {
             savedPhone = 'tg_' + tgUser.id;
@@ -6409,7 +6618,9 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 
       const urlParams = new URLSearchParams(window.location.search);
       const urlRef = urlParams.get('ref');
-      if (urlRef) {
+      if (applyIncomingRefLock()) {
+        // রেফার কোড লক হয়ে গেছে
+      } else if (urlRef) {
         const regRef = document.getElementById('reg-refer');
         if (regRef) regRef.value = urlRef;
         toggleAuthMode('register');
@@ -6418,4 +6629,5 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
   </script>
 </body>
 </html>
+
 
