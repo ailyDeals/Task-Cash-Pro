@@ -2229,6 +2229,7 @@
     // Auto-reset daily limits & instantly sync when Admin increases/changes limits
     function ensureUserDailyLimits() {
       if (!appData || !appData.user || !appData.user.phone || appData.user.phone === '017XXXXXXXX') return;
+      if (!appData.appSettings) return; // অ্যাডমিন সেটিংস লোড হওয়ার আগে লিমিট হিসাব নয়
       const u = appData.user;
       const todayStr = new Date().toISOString().split('T')[0];
 
@@ -2285,8 +2286,27 @@
           }
           if (typeof renderUserHeader === 'function') renderUserHeader();
         } catch (e) {}
-      } else if (isAdminKeyChanged) {
+      } else if (isAdminKeyChanged || !u.lastAdminLimitKey) {
+        // অ্যাডমিন দিনের মাঝে লিমিট বদলালে সাথে সাথে প্রয়োগ: বাড়লে বাকি সংখ্যা বাড়ে, কমলে ছাঁটাই হয়
+        const oldL = String(u.lastAdminLimitKey || '').split('_').map(Number);
+        const newL = [spinLim, scratchLim, captchaLim, quizLim, adsgramLim, monetagLim, watchLim, unlockLim, instantLim];
+        const flds = ['dailySpins', 'dailyScratch', 'dailyCaptcha', 'dailyQuiz', 'dailyAdsgram', 'dailyMonetag', 'dailyWatchAd', 'dailyUnlockExtra', 'dailyInstant'];
+        const upd = {};
+        if (isAdminKeyChanged && oldL.length === 9 && oldL.every(n => !isNaN(n))) {
+          flds.forEach((f, i) => {
+            const d = newL[i] - oldL[i];
+            if (d > 0) u[f] = (Number(u[f]) || 0) + d;
+            else if (d < 0) u[f] = Math.min(Number(u[f]) || 0, newL[i]);
+            upd[f] = u[f];
+          });
+        }
         u.lastAdminLimitKey = currentAdminLimitKey;
+        upd.lastAdminLimitKey = currentAdminLimitKey;
+        try {
+          localStorage.setItem('TASKCASH_USER_DATA', JSON.stringify(u));
+          if (isFirebaseReady && fbDatabase && u.phone) fbDatabase.ref('users/' + sanitizeKey(u.phone)).update(upd);
+          if (typeof renderUserHeader === 'function') renderUserHeader();
+        } catch (e) {}
       }
     }
     setInterval(ensureUserDailyLimits, 2000);
@@ -3286,29 +3306,29 @@
       let reply = '';
 
       if (q.includes('unlock extra') || q.includes('আনলক এক্সট্রা')) {
-        reply = "🔓 **Unlock Extra (+২০০ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **পেজে প্রবেশ:** বাটনে চাপ দিয়ে নির্দিষ্ট পেজটি ওপেন হলে সাথে সাথে ব্যাক করবেন না। পেজটি পুরো লোড হতে ৫-১০ সেকেন্ড সময় দিন।\n২. **স্ক্রোলিং (১৩-১৫ সেকেন্ড):** পেজটি ধীরে ধীরে উপর-নিচ স্ক্রোল করে স্বাভাবিক ভিজিটরের মতো কনটেন্ট দেখুন।\n৩. **ইন্টারনাল ব্রাউজিং:** পেজের ভেতরের যেকোনো মেনু, ছবি বা লিংকে স্বাভাবিকভাবে একবার ক্লিক করে ৩-৫ সেকেন্ড ব্রাউজ করুন।\n৪. **ভেরিফিকেশন সম্পন্ন:** নির্ধারিত সময় পূর্ণ হলে আপনার একাউন্টে সাথে সাথে +৪২ কয়েন নিশ্চিতভাবে ক্রেডিট হয়ে যাবে।\n\n⚠️ *সতর্কতা: ভিপিএন বা অটো-ক্লিকার ব্যবহার করবেন না, স্বাভাবিকভাবে পেজটি ব্রাউজ করুন।*";
+        reply = "🔓 **Unlock Extra (+২০০ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **পেজে প্রবেশ:** বাটনে চাপ দিয়ে নির্দিষ্ট পেজটি ওপেন হলে সাথে সাথে ব্যাক করবেন না। পেজটি পুরো লোড হতে ৫-১০ সেকেন্ড সময় দিন।\n২. **স্ক্রোলিং (১৩-১৫ সেকেন্ড):** পেজটি ধীরে ধীরে উপর-নিচ স্ক্রোল করে স্বাভাবিক ভিজিটরের মতো কনটেন্ট দেখুন।\n৩. **ইন্টারনাল ব্রাউজিং:** পেজের ভেতরের যেকোনো মেনু, ছবি বা লিংকে স্বাভাবিকভাবে একবার ক্লিক করে ৩-৫ সেকেন্ড ব্রাউজ করুন।\n৪. **ভেরিফিকেশন সম্পন্ন:** নির্ধারিত সময় পূর্ণ হলে আপনার একাউন্টে সাথে সাথে নির্ধারিত রিওয়ার্ড কয়েন নিশ্চিতভাবে ক্রেডিট হয়ে যাবে।\n\n⚠️ *সতর্কতা: ভিপিএন বা অটো-ক্লিকার ব্যবহার করবেন না, স্বাভাবিকভাবে পেজটি ব্রাউজ করুন।*";
       } else if (q.includes('watch ad') || q.includes('ওয়াচ এড') || q.includes('ওয়াচ এড')) {
-        reply = "🎬 **Watch Ad (+২০০ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **পেজ লোড হতে দিন:** Watch Ad বাটনে চাপ দিয়ে পেজে গিয়ে ৫-১০ সেকেন্ড অপেক্ষা করুন যাতে পেজ পুরোপুরি লোড হয়।\n২. **সক্রিয় ব্রাউজিং:** অন্তত ১৩-১৫ সেকেন্ড পেজটিতে স্বাভাবিকভাবে স্ক্রোল করে দেখুন। কোনো ভিডিও কনটেন্ট আসলে তা পুরোটা দেখুন।\n৩. **ভেতরের লিংকে টাচ:** পেজের যেকোনো বাটনে বা আর্টিকেলে স্বাভাবিকভাবে একবার ক্লিক করে ৩ সেকেন্ড সময় কাটান।\n৪. **রিওয়ার্ড গ্রহণ:** সময় শেষ হলে স্বয়ংক্রিয়ভাবে +২৮ কয়েন আপনার ওয়ালেটে জমা হবে।";
+        reply = "🎬 **Watch Ad (+২০০ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **পেজ লোড হতে দিন:** Watch Ad বাটনে চাপ দিয়ে পেজে গিয়ে ৫-১০ সেকেন্ড অপেক্ষা করুন যাতে পেজ পুরোপুরি লোড হয়।\n২. **সক্রিয় ব্রাউজিং:** অন্তত ১৩-১৫ সেকেন্ড পেজটিতে স্বাভাবিকভাবে স্ক্রোল করে দেখুন। কোনো ভিডিও কনটেন্ট আসলে তা পুরোটা দেখুন।\n৩. **ভেতরের লিংকে টাচ:** পেজের যেকোনো বাটনে বা আর্টিকেলে স্বাভাবিকভাবে একবার ক্লিক করে ৩ সেকেন্ড সময় কাটান।\n৪. **রিওয়ার্ড গ্রহণ:** সময় শেষ হলে স্বয়ংক্রিয়ভাবে নির্ধারিত রিওয়ার্ড কয়েন আপনার ওয়ালেটে জমা হবে।";
       } else if (q.includes('বোনাস এড') || q.includes('bonus ad')) {
-        reply = "🎁 **বোনাস এড (+২০০ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **পেজে উপস্থিতি:** বোনাস এড ওপেন হলে পেজটি সম্পূর্ণ লোড হতে দিন (৫-৮ সেকেন্ড)।\n২. **স্ক্রোল ও নিরীক্ষণ:** পুরো পেজটি স্ক্রোল করুন এবং স্বাভাবিক ব্যবহারকারীর মতো ১৩-১৫ সেকেন্ড পেজে অবস্থান করুন।\n৩. **ইন্টারঅ্যাকশন:** পেজের ভেতরের যেকোনো লিংকে ক্লিক করে পেজটি একটু ঘুরে দেখুন। এতে আপনার ভিজিট সফলভাবে ভেরিফাই হবে এবং নিশ্চিতভাবে +২৫ কয়েন পাবেন।";
+        reply = "🎁 **বোনাস এড (+২০০ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **পেজে উপস্থিতি:** বোনাস এড ওপেন হলে পেজটি সম্পূর্ণ লোড হতে দিন (৫-৮ সেকেন্ড)।\n২. **স্ক্রোল ও নিরীক্ষণ:** পুরো পেজটি স্ক্রোল করুন এবং স্বাভাবিক ব্যবহারকারীর মতো ১৩-১৫ সেকেন্ড পেজে অবস্থান করুন।\n৩. **ইন্টারঅ্যাকশন:** পেজের ভেতরের যেকোনো লিংকে ক্লিক করে পেজটি একটু ঘুরে দেখুন। এতে আপনার ভিজিট সফলভাবে ভেরিফাই হবে এবং নিশ্চিতভাবে নির্ধারিত রিওয়ার্ড কয়েন পাবেন।";
       } else if (q.includes('ভিডিও এড') || q.includes('video ad') || q.includes('adsgram')) {
-        reply = "📹 **ভিডিও এড (+২০০ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **সম্পূর্ণ ভিডিও দেখুন:** ভিডিওটি শুরু হলে কোনো অবস্থাতেই মাঝে কেটে দেবেন না। সম্পূর্ণ সময় শেষ না হওয়া পর্যন্ত অপেক্ষা করুন।\n২. **ভিডিও শেষে পেজ ভিজিট:** ভিডিও শেষ হওয়ার পর যদি কোনো পেজ ওপেন হয়, সেখানে ৫-১০ সেকেন্ড স্বাভাবিকভাবে থাকুন এবং স্ক্রোল করুন।\n৩. **নিশ্চিত পয়েন্ট:** ভিডিও সম্পন্ন হলে সাথে সাথে +১৮ কয়েন আপনার অ্যাকাউন্টে সফলভাবে যোগ হবে।";
+        reply = "📹 **ভিডিও এড (+২০০ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **সম্পূর্ণ ভিডিও দেখুন:** ভিডিওটি শুরু হলে কোনো অবস্থাতেই মাঝে কেটে দেবেন না। সম্পূর্ণ সময় শেষ না হওয়া পর্যন্ত অপেক্ষা করুন।\n২. **ভিডিও শেষে পেজ ভিজিট:** ভিডিও শেষ হওয়ার পর যদি কোনো পেজ ওপেন হয়, সেখানে ৫-১০ সেকেন্ড স্বাভাবিকভাবে থাকুন এবং স্ক্রোল করুন।\n৩. **নিশ্চিত পয়েন্ট:** ভিডিও সম্পন্ন হলে সাথে সাথে নির্ধারিত রিওয়ার্ড কয়েন আপনার অ্যাকাউন্টে সফলভাবে যোগ হবে।";
       } else if (q.includes('instant') || q.includes('ইনস্ট্যান্ট') || q.includes('instant bonus')) {
-        reply = "⚡ **Instant Bonus (+২০০ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **পেজ ভিজিট:** Instant Bonus এ ক্লিক করে পেজটিতে প্রবেশ করুন এবং পেজটি লোড হওয়া পর্যন্ত অপেক্ষা করুন।\n২. **ন্যাচারাল স্ক্রোল:** পেজে গিয়ে অন্তত ১৩-১৫ সেকেন্ড ওপর-নিচ স্ক্রোল করুন।\n৩. **ক্লিক ও ব্রাউজ:** পেজের ভেতরের কোনো আর্টিকেলে বা লিংকে একবার আলতো করে ক্লিক করে ৩ সেকেন্ড সময় কাটান।\n৪. **রিওয়ার্ড:** কাজ সম্পন্ন হওয়া মাত্রই +২০ কয়েন ক্রেডিট হবে।";
+        reply = "⚡ **Instant Bonus (+২০০ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **পেজ ভিজিট:** Instant Bonus এ ক্লিক করে পেজটিতে প্রবেশ করুন এবং পেজটি লোড হওয়া পর্যন্ত অপেক্ষা করুন।\n২. **ন্যাচারাল স্ক্রোল:** পেজে গিয়ে অন্তত ১৩-১৫ সেকেন্ড ওপর-নিচ স্ক্রোল করুন।\n৩. **ক্লিক ও ব্রাউজ:** পেজের ভেতরের কোনো আর্টিকেলে বা লিংকে একবার আলতো করে ক্লিক করে ৩ সেকেন্ড সময় কাটান।\n৪. **রিওয়ার্ড:** কাজ সম্পন্ন হওয়া মাত্রই নির্ধারিত রিওয়ার্ড কয়েন ক্রেডিট হবে।";
       } else if (q.includes('স্পিন') || q.includes('spin') || q.includes('লাকি স্পিন')) {
         reply = "🎡 **লাকি স্পিন হুইল এ কাজের সম্পূর্ণ গাইড:**\n\n১. **স্পিন আনলক:** 'দেখে স্পিন করুন' বাটনে ক্লিক করে স্পন্সরড পেজে যান।\n২. **পেজে ১৩-১৫ সেকেন্ড স্ক্রোল:** প্রতিটি পেজ ভালো করে লোড হতে দিন এবং স্বাভাবিকভাবে স্ক্রোল করে ১৩-১৫ সেকেন্ড অবস্থান করুন।\n৩. **পেজ ব্রাউজিং:** পেজের যেকোনো লিংকে একবার ক্লিক করে ঘুরে দেখুন।\n৪. **স্পিন ও কয়েন:** ভেরিফিকেশন ধাপগুলো শেষ হলে হুইলটি স্বয়ংক্রিয়ভাবে ঘুরবে এবং আপনি সর্বোচ্চ ৪০ কয়েন পর্যন্ত জিতে নিতে পারবেন (গড় ২২ কয়েন)।";
       } else if (q.includes('স্ক্র্যাচ') || q.includes('scratch')) {
-        reply = "🎫 **স্ক্র্যাচ কার্ড (+২২ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **কার্ড আনলক:** আনলক বাটনে ক্লিক করে স্পন্সর পেজটি ওপেন করুন।\n২. **স্বাভাবিক ব্রাউজ:** পেজটি ৫-১০ সেকেন্ড লোড হতে দিয়ে অন্তত ১৩-১৫ সেকেন্ড স্ক্রোল করুন এবং একটি ভেতরের লিংকে স্বাভাবিক ক্লিক করুন।\n৩. **কার্ড স্ক্র্যাচ:** পেজের কাজ সফলভাবে সম্পন্ন হলে স্ক্র্যাচ কার্ডটি উন্মুক্ত হবে এবং হাত দিয়ে ঘষে সাথে সাথে +২২ কয়েন আপনার অ্যাকাউন্টে নিয়ে নিন।";
+        reply = "🎫 **স্ক্র্যাচ কার্ড (নির্ধারিত রিওয়ার্ড কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **কার্ড আনলক:** আনলক বাটনে ক্লিক করে স্পন্সর পেজটি ওপেন করুন।\n২. **স্বাভাবিক ব্রাউজ:** পেজটি ৫-১০ সেকেন্ড লোড হতে দিয়ে অন্তত ১৩-১৫ সেকেন্ড স্ক্রোল করুন এবং একটি ভেতরের লিংকে স্বাভাবিক ক্লিক করুন।\n৩. **কার্ড স্ক্র্যাচ:** পেজের কাজ সফলভাবে সম্পন্ন হলে স্ক্র্যাচ কার্ডটি উন্মুক্ত হবে এবং হাত দিয়ে ঘষে সাথে সাথে নির্ধারিত রিওয়ার্ড কয়েন আপনার অ্যাকাউন্টে নিয়ে নিন।";
       } else if (q.includes('ক্যাপচা') || q.includes('captcha')) {
-        reply = "⌨️ **ক্যাপচা জব (+১০ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **সঠিক কোড টাইপ:** স্ক্রিনে প্রদর্শিত ইংরেজি বড় হাতের কোডটি নির্ভুলভাবে লিখে সাবমিট করুন।\n২. **ভেরিফিকেশন পেজ ব্রাউজিং:** পেজ ওপেন হলে ১৩-১৫ সেকেন্ড থাকুন, ওপর-নিচ স্ক্রোল করুন এবং একটি লিংকে স্বাভাবিক ক্লিক করুন।\n৩. **কয়েন অর্জন:** ভেরিফিকেশন সফল হলে সাথে সাথে +১০ কয়েন ওয়ালেটে জমা হবে।";
+        reply = "⌨️ **ক্যাপচা জব (নির্ধারিত রিওয়ার্ড কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **সঠিক কোড টাইপ:** স্ক্রিনে প্রদর্শিত ইংরেজি বড় হাতের কোডটি নির্ভুলভাবে লিখে সাবমিট করুন।\n২. **ভেরিফিকেশন পেজ ব্রাউজিং:** পেজ ওপেন হলে ১৩-১৫ সেকেন্ড থাকুন, ওপর-নিচ স্ক্রোল করুন এবং একটি লিংকে স্বাভাবিক ক্লিক করুন।\n৩. **কয়েন অর্জন:** ভেরিফিকেশন সফল হলে সাথে সাথে নির্ধারিত রিওয়ার্ড কয়েন ওয়ালেটে জমা হবে।";
       } else if (q.includes('কুইজ') || q.includes('quiz') || q.includes('ম্যাথ')) {
-        reply = "🧠 **ম্যাথ কুইজ (+১৫ কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **সহজ প্রশ্নের সঠিক উত্তর:** স্ক্রিনে থাকা সহজ যোগ/বিয়োগ অংকটির সঠিক অপশনটি বেছে নিন।\n২. **সফল উত্তর:** সঠিক উত্তরে ক্লিক করলেই সরাসরি +১৫ কয়েন অ্যাকাউন্টে ক্রেডিট হয়ে যাবে।";
+        reply = "🧠 **ম্যাথ কুইজ (নির্ধারিত রিওয়ার্ড কয়েন) এ কাজের সম্পূর্ণ গাইড:**\n\n১. **সহজ প্রশ্নের সঠিক উত্তর:** স্ক্রিনে থাকা সহজ যোগ/বিয়োগ অংকটির সঠিক অপশনটি বেছে নিন।\n২. **সফল উত্তর:** সঠিক উত্তরে ক্লিক করলেই সরাসরি নির্ধারিত রিওয়ার্ড কয়েন অ্যাকাউন্টে ক্রেডিট হয়ে যাবে।";
       } else if (q.includes('টাস্ক') || q.includes('কাজ') || q.includes('task') || q.includes('ডেইলি') || q.includes('প্রতিদিন') || q.includes('আনলিমিটেড')) {
         reply = "📌 **মাইক্রো-টাস্ক সম্পন্ন করার সম্পূর্ণ গাইড:**\n\nঅ্যাপের টাস্কগুলো মূলত ৩ ধরণের ক্যাটাগরিতে পাওয়া যায়:\n\n১. 📅 **প্রতিদিন ১ বার (Daily):** এই টাস্কগুলো দিনে একবার সম্পন্ন করা যায়। প্রতিদিন রাত ১২টায় আবার নতুন করে আসে।\n২. ⚡ **আনলিমিটেড (Unlimited):** কোনো দৈনিক সীমা নেই, যত ইচ্ছা ততবার সম্পন্ন করে বারবার পয়েন্ট আয় করা যায়।\n৩. 🔒 **ওয়ান-টাইম (One-Time):** অ্যাকাউন্ট খোলার পর কেবল ১ বার সম্পন্ন করার টাস্ক (যেমন অফিসিয়াল টেলিগ্রাম চ্যানেলে জয়েন)।\n\n⏱️ **টাস্ক করার নিয়ম:**\n• টাস্কের 'শুরু করুন' বাটনে ক্লিক করে নির্দিষ্ট পেজে যান।\n• নির্ধারিত পুরো সময় (যেমন ২০, ৩০ বা ৬০ সেকেন্ড) পেজে অবস্থান করুন।\n• সময় পূর্ণ হলে স্বয়ংক্রিয়ভাবে আপনার ব্যালেন্সে কয়েন যোগ হবে এবং টাস্কটি সম্পন্ন হিসেবে চিহ্নিত হবে।";
       } else if (q.includes('অ্যাড') || q.includes('বিজ্ঞাপন') || q.includes('এড') || q.includes('ad') || q.includes('কি করতে হবে') || q.includes('নিয়ম')) {
         reply = "💎 **বিজ্ঞাপনে সঠিক কাজের সাধারণ নিয়মাবলী (কয়েন নিশ্চিত করার উপায়):**\n\nআপনার প্রতিটি ভিজিট যাতে সিস্টেমে শতভাগ সফলভাবে অনুমোদিত হয় এবং কয়েন নিশ্চিতভাবে জমা হয়:\n\n১. 🌐 **পেজ লোড হতে দেওয়া:** পেজে প্রবেশের সাথে সাথে ব্যাক করবেন না। পেজটি পুরো লোড হতে ৫-১০ সেকেন্ড সময় দিন।\n২. 📜 **১৩-১৫ সেকেন্ড স্ক্রোল:** পেজটি ধীরে ধীরে উপর-নিচ স্ক্রোল করুন এবং ভেতরের তথ্যগুলো স্বাভাবিকভাবে দেখুন।\n৩. 👆 **ইন্টারনাল ক্লিক:** পেজের ভেতরের যেকোনো আর্টিকেল, বাটন বা মেনুতে স্বাভাবিকভাবে একবার ক্লিক করে ৩-৫ সেকেন্ড ব্রাউজ করুন।\n৪. 🎬 **ভিডিও পুরো দেখা:** কোনো ভিডিও থাকলে তা শেষ না হওয়া পর্যন্ত ব্যাক করবেন না।\n৫. 🛡️ **অ্যাকাউন্ট সুরক্ষা:** কোনো প্রকার VPN, অটো-ক্লিকার বা বট ব্যবহার সম্পূর্ণ নিষিদ্ধ। স্বাভাবিক ব্রাউজিং করলেই সাথে সাথে কয়েন জমা হয়ে যাবে।";
       } else if (q.includes('উইথড্র') || q.includes('টাকা') || q.includes('বিকাশ') || q.includes('নগদ') || q.includes('withdraw') || q.includes('পেমেন্ট')) {
-        reply = "💸 **টাকা উত্তোলন (Withdraw) পলিসি:**\n\n• কয়েন রেট: ২০০ কয়েন = ৳১ টাকা।\n• সর্বনিম্ন উত্তোলন: ৳২০০ (২০,০০০ কয়েন)।\n• শর্তাবলী: ন্যূনতম ৫টি সফল রেফারেল থাকতে হবে এবং নিয়ম মেনে নিয়মিত টাস্ক করতে হবে।\n• পেমেন্ট মেথড: বিকাশ, নগদ, রকেট এবং মোবাইল রিচার্জ।\n• প্রসেসিং সময়: উইথড্র আবেদন করার পর তথ্য যাচাই করে দ্রুত সময়ের মধ্যে বিকাশ/নগদে টাকা পাঠিয়ে দেওয়া হয়।";
+        reply = "💸 **টাকা উত্তোলন (Withdraw) পলিসি:**\n\n• কয়েন রেট: " + COINS_PER_BDT + " কয়েন = ৳১ টাকা।\n• সর্বনিম্ন উত্তোলন: ৳" + MIN_WITHDRAW_BDT + " (" + (MIN_WITHDRAW_BDT * COINS_PER_BDT).toLocaleString() + " কয়েন)।\n• শর্তাবলী: ন্যূনতম ৫টি সফল রেফারেল থাকতে হবে এবং নিয়ম মেনে নিয়মিত টাস্ক করতে হবে।\n• পেমেন্ট মেথড: বিকাশ, নগদ, রকেট এবং মোবাইল রিচার্জ।\n• প্রসেসিং সময়: উইথড্র আবেদন করার পর তথ্য যাচাই করে দ্রুত সময়ের মধ্যে বিকাশ/নগদে টাকা পাঠিয়ে দেওয়া হয়।";
       } else if (q.includes('ব্যান') || q.includes('ban') || q.includes('ভিপিএন') || q.includes('vpn') || q.includes('invalid') || q.includes('সুরক্ষা')) {
         reply = "🚫 **একাউন্ট ব্যান ও ইনভ্যালিড ক্লিক থেকে সুরক্ষার উপায়:**\n\n১. 🛡️ **ভিপিএন সম্পূর্ণ নিষিদ্ধ:** কোনো প্রকার VPN বা প্রক্সি ব্যবহার করবেন না। ভিপিএন ডিটেক্ট হলে একাউন্ট বাতিল হতে পারে।\n২. 📱 **স্বাভাবিক ব্রাউজিং:** পেজে গিয়ে সাথে সাথে বের না হয়ে অন্তত ১৩-১৫ সেকেন্ড স্ক্রোল করুন।\n৩. 👤 **এক ডিভাইসে এক একাউন্ট:** একাধিক একাউন্ট বা ক্লোন অ্যাপ ব্যবহার করা যাবে না।\n৪. 🤖 **অটো-ক্লিকার নিষিদ্ধ:** কোনো বট বা অটোমেশন স্ক্রিপ্ট ব্যবহার করা সম্পূর্ণ নিষিদ্ধ।";
       } else if (q.includes('রেফার') || q.includes('কমিশন') || q.includes('স্যালারি') || q.includes('বেতন') || q.includes('refer')) {
@@ -3325,7 +3345,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
 1. NEVER mention any ad network names under any circumstances (FORBIDDEN words: Monetag, AdsGram, Adsterra, PopAds, HilltopAds, Google, AdSense, etc.).
 2. NEVER mention admin revenue, profit margins, eCPM, publisher earnings, or backend business monetization.
 3. ALWAYS speak 100% from the USER'S perspective: politely guide the user how to visit pages naturally (wait 5-10s for page to fully load, scroll smoothly for 13-15 seconds, click an internal link/article to browse for 3-5 seconds, watch videos completely, never use VPNs or auto-clickers) so that the user's task visit is successfully verified and coins are credited smoothly.
-4. Button coin values: Unlock Extra (+42 coins), Watch Ad (+28 coins), Bonus Ad (+25 coins), Scratch Card (+22 coins), Lucky Spin (~22 coins average), Instant Bonus (+20 coins), Video Ad (+18 coins), Math Quiz (+15 coins), Captcha (+10 coins), Daily Bonus (+12 coins), Welcome Bonus (+25 coins), Referral Bonus (+22 coins). 100 coins = 1 BDT.
+4. Coin rewards for each button are set by the admin and can change at any time, so do NOT state exact coin amounts per button. Conversion: ${COINS_PER_BDT} coins = 1 BDT.
 5. Answer concisely, cleanly, warmly and step-by-step in natural Bengali.`;
 
           const res = await fetch(endpoint, {
@@ -3378,6 +3398,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     }
 
     function awardCoins(amount, source) {
+      if (appData.user && appData.user.banned) return;
       const numAmt = Number(amount);
       if (isNaN(numAmt) || numAmt <= 0) return;
 
@@ -3856,6 +3877,60 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       } catch (e) {}
     }
 
+
+    // ===== FIXES: ban logout, tasks map, unique referral code, live refresh =====
+    let _banHandled = false;
+    function forceBannedLogout() {
+      if (_banHandled) return;
+      _banHandled = true;
+      alert('⛔ আপনার একাউন্ট ব্যান করা হয়েছে। সাপোর্টে যোগাযোগ করুন।');
+      handleUserLogout();
+    }
+
+    function getAllTasksMap() {
+      const st = appData.appSettings || {};
+      const map = st.disableDefaultTasks ? {} : { ...DEFAULT_SYSTEM_TASKS };
+      Object.entries(appData.tasks || {}).forEach(([id, t]) => { if (t) map[id] = t; });
+      Object.keys(map).forEach(id => {
+        const t = map[id];
+        if (t.active === false || String(t.status || '').toLowerCase() === 'inactive') delete map[id];
+      });
+      return map;
+    }
+
+    function pickUniqueReferralCode(phone, cb) {
+      const base = 'TC' + phone.slice(-4);
+      if (!isFirebaseReady || !fbDatabase) return cb(base);
+      let done = false;
+      const finish = c => { if (!done) { done = true; cb(c); } };
+      const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+      const tryCode = (code, n) => {
+        fbDatabase.ref('users').orderByChild('referralCode').equalTo(code).limitToFirst(1).once('value', sn => {
+          if (!sn.val()) return finish(code);
+          if (n >= 6) return finish(base + Math.random().toString(36).slice(2, 5).toUpperCase());
+          tryCode(base + letters.charAt(Math.floor(Math.random() * letters.length)), n + 1);
+        }, () => finish(base));
+      };
+      setTimeout(() => finish(base), 4000);
+      tryCode(base, 0);
+    }
+
+    // টিম ও রেফারেল পেজ খোলা থাকলে নিজে থেকে রিফ্রেশ
+    setInterval(() => {
+      try {
+        if (document.hidden || !appData.user || !appData.user.phone || !isFirebaseReady) return;
+        const vis = id => { const e = document.getElementById(id); return e && !e.classList.contains('hidden'); };
+        if (vis('view-team')) loadTeamCenter();
+      } catch (e) {}
+    }, 15000);
+    setInterval(() => {
+      try {
+        if (document.hidden || !appData.user || !appData.user.phone || !isFirebaseReady) return;
+        const vis = id => { const e = document.getElementById(id); return e && !e.classList.contains('hidden'); };
+        if (vis('view-refer') || vis('view-referral_comm') || vis('view-withdraw')) loadUserReferralHistory(false);
+      } catch (e) {}
+    }, 60000);
+
     // ===== TEAM SHARED HELPERS =====
     function tlIso(ms){return new Date(ms).toISOString().split('T')[0];}
     function tlWeekDates(){const since=(new Date().getDay()+1)%7,st=Date.now()-since*864e5;return Array.from({length:7},(_,i)=>tlIso(st+i*864e5));}
@@ -4018,7 +4093,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         return;
       }
 
-      fbDatabase.ref('withdrawRequests').once('value').then(snap => {
+      fbDatabase.ref('withdrawRequests').orderByChild('userPhone').equalTo(appData.user.phone).once('value').then(snap => {
         const allReqs = snap.val() || {};
         const mergedMap = {};
 
@@ -4069,9 +4144,24 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       const myUserKey = sanitizeKey(myPhone);
 
       Promise.all([
-        fbDatabase.ref('referralLogs').orderByChild('referrerPhone').equalTo(myPhone).limitToLast(60).once('value'),
+        fbDatabase.ref('referralLogs').orderByChild('referrerPhone').equalTo(myPhone).limitToLast(300).once('value'),
         fbDatabase.ref('users/' + myUserKey + '/referralWorkHistory').limitToLast(40).once('value')
-      ]).then(([logsSnap, workHistSnap]) => {
+      ]).then(async ([logsSnap, workHistSnap]) => {
+        // প্রতিটি রেফার ইউজারের আসল কয়েন (শুধু প্রয়োজনীয় ফিল্ড, পাসওয়ার্ড ইত্যাদি নয়)
+        const enrich = {};
+        try {
+          const phones = new Set();
+          Object.values(logsSnap.val() || {}).forEach(l => { if (l && l.referredPhone) phones.add(l.referredPhone); });
+          Object.values(workHistSnap.val() || {}).forEach(w => { if (w && w.referredPhone) phones.add(w.referredPhone); });
+          await Promise.all([...phones].map(async ph => {
+            const k = sanitizeKey(ph);
+            const g = async c => (await fbDatabase.ref('users/' + k + '/' + c).once('value')).val();
+            const [lt, co, pd, td, ca] = await Promise.all([g('lifetimeCoins'), g('coins'), g('ref5kBonusPaid'), g('todayCoins'), g('completedAdsCount')]);
+            enrich[ph] = {lt: Number(lt) || 0, co: Number(co) || 0, pd: !!pd, td: Number(td) || 0, ca: Number(ca) || 0};
+          }));
+        } catch (e) {}
+        return [logsSnap, workHistSnap, enrich];
+      }).then(([logsSnap, workHistSnap, enrich]) => {
         const allLogs = logsSnap.val() || {};
         const workHistObj = workHistSnap.val() || {};
 
@@ -4116,6 +4206,15 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           existing.lifetimeCoins = Math.max(existing.lifetimeCoins, Number(w.userTotalCoins) || 0);
           existing.lastActive = Math.max(existing.lastActive, w.timestamp || 0);
           referredMap[ph] = existing;
+        });
+
+        Object.values(referredMap).forEach(r => {
+          const e = enrich[r.phone];
+          if (!e) return;
+          r.lifetimeCoins = Math.max(e.lt, e.co, r.lifetimeCoins || 0);
+          r.ref5kBonusPaid = r.ref5kBonusPaid || e.pd;
+          r.todayCoins = e.td;
+          if (e.ca) r.completedAdsCount = e.ca;
         });
 
         const referredList = Object.values(referredMap).sort((a, b) => (b.lifetimeCoins - a.lifetimeCoins) || (b.createdAt - a.createdAt));
@@ -4570,6 +4669,9 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       if (!isWdrActive) {
         return alert('⚠️ অ্যাডমিন কর্তৃক বর্তমানে উত্তোলন সাময়িক স্থগিত রয়েছে। অনুগ্রহ করে পরবর্তীতে চেষ্টা করুন।');
       }
+      if (appData.user && appData.user.banned) {
+        return alert('⛔ আপনার একাউন্ট ব্যান করা হয়েছে। সাপোর্টে যোগাযোগ করুন।');
+      }
 
       const amt = Number(document.getElementById('wdr-amount').value);
       const method = document.getElementById('wdr-method').value;
@@ -4939,7 +5041,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         }
       };
 
-      const completeRegistration = () => {
+      const completeRegistration = (codeOverride) => {
         resetRegBtn();
         try {
           localStorage.setItem(SESSION_USER_KEY, phone);
@@ -4967,7 +5069,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           dailyScratch: 50,
           dailyIdleChest: 5,
           completedAdsCount: 0,
-          referralCode: 'TC' + phone.slice(-4),
+          referralCode: codeOverride || ('TC' + phone.slice(-4)),
           referredBy: refCodeEntered || '',
           ref5kBonusPaid: false,
           totalJoinedReferrals: 0,
@@ -5049,7 +5151,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           }
           toggleAuthMode('login');
         } else {
-          completeRegistration();
+          pickUniqueReferralCode(phone, code => completeRegistration(code));
         }
       });
     }
@@ -5293,7 +5395,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       const container = document.getElementById('all-tasks-list');
       if (!container) return;
 
-      const allTasksMap = { ...DEFAULT_SYSTEM_TASKS, ...(appData.tasks || {}) };
+      const allTasksMap = getAllTasksMap();
       const tasksArray = Object.entries(allTasksMap).map(([id, t]) => ({
         id,
         ...t,
@@ -5529,7 +5631,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     }
 
     function openTaskRunModal(taskId) {
-      const allTasksMap = { ...DEFAULT_SYSTEM_TASKS, ...(appData.tasks || {}) };
+      const allTasksMap = getAllTasksMap();
       const task = allTasksMap[taskId];
       if (!task) return;
 
@@ -5668,6 +5770,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       fbDatabase.ref('users/' + userKey).on('value', snap => {
         const val = snap.val();
         if (!val) return;
+        if (val.banned) { forceBannedLogout(); return; }
 
         const currentLocalCoins = Number(appData.user?.coins) || 0;
         const remoteCoins = val.coins !== undefined ? Number(val.coins) : currentLocalCoins;
@@ -5712,7 +5815,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       });
 
       // Real-time listener for user's withdrawal status updates (Pending / Approved / Rejected)
-      fbDatabase.ref('withdrawRequests').on('value', () => {
+      fbDatabase.ref('withdrawRequests').orderByChild('userPhone').equalTo(appData.user.phone).on('value', () => {
         if (typeof loadUserWithdrawHistory === 'function') {
           loadUserWithdrawHistory(false);
         }
@@ -5863,6 +5966,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         renderUserHeader();
       }
       try { checkChannelGate(); } catch (e) {}
+      try { renderTaskList(); } catch (e) {}
     }
 
     function renderTimeWallCardUI(settings) {
@@ -6629,5 +6733,4 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
   </script>
 </body>
 </html>
-
 
