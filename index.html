@@ -49,7 +49,7 @@
 <script src="/_aistudio-iframe.js?v=2c34bde1"></script></head>
 <body class="bg-slate-900 text-slate-800 dark:text-slate-100 antialiased font-sans min-h-screen flex justify-center selection:bg-emerald-500 selection:text-white transition-colors">
 
-  <div id="toast-container" class="fixed top-4 right-4 z-50 pointer-events-none space-y-2 max-w-[90vw]"></div>
+  <div id="toast-container" class="fixed top-4 right-4 z-[100] pointer-events-none space-y-2 max-w-[90vw]"></div>
 
   <!-- AUTH SCREEN -->
   <div id="auth-screen" class="w-full max-w-xl bg-slate-900 min-h-screen flex flex-col justify-center p-5 relative z-40 text-white">
@@ -638,7 +638,7 @@
               </div>
               <span>আমার ডিজিটাল ওয়ালেট</span>
             </h3>
-            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-400 text-slate-950 uppercase tracking-wider">১০০ কয়েন = ৳১.০০</span>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-400 text-slate-950 uppercase tracking-wider" id="wallet-rate-badge">১০০ কয়েন = ৳১.০০</span>
           </div>
           <p class="text-xs text-slate-300 mt-1.5">আপনার অর্জিত সমস্ত কয়েন নিরাপদে সংরক্ষিত এবং যেকোনো সময় বিকাশ, নগদ ও রিচার্জে উত্তোলনযোগ্য।</p>
         </div>
@@ -674,7 +674,7 @@
             </span>
             <span class="text-[10px] text-emerald-600 font-black">অটোমেটিক ক্যালকুলেটর</span>
           </div>
-          <div class="grid grid-cols-3 gap-2 text-center text-xs">
+          <div class="grid grid-cols-3 gap-2 text-center text-xs" id="wallet-conv-grid">
             <div class="p-2 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-750">
               <div class="text-[10px] text-slate-400">১,০০০ কয়েন</div>
               <div class="font-black text-amber-500 font-mono mt-0.5">৳১০.০০</div>
@@ -778,7 +778,7 @@
           <h3 class="text-base font-black flex items-center gap-1.5">
             <i data-lucide="wallet" class="w-5 h-5"></i> টাকা উত্তোলন (Withdraw)
           </h3>
-          <p class="text-xs text-emerald-100 mt-0.5">১০০ কয়েন = ৳১ টাকা। সর্বনিম্ন ৳১০০ ও ৫টি কমপ্লিট রেফারেল (প্রতি রেফারে ৫,০০০ কয়েন আয়) প্রয়োজন।</p>
+          <p id="wdr-head-note" class="text-xs text-emerald-100 mt-0.5">১০০ কয়েন = ৳১ টাকা। সর্বনিম্ন ৳১০০ ও ৫টি কমপ্লিট রেফারেল (প্রতি রেফারে ৫,০০০ কয়েন আয়) প্রয়োজন।</p>
         </div>
 
         <div class="grid grid-cols-2 gap-2.5">
@@ -1015,7 +1015,7 @@
             <i data-lucide="users" class="w-6 h-6"></i>
           </div>
           <h3 class="text-base font-black">রেফারেল প্রোগ্রাম ও কাজের হিস্ট্রি</h3>
-          <p class="text-xs text-purple-100 mt-1">প্রতি কমপ্লিট রেফারে (৫,০০০ কয়েন ইনকাম পূর্ণ হলে) পান ১২০০ কয়েন বোনাস ও আজীবন ১০% কমিশন!</p>
+          <p id="refer-head-note" class="text-xs text-purple-100 mt-1">প্রতি কমপ্লিট রেফারে (৫,০০০ কয়েন ইনকাম পূর্ণ হলে) পান ১২০০ কয়েন বোনাস ও আজীবন ১০% কমিশন!</p>
         </div>
 
         <!-- 5,000 Coins Mandatory Referral Completion Rule Banner -->
@@ -1162,7 +1162,7 @@
                 <div class="font-bold text-slate-800 dark:text-white">লেভেল ১ (সরাসরি রেফার)</div>
                 <div class="text-[11px] text-slate-500">ইউজারের প্রতি টাস্ক ও জয়েনিংয়ে</div>
               </div>
-              <span class="px-2.5 py-1 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 font-bold rounded-lg text-xs">+১২০০ কয়েন + ১০%</span>
+              <span class="px-2.5 py-1 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 font-bold rounded-lg text-xs" id="comm-lvl1-badge">+১২০০ কয়েন + ১০%</span>
             </div>
             <div class="p-2.5 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
               <div>
@@ -1422,12 +1422,8 @@
           <h4 class="text-xs font-black text-slate-800 dark:text-white flex items-center gap-1.5">
             <i data-lucide="camera" class="w-4 h-4 text-rose-500"></i> আজকের কয়েন রিডিম প্রুফ জমা দিন
           </h4>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-            <b>১)</b> TimeWall খুলে কাজ করুন → কয়েন রিডিম করুন।<br>
-            <b>২)</b> রিডিম/হিস্ট্রির স্পষ্ট স্ক্রিনশট নিন।<br>
-            <b>৩)</b> নিচে আপলোড করে জমা দিন। অ্যাডমিন অ্যাপ্রুভ করলে অ্যাপ ওয়ালেটে <strong id="team-report-reward-hint" class="text-emerald-600">বোনাস কয়েন</strong> পাবেন।<br>
-            <span class="text-rose-500 font-bold">⚠️ একই স্ক্রিনশট টিম + সাধারণ টাস্ক দুই জায়গায় দিলে একাউন্ট ব্যান।</span>
-          </p>
+          <div id="team-proof-rules" class="hidden text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line"></div>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">অ্যাডমিন অ্যাপ্রুভ করলে অ্যাপ ওয়ালেটে <strong id="team-report-reward-hint" class="text-emerald-600">বোনাস কয়েন</strong> পাবেন।<br><span class="text-rose-500 font-bold">⚠️ একই স্ক্রিনশট টিম + সাধারণ টাস্ক দুই জায়গায় দিলে একাউন্ট ব্যান।</span></p>
           <div>
             <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">রিডিম টার্গেট (অ্যাডমিন নির্ধারিত — পরিবর্তন করা যাবে না):</label>
             <input type="number" id="team-report-coins" min="100" value="3000" readonly class="w-full bg-slate-100 dark:bg-slate-900/80 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs font-mono text-slate-800 dark:text-white font-black cursor-not-allowed">
@@ -1435,13 +1431,12 @@
           </div>
           <div class="p-3 rounded-xl bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-800 space-y-2">
             <div class="text-[11px] font-black text-sky-700 dark:text-sky-300">📌 TimeWall Redeem তথ্য (বাধ্যতামূলক)</div>
-            <p class="text-[10px] text-slate-600 dark:text-slate-300 leading-relaxed">TimeWall এ কয়েন REDEEM করার পর <b>Redeem History</b> এর সর্বশেষ সারির (তারিখ, Coins, Redeem ID) স্ক্রিনশট দিন। রিডিম কয়েন অ্যাডমিন নির্ধারিত টার্গেটের কম হলে প্রুফ গ্রহণ হবে না।</p>
+            
             <div class="grid grid-cols-2 gap-2">
               <input type="number" id="team-redeem-coins" min="0" placeholder="রিডিম করা কয়েন" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-xs font-mono text-slate-800 dark:text-white">
               <input type="tel" id="team-redeem-id" placeholder="Redeem ID" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-xs font-mono text-slate-800 dark:text-white">
             </div>
-            <button type="button" onclick="openTimeWallGuide()" class="w-full py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-[11px] font-bold">❓ কীভাবে রিডিম করবেন (গাইড ও ভিডিও)</button>
-          </div>
+            </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">স্ক্রিনশট:</label>
             <input type="file" id="team-report-file" accept="image/*" onchange="handleTeamReportScreenshot(event)" class="w-full text-xs text-slate-600 dark:text-slate-300">
@@ -1803,17 +1798,16 @@
           </div>
 
           <div id="trun-redeem-fields" class="hidden p-3 rounded-xl bg-sky-950/40 border border-sky-500/40 space-y-2">
-            <div class="text-[11px] font-black text-sky-300">📌 TimeWall থেকে "REDEEM" করে এই তথ্য দিন</div>
-            <p class="text-[10px] text-slate-300 leading-relaxed">TimeWall এ <b>REDEEM COINS</b> চাপার পর নিচের <b>Redeem History</b> তে সর্বশেষ সারিতে তারিখ, <b>Coins</b> ও <b>Redeem ID</b> আসে। ওই সারি স্পষ্ট দেখা যায় এমন স্ক্রিনশট দিন। ন্যূনতম <b id="trun-redeem-min" class="text-amber-300">১,০০০</b> কয়েন রিডিম করতে হবে।</p>
+            <div class="text-[11px] font-black text-sky-300">📌 রিডিম তথ্য দিন</div>
+            <p class="text-[10px] text-slate-300 leading-relaxed">ন্যূনতম রিডিম: <b id="trun-redeem-min" class="text-amber-300">১,০০০</b> কয়েন।</p>
             <div class="grid grid-cols-2 gap-2">
               <div><label class="block text-[10px] font-bold text-slate-400 mb-0.5">রিডিম করা কয়েন:</label>
                 <input type="number" id="trun-redeem-coins" min="0" placeholder="যেমন 1218" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white font-mono focus:outline-none focus:border-sky-500"></div>
               <div><label class="block text-[10px] font-bold text-slate-400 mb-0.5">Redeem ID:</label>
                 <input type="tel" id="trun-redeem-id" placeholder="যেমন 21793512" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white font-mono focus:outline-none focus:border-sky-500"></div>
             </div>
-            <button type="button" onclick="openTimeWallGuide()" class="w-full py-1.5 bg-sky-600/30 hover:bg-sky-600/50 text-sky-200 rounded-lg text-[11px] font-bold">❓ কীভাবে রিডিম করবেন (গাইড ও ভিডিও)</button>
-          </div>
-          <div id="trun-old-proof-info" class="p-2.5 bg-slate-950/80 rounded-xl border border-slate-800 text-[11px] space-y-1 text-slate-300">
+            </div>
+          <div id="trun-old-proof-info" class="hidden p-2.5 bg-slate-950/80 rounded-xl border border-slate-800 text-[11px] space-y-1 text-slate-300">
             <div class="font-bold text-amber-400 flex items-center gap-1 text-[10.5px]">
               <i data-lucide="info" class="w-3.5 h-3.5"></i> <span>কোন জায়গার স্ক্রিনশট দিতে হবে?</span>
             </div>
@@ -2199,6 +2193,28 @@
       lucide.createIcons();
       setTimeout(() => toast.remove(), 3500);
     }
+
+    // বিরক্তিকর alert() পপআপের বদলে অটো-মিলিয়ে যাওয়া বার্তা (ওকে বাটন চাপতে হয় না)
+    function showAlertToast(msg) {
+      try {
+        const container = document.getElementById('toast-container');
+        const text = String(msg == null ? '' : msg).replace(/\n{2,}/g, '\n').trim();
+        if (!container) { console.warn(text); return; }
+        const toast = document.createElement('div');
+        toast.className = 'bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-amber-500/50 text-xs font-bold flex items-start gap-2 pointer-events-auto';
+        toast.style.whiteSpace = 'pre-line';
+        toast.style.maxWidth = '90vw';
+        toast.innerHTML = '<i data-lucide="alert-circle" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>';
+        const span = document.createElement('span');
+        span.textContent = text;
+        toast.appendChild(span);
+        toast.onclick = () => toast.remove();
+        container.appendChild(toast);
+        if (window.lucide) lucide.createIcons();
+        setTimeout(() => toast.remove(), Math.min(9000, Math.max(3500, text.length * 55)));
+      } catch (e) {}
+    }
+    window.alert = showAlertToast;
 
     function safeConfetti(opts) {
       try {
@@ -3552,6 +3568,30 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       }
     }
 
+    function renderDynamicLimitTexts() {
+      const set = (id, t) => { const e = document.getElementById(id); if (e) e.innerText = t; };
+      const reqRef = getAdminConfig('requireRefForWithdraw', true);
+      const refBonus = Number(getAdminConfig('referralBonusCoins', 1200));
+      const refPart = reqRef ? ` ও ${MIN_REFS_FOR_WITHDRAW}টি কমপ্লিট রেফারেল (প্রতি রেফারে ${REFERRAL_COMPLETE_TARGET_COINS.toLocaleString()} কয়েন আয়) প্রয়োজন।` : ' প্রয়োজন।';
+      set('wdr-head-note', `${COINS_PER_BDT} কয়েন = ৳১ টাকা। সর্বনিম্ন ৳${MIN_WITHDRAW_BDT}${refPart}`);
+      set('wallet-rate-badge', `${COINS_PER_BDT} কয়েন = ৳১.০০`);
+      const g = document.getElementById('wallet-conv-grid');
+      if (g) g.innerHTML = [10, 50, 100].map((t, i) => `<div class="p-2 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-750"><div class="text-[10px] text-slate-400">${(t * COINS_PER_BDT).toLocaleString()} কয়েন</div><div class="font-black ${i === 2 ? 'text-emerald-600' : 'text-amber-500'} font-mono mt-0.5">৳${t}.00</div></div>`).join('');
+      set('refer-head-note', `প্রতি কমপ্লিট রেফারে (${REFERRAL_COMPLETE_TARGET_COINS.toLocaleString()} কয়েন ইনকাম পূর্ণ হলে) পান ${refBonus} কয়েন বোনাস ও আজীবন ১০% কমিশন!`);
+      set('comm-lvl1-badge', `+${refBonus} কয়েন + ১০%`);
+      const wi = document.getElementById('wdr-amount');
+      if (wi) {
+        if (!wi._twBound) { wi._twBound = 1; wi.addEventListener('input', () => { wi.dataset.touched = '1'; }); }
+        if (!wi.dataset.touched) { wi.value = MIN_WITHDRAW_BDT; updateCoinsNeeded(wi.value); }
+      }
+      // অ্যাডমিন সেট করা টিম প্রুফ নিয়ম
+      const rules = document.getElementById('team-proof-rules');
+      if (rules) {
+        const t = String((appData.appSettings || {}).teamProofNote || '').trim();
+        if (t) { rules.innerText = t; rules.classList.remove('hidden'); } else rules.classList.add('hidden');
+      }
+    }
+
     function renderUserHeader() {
       const u = appData.user;
       const refCode = u.referralCode || (u.phone ? 'TC' + u.phone.slice(-4) : 'TC7701');
@@ -3736,6 +3776,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         wdrInput.min = MIN_WITHDRAW_BDT;
         updateCoinsNeeded(wdrInput.value || MIN_WITHDRAW_BDT);
       }
+      try { renderDynamicLimitTexts(); } catch (e) {}
 
       const isWdrActive = getAdminConfig('withdrawActive', true);
       const wdrAlert = document.getElementById('wdr-suspended-alert');
@@ -3883,8 +3924,8 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
     function forceBannedLogout() {
       if (_banHandled) return;
       _banHandled = true;
-      alert('⛔ আপনার একাউন্ট ব্যান করা হয়েছে। সাপোর্টে যোগাযোগ করুন।');
-      handleUserLogout();
+      showAlertToast('⛔ আপনার একাউন্ট ব্যান করা হয়েছে। সাপোর্টে যোগাযোগ করুন।');
+      setTimeout(handleUserLogout, 2500);
     }
 
     function getAllTasksMap() {
@@ -4697,7 +4738,9 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       const requireTimeWall = getAdminConfig('requireTimewallForWithdraw', true);
       const twTransfers = Number(appData.user.timewallTransfersAvailable || 0);
       if (requireTimeWall && twTransfers < 1) {
-        return alert(`❌ উইথড্র শর্ত অপূর্ণ!\n\nটাকা তোলার জন্য TimeWall থেকে কমপক্ষে ২,০০০ কয়েন ট্রান্সফার করে অ্যাপে জমা দেওয়া বাধ্যতামূলক।\n\nঅনুগ্রহ করে TimeWall-এ গিয়ে ২,০০০ কয়েন ট্রান্সফার সম্পন্ন করে স্ক্রিনশট প্রুফ জমা দিন। প্রতিবার উইথড্র করার জন্য TimeWall থেকে ২,০০০ কয়েন ট্রান্সফার করা বাধ্যতামূলক।`);
+        const twNeed = Number(getAdminConfig('timewallWithdrawCoins', 2000)) || 2000;
+        const twPool = Number(appData.user.timewallRedeemPool || 0);
+        return alert(`🔒 উইথড্র আনলক করতে TimeWall রিডিম প্রয়োজন\n\nপ্রতিবার উইথড্রের জন্য TimeWall থেকে ${twNeed.toLocaleString()} কয়েন রিডিম করে প্রুফ জমা দিতে হবে। অ্যাডমিন অ্যাপ্রুভ করলে উইথড্র আনলক হবে।` + (twPool > 0 ? `\nআপনার অ্যাপ্রুভড রিডিম: ${twPool.toLocaleString()} / ${twNeed.toLocaleString()} কয়েন` : ''));
       }
 
       if (!account || account.length < 11) {
@@ -5598,6 +5641,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
         userPhone: appData.user.phone,
         userName: appData.user.name || 'ইউজার',
         screenshotBase64: currentTaskScreenshotBase64 || '',
+        screenshotHash: currentTaskScreenshotBase64 ? tlImgHash(currentTaskScreenshotBase64) : '',
         userNote: twMeta ? ('Redeem ID: ' + twMeta.rid + ' | Redeem কয়েন: ' + twMeta.rc + (userNote ? ' | ' + userNote : '')) : userNote,
         redeemId: twMeta ? twMeta.rid : '',
         redeemCoins: twMeta ? twMeta.rc : 0,
@@ -5677,7 +5721,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
       document.getElementById('trun-timer-box').classList.add('hidden');
       document.getElementById('trun-proof-box').classList.add('hidden');
       document.getElementById('trun-redeem-fields').classList.add('hidden');
-      document.getElementById('trun-old-proof-info').classList.remove('hidden');
+      document.getElementById('trun-old-proof-info').classList.add('hidden');
       document.getElementById('trun-submit-proof-btn').classList.add('hidden');
       document.getElementById('trun-action-btn').classList.remove('hidden');
       document.getElementById('trun-action-btn').disabled = false;
@@ -6594,7 +6638,7 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
           const screenshotHash = tlImgHash(currentTeamReportScreenshot);
           let duplicate = false;
           Object.values(proofs).forEach(p => {
-            if (p.screenshotBase64 && p.screenshotBase64.length === currentTeamReportScreenshot.length && tlImgHash(p.screenshotBase64) === screenshotHash) {
+            if ((p.screenshotHash && p.screenshotHash === screenshotHash) || (p.screenshotBase64 && p.screenshotBase64.length === currentTeamReportScreenshot.length && tlImgHash(p.screenshotBase64) === screenshotHash)) {
               duplicate = true;
             }
           });
@@ -6733,4 +6777,3 @@ STRICT PRIVACY & CONFIDENTIALITY RULES (CRITICAL):
   </script>
 </body>
 </html>
-
